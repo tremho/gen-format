@@ -140,8 +140,8 @@ function decodeSpec(str:string):SpecParts {
     }
     else if(di === -1) {
         // neither. so we must be naming a type
-        let te = fi
-        if(te === -1) te = hi
+        let te = hi
+        if(te === -1) te = fi
         if(te === -1) te = li
         if(te === -1) te = str.length
         specParts.type = str.substring(0, te)
@@ -164,8 +164,8 @@ function decodeSpec(str:string):SpecParts {
     }
     if(true) {
         let fe = hi
-        if(fe === -1) fe = li
-        if(fe == -1) fe = str.length
+        if(fe <= fi ) fe = li
+        if(fe <= fi) fe = str.length
         specParts.format = str.substring(fi+1, fe)
     }
     return specParts

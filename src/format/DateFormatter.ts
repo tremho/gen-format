@@ -196,9 +196,20 @@ export default class DateFormatter implements IFormatHandler {
             throw BadDateValue(`"${value}" is not an acceptable value for a date`)
         }
 
+        // the only type of hint we recognize is a single cast to a timezone
+        const hints = specParts.hints
+        let tzCast = '' // UTC is the default
+        if(hints) {
+            if (hints.length > 1) {
+                throw RangeError('Unsupported number of hints')
+            }
+            tzCast = hints[0]
+        }
+
         let sdf = new SimpleDateFormat(timestamp)
         sdf.setFormat(specParts.format)
         sdf.setLocale(specParts.locale)
+        sdf.setTimezoneCast(tzCast)
         return sdf.toString()
     }
 }
@@ -263,6 +274,7 @@ export class SimpleDateFormat {
 
     private format:string = 'MMM DD YYY hh:mm:ss.sss ++ (UTC)'
     private locale:string;
+    private tzCast:string;
     private workingDate:Date;
     private mo:number;
     private wd:number;
@@ -307,6 +319,9 @@ export class SimpleDateFormat {
     setLocale(locale:string) {
         this.locale = locale
     }
+    setTimezoneCast(tzCast:string) {
+        this.tzCast = tzCast
+    }
     useIntl() {
         if(IDTF) {
             if(this.format.indexOf('full') !== -1
@@ -320,16 +335,13 @@ export class SimpleDateFormat {
     }
     toIntlString() {
         let fmt = this.format
+        let tzr = this.tzCast
         let timeZone
-        let pi = fmt.indexOf('(')
-        if(pi !== -1) {
-            let pe = fmt.indexOf(')', pi)
-            let tzr = fmt.substring(pi+1, pe)
+        if(tzr) {
             let tzes = findTimezone(tzr)
             let n = 0
             let tze = tzes[n]
             timeZone = tze.anchor.replace(/ /g,'_')
-            fmt = fmt.substring(0, pi).trim()
         }
         let [dateStyle, timeStyle] = fmt.split('-')
         let opts:DateTimeFormatOptions
@@ -343,10 +355,8 @@ export class SimpleDateFormat {
         // handle timezone cast for non-intl context
         let fmt = this.format
         let tzName = 'UTC', tzOffset = 0
-        let pi = fmt.indexOf('(')
-        if(pi !== -1) {
-            let pe = fmt.indexOf(')', pi)
-            let tzr = fmt.substring(pi+1, pe)
+        let tzr = this.tzCast
+        if(tzr) {
             let tzes = findTimezone(tzr)
             let n = 0
             let tze = tzes[n]
@@ -354,7 +364,6 @@ export class SimpleDateFormat {
                 tzName = tze.anchor
                 tzOffset = -tze.standard.offset
                 // timeZone = tze.anchor.replace(/ /g,'_')
-                fmt = fmt.substring(0, pi).trim()
 
                 let adjtime = tzOffset * 60 * 1000
                 this.workingDate.setTime(this.workingDate.getTime() + adjtime) // offset so the UTC values match the cast TZ
@@ -375,7 +384,7 @@ export class SimpleDateFormat {
         // use Intl to get timezone
         let tzDisp = ''
         if(tzName === 'UTC') {
-            tzDisp = tzStyle === 'short' ? '(UTC)' : '(Universal Time)'
+            tzDisp = tzStyle === 'short' ? 'UTC' : 'Universal Time'
         } else {
             try {
                 if (IDTF && tzStyle) {
@@ -385,7 +394,7 @@ export class SimpleDateFormat {
                     }
                     let dtf = new IDTF(this.locale, opts)
                     let dstr = dtf.format(this.workingDate)
-                    tzDisp = '(' + dstr.substring(dstr.lastIndexOf(',') + 2) + ')'
+                    tzDisp = dstr.substring(dstr.lastIndexOf(',') + 2)
                 }
             } catch (e) {
 

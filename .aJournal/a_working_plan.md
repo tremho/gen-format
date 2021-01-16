@@ -212,8 +212,30 @@ When we write it up and publish:
   - then take first and last
   - for diff, compute sign before sort
   
-- Default to local time.  absence of (TZ) is Local. Remove hack
-from findTimezone.
+<s>- Default to local time.  absence of (TZ) is Local. Remove hack
+from findTimezone.</s>
   
-- Write version that uses Intl for formatted elements.
+- √ use hint to defne TZ cast date?PST|fmt <s>as well as date|fmt (PST)</s>
+- Remove display of parenthesis around timezone 
+  
+- Updated version that uses Intl for all formatted elements.
 
+```
+MMM D, YYYY =>  MMM D - MMM D, YYYY
+dateLeft = true (because there is no time)
+postYear = true
+
+YYYY M D => YYYY M D - M D
+dateLeft = true 
+postYear = false
+
+
+M/D/YY hh:mm =>  M/D/YY time - time
+dateLeft = true 
+postYear true, but should be false because of time
+
+hh:mm M/D/YY => time - time M/D/YY  
+dateLeft = false 
+postYear true, but should be false because of time
+
+```

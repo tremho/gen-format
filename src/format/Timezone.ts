@@ -4576,7 +4576,8 @@ export function findTimezone(tzString:string) {
     if(tzString === 'UTC') {
         tzString = 'GMT' // use this eqivalent instead, UTC doesn't occur in table
     }
-    if(tzString === 'Local') { // use the current local timezone
+    const tzAbbr = tzString.toUpperCase()
+    if(tzAbbr === 'LOCAL') { // use the current local timezone
         let off = new Date().getTimezoneOffset()
         found.push(
             {
@@ -4592,9 +4593,9 @@ export function findTimezone(tzString:string) {
 
     tztable.forEach(entry => {
         let anchor = entry.anchor
-        let short = entry.shortHand
-        let sabbr = entry.standard.abbr
-        let dabbr = entry.daylight.abbr
+        let short = entry.shortHand && entry.shortHand.toUpperCase()
+        let sabbr = entry.standard.abbr.toUpperCase()
+        let dabbr = entry.daylight.abbr.toUpperCase()
         let sname = entry.standard.name
         let we = sname.indexOf(' ')
         if(we === -1) we = sname.length
@@ -4613,10 +4614,10 @@ export function findTimezone(tzString:string) {
         if(tzString === ssname || tzString === sdname) {
             found.push(entry)
         }
-        if(tzString == sabbr || tzString == dabbr) {
+        if(tzAbbr == sabbr || tzAbbr == dabbr) {
             found.push(entry)
         }
-        if(tzString == short) {
+        if(tzAbbr == short) {
             found.push(entry)
         }
     })

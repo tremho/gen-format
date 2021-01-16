@@ -43,7 +43,6 @@ export default class DateRangeFormatter implements IFormatHandler {
 
         let format = specParts.format
 
-
         let isDiff = format.indexOf(' diff') !== -1
         format = format.replace(' diff', '') // now remove it
         let isHuman = format.indexOf(' human') !== -1
@@ -85,19 +84,25 @@ export default class DateRangeFormatter implements IFormatHandler {
         }
 
         const remove = (fmt, ltr) => {
-            return fmt.replace(ltr+' ', '').replace(new RegExp(ltr, 'g'), '')
+            const re = new RegExp(ltr + '*'+ltr+'[^YMDhmszZ+-]*')
+            return fmt.replace(re, '')
         }
         let postYear = (format.indexOf('Y') > format.indexOf('M'))
 
-        let leftFormat, rightFormat
-        leftFormat = rightFormat = format
+        if(timeFmt) postYear = false
+
+
+        // timezones always on right
+        let leftFormat = remove(format, 'Z')
+        leftFormat = remove(leftFormat, 'z')
+        let rightFormat = format
+
         let remMo = false
         if(dtStart.getUTCFullYear() === dtEnd.getFullYear()) {
-            if(dateLeft) {
-                if(postYear)  leftFormat = remove(leftFormat, 'Y')
-                else          rightFormat = remove(rightFormat,'Y')
+            if (dateLeft && !postYear) {
+                rightFormat = remove(rightFormat, 'Y')
             } else {
-                leftFormat = remove(leftFormat,'Y')
+                leftFormat = remove(leftFormat, 'Y')
             }
             if(dtStart.getUTCMonth() === dtEnd.getUTCMonth()) {
                 if(dtStart.getUTCDate() === dtEnd.getUTCDate()) {
