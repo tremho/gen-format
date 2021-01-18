@@ -129,34 +129,21 @@ function dateRangeFormatTest() {
         x = '4/3/61 10:12 am - 12:50 pm'
         t.ok(r === x, `${name()} expected "${x}", got "${r}"`)
 
-        // TODO: group with time zone displays and casts
+        // √ TODO: group with time zone displays and casts
         r = F('daterange|M/D/YY hh:mm -- z', {startDate:tn, endDate:tn2})
         x = '4/3/61 10:12 am - 12:50 pm UTC'
         t.ok(r === x, `${name()} expected "${x}", got "${r}"`)
 
-        // TODO: Current debug puzzler
+        // √ TODO: Current debug puzzler
         // weird truncation bug...
         r = F('daterange|M/D/YY hh:mm -- (z)', {startDate:tn, endDate:tn2})
         x = '4/3/61 10:12 am - 12:50 pm (UTC)'
         t.ok(r === x, `${name()} expected "${x}", got "${r}"`)
 
-        // TODO:Refactor to cast with hints instead of format then do this test
-        // r = F('daterange|M/D/YY hh:mm -- z (PST)', {startDate:tn, endDate:tn2})
-        // x = '4/3/61 10:12 am - 12:50 pm (PST)'
-        // t.ok(r === x, `${name()} expected "${x}", got "${r}"`)
-
-
-        // TODO: human ranges ?
-
-        // TODO: diffs (different display options, human)
-
-
-        // Support + - (for A a) as well as ++, -- (AM am)
-
-        // TODO: .sss, .ss, .s, x
-        // TODO: j, u
-        // TODO: h H V (12-12, 0-24, 0-11), no ap on 24
-        // TODO: start with survey of all format sizes: e.g. Y vs. YYY
+        // √ TODO: Refactor to cast with hints instead of format then do this test
+        r = F('daterange?pst|M/D/YY hh:mm -- (z)', {startDate:tn, endDate:tn2})
+        x = '4/3/61 02:12 am - 04:50 am (PST)'
+        t.ok(r === x, `${name()} expected "${x}", got "${r}"`)
 
 
         t.end()

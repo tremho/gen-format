@@ -339,9 +339,12 @@ export class SimpleDateFormat {
         let timeZone
         if(tzr) {
             let tzes = findTimezone(tzr)
-            let n = 0
-            let tze = tzes[n]
-            timeZone = tze.anchor.replace(/ /g,'_')
+            // let n = 0
+            // let tze = tzes[n]
+            let tze = pickTimezone(tzr, tzes)
+            if(tze && tze.anchor) {
+                timeZone = tze.anchor.replace(/ /g, '_')
+            }
         }
         let [dateStyle, timeStyle] = fmt.split('-')
         let opts:DateTimeFormatOptions
@@ -354,14 +357,17 @@ export class SimpleDateFormat {
         if(this.useIntl()) return this.toIntlString()
         // handle timezone cast for non-intl context
         let fmt = this.format
+        let tzDisp = ''
         let tzName = 'UTC', tzOffset = 0
         let tzr = this.tzCast
         if(tzr) {
             let tzes = findTimezone(tzr)
-            let n = 0
-            let tze = tzes[n]
+            // let n = 0
+            // let tze = tzes[n]
+            let tze = pickTimezone(tzr, tzes)
             if(tze) {
                 tzName = tze.anchor
+                tzDisp = tze.shortHand || tze.standard.abbr.toUpperCase()
                 tzOffset = -tze.standard.offset
                 // timeZone = tze.anchor.replace(/ /g,'_')
 
@@ -382,22 +388,23 @@ export class SimpleDateFormat {
         }
 
         // use Intl to get timezone
-        let tzDisp = ''
-        if(tzName === 'UTC') {
-            tzDisp = tzStyle === 'short' ? 'UTC' : 'Universal Time'
-        } else {
-            try {
-                if (IDTF && tzStyle) {
-                    let opts = {
-                        timeZone: tzName,
-                        timeZoneName: tzStyle
+        if(!tzDisp || tzStyle === 'long' || tzDisp.toLowerCase() === 'local') {
+            if (tzName === 'UTC') {
+                tzDisp = tzStyle === 'short' ? 'UTC' : 'Universal Time'
+            } else {
+                try {
+                    if (IDTF && tzStyle) {
+                        let opts = {
+                            timeZone: tzName,
+                            timeZoneName: tzStyle
+                        }
+                        let dtf = new IDTF(this.locale, opts)
+                        let dstr = dtf.format(this.workingDate)
+                        tzDisp = dstr.substring(dstr.lastIndexOf(',') + 2)
                     }
-                    let dtf = new IDTF(this.locale, opts)
-                    let dstr = dtf.format(this.workingDate)
-                    tzDisp = dstr.substring(dstr.lastIndexOf(',') + 2)
-                }
-            } catch (e) {
+                } catch (e) {
 
+                }
             }
         }
         const thisYear = new Date().getFullYear()
@@ -620,12 +627,44 @@ export class SimpleDateFormat {
             out = out.replace('-+', pm.toUpperCase())
             n += ampm.length;
         }
+        while ((n = out.indexOf('-?')) !== -1) {
+            out = out.replace('-?', ampm.charAt(0))
+            n += ampm.length;
+        }
+        if ((n = out.indexOf('+?')) !== -1) {
+            out = out.replace('+?', ampm.charAt(0).toUpperCase())
+            n += ampm.length;
+        }
 
         return out;
     }
 }
 
 //-------------
+
+function pickTimezone(tz, entries) {
+    for(let i=0; i<entries.length; i++) {
+        const tze = entries[i]
+        const tzu = tz.toUpperCase()
+        const tzl = tz.toLowerCase()
+        let anchor = tze.anchor
+        if(anchor) {
+            let city = anchor.substring(anchor.indexOf('/') + 1)
+            if (anchor.toLowerCase() === tzl || city.toLowerCase() === tzl) {
+                return tze
+            }
+        }
+        let sabbr = tze.standard && tze.standard.abbr && tze.standard.abbr.toUpperCase()
+        let dabbr = tze.daylight && tze.daylight.abbr && tze.daylight.abbr.toUpperCase()
+        if(sabbr === tzu || dabbr === tzu) {
+            return tze
+        }
+        if(tze.shortHand && tze.shortHand.toUpperCase() === tzu) {
+            return tze
+        }
+
+    }
+}
 
 /**
  * Adjust the current time by interval of years

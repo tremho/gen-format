@@ -1,8 +1,10 @@
-import {IFormatHandler, SpecParts, IncompatibleValueType} from "../Formatter";
+import {IFormatHandler, SpecParts, formatV,IncompatibleValueType} from "../Formatter";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 import DateFormatter, {BadDateValue} from "./DateFormatter";
 
 const IDTF = Intl && Intl.DateTimeFormat
+// @ts-ignore
+const IRTF = Intl && Intl.RelativeTimeFormat
 
 
 export default class DateRangeFormatter implements IFormatHandler {
@@ -43,10 +45,41 @@ export default class DateRangeFormatter implements IFormatHandler {
 
         let format = specParts.format
 
-        let isDiff = format.indexOf(' diff') !== -1
-        format = format.replace(' diff', '') // now remove it
-        let isHuman = format.indexOf(' human') !== -1
-        format = format.replace(' human', '')
+        let hints = specParts.hints || []
+        let dhi = hints.indexOf('diff')
+        let hhi = hints.indexOf('human')
+        let ghi = hints.indexOf('digital')
+        let lhi = hints.indexOf('long')
+        let shi = hints.indexOf('short')
+        let nhi = hints.indexOf('narrow')
+
+        let isDiff, isHuman, relStyle
+        if(dhi !== -1) {
+            hints = hints.splice(dhi, 1)
+            isDiff = true
+        }
+        if(hhi !== -1) {
+            hints = hints.splice(hhi,1)
+            isHuman = true
+        }
+        if(ghi !== -1) {
+            hints = hints.splice(ghi,1)
+            isHuman = false
+        }
+        if(lhi !== -1) {
+            hints = hints.splice(lhi, 1)
+            relStyle = 'long'
+        }
+        if(shi !== -1) {
+            hints = hints.splice(shi, 1)
+            relStyle = 'short'
+        }
+        if(nhi !== -1) {
+            hints = hints.splice(nhi, 1)
+            relStyle = 'narrow'
+        }
+
+
 
         if(format.indexOf(' db') !== -1) {
             console.log('break')
@@ -66,11 +99,25 @@ export default class DateRangeFormatter implements IFormatHandler {
         tti = ((ti = format.lastIndexOf('s')) > tti) ? ti : tti
         tti = ((ti = format.lastIndexOf('-')) > tti) ? ti : tti
         tti = ((ti = format.lastIndexOf('+')) > tti) ? ti : tti
-        tti = ((ti = format.lastIndexOf('z')) > tti) ? ti : tti
-        tti = ((ti = format.lastIndexOf('Z')) > tti) ? ti : tti
+
         if(tti === -1) {
             tti = dti+1
         }
+
+        let zti = ((ti = format.lastIndexOf('z')) > tti) ? ti : -1
+        zti = ((ti = format.lastIndexOf('Z')) > zti) ? ti : zti
+
+        // extend zti forward to end of string or first pattern character
+        if(zti !== -1) {
+            while(zti < format.length) {
+                let c = format.charAt(zti)
+                if(c.match(/[MDYhms+-]/)) {
+                    break;
+                }
+                zti++
+            }
+        }
+
 
         let dateLeft = (tti >= dti)
 
@@ -93,8 +140,7 @@ export default class DateRangeFormatter implements IFormatHandler {
 
 
         // timezones always on right
-        let leftFormat = remove(format, 'Z')
-        leftFormat = remove(leftFormat, 'z')
+        let leftFormat = zti !==-1 ? format.substring(0, tti+1) : format
         let rightFormat = format
 
         let remMo = false
@@ -141,14 +187,10 @@ export default class DateRangeFormatter implements IFormatHandler {
         if(fmtchars.indexOf(llc) === -1) {
             leftFormat = leftFormat.substring(0, leftFormat.length-1)
         }
-        let lrc = rightFormat.charAt(rightFormat.length-1)
-        if(fmtchars.indexOf(lrc) === -1) {
-            rightFormat = rightFormat.substring(0, rightFormat.length-1)
-        }
-
 
         let dateFormatter = new DateFormatter()
         let spec = Object.assign({}, specParts) // copy
+        spec.hints = hints // pass any remaining hints not pulled above to the date formatter (i.e. timezone cast)
         spec.format = leftFormat || format
         let startStr = startIsNow ? 'now' : dateFormatter.format(spec, dtStart)
         spec.format = rightFormat || format
@@ -156,30 +198,8 @@ export default class DateRangeFormatter implements IFormatHandler {
 
         if(isDiff) {
             let ms = dtEnd.getTime() - dtStart.getTime()
-            if(Math.abs(ms) < 1000) {
-                out =  endIsNow ? 'just now' : 'same time as ' + endStr
-                return out
-            }
-
-            if(Math.abs(ms) < 3000) {
-                out = 'a moment'
-            } else {
-                out = describeDuration(ms)
-            }
-            if(!endIsNow) {
-                if(ms > 0) {
-                    out += ' before '
-                } else {
-                    out += ' after '
-                }
-                out += endStr
-            } else { // relative to now
-                if(ms > 0) {
-                    if(out !== 'just now') out += ' ago'
-                } else {
-                    if(out !== 'just now') out += ' from now'
-                }
-            }
+            let dparts = getDurationParts(ms)
+            out = fitRelativeTime(dparts, specParts.locale, spec, isHuman, relStyle)
         } else {
             if(dtStart.getTime() == dtEnd.getTime()) {
                 // not a range if they are the same
@@ -207,9 +227,23 @@ export default class DateRangeFormatter implements IFormatHandler {
     }
 }
 
-function describeDuration(ms) {
+class DurationParts {
+    public sign: number
+    public years: number
+    public months:number
+    public weeks: number
+    public days: number
+    public hours:number
+    public minutes: number
+    public seconds: number
+    public milliseconds: number
+    public totalms:number
+    
+}
 
-    let out = ''
+function getDurationParts(ms):DurationParts {
+
+    let out = new DurationParts()
 
     const msPerSec = 1000
     const secPerMin = 60
@@ -219,99 +253,103 @@ function describeDuration(ms) {
     const weeksPerMonth= 4
     const monthsPerYear = 12
 
-    let secs = Math.floor( ms/msPerSec)
-    let mins = Math.floor(ms/(msPerSec * secPerMin))
-    let hrs = Math.floor(ms/(msPerSec * secPerMin*minPerHr))
-    let days = Math.floor(ms/(msPerSec * secPerMin*minPerHr*hrsPerDay))
-    let weeks = Math.floor(ms/(msPerSec * secPerMin*minPerHr*hrsPerDay*dayPerWeek))
-    let months = Math.floor(ms/(msPerSec * secPerMin*minPerHr*hrsPerDay*dayPerWeek*weeksPerMonth))
-    let years = Math.floor(ms/(msPerSec * secPerMin*minPerHr*hrsPerDay*dayPerWeek*weeksPerMonth*monthsPerYear))
-    let msecs = ms - secs*msPerSec
-    secs -= mins*secPerMin
-    mins -= hrs*minPerHr
-    hrs -= days*hrsPerDay
-    days -= weeks*dayPerWeek
-    weeks -= months*weeksPerMonth
-    months -= years*monthsPerYear
+    out.sign = ms < 0 ? -1 : 1
+    ms = Math.abs(ms)
+    out.totalms = ms
+    out.seconds = Math.floor( ms/msPerSec)
+    out.minutes = Math.floor(ms/(msPerSec * secPerMin))
+    out.hours = Math.floor(ms/(msPerSec * secPerMin*minPerHr))
+    out.days = Math.floor(ms/(msPerSec * secPerMin*minPerHr*hrsPerDay))
+    out.weeks = Math.floor(ms/(msPerSec * secPerMin*minPerHr*hrsPerDay*dayPerWeek))
+    out.months = Math.floor(ms/(msPerSec * secPerMin*minPerHr*hrsPerDay*dayPerWeek*weeksPerMonth))
+    out.years = Math.floor(ms/(msPerSec * secPerMin*minPerHr*hrsPerDay*dayPerWeek*weeksPerMonth*monthsPerYear))
+    out.milliseconds = ms - out.seconds*msPerSec
+    out.seconds -= out.minutes*secPerMin
+    out.minutes -= out.hours*minPerHr
+    out.hours -= out.days*hrsPerDay
+    out.days -= out.weeks*dayPerWeek
+    out.weeks -= out.months*weeksPerMonth
+    out.months -= out.years*monthsPerYear
 
+    return out
+}
 
-    if(years) {
-        if(months || weeks) {
-            out = 'a little over '
+function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
+    let out = ''
+    const express = (value, type, abbr) => {
+        let lbl = type
+        let isAbbr = false
+        if(relStyle === 'short' || relStyle === 'narrow') {
+            lbl = abbr
+            isAbbr = true
         }
-        if(years === 1) {
-            out += 'a year'
+        if(value == 1) {
+            value = 'one'
         } else {
-            out += `${years} years`
+            lbl += 's'
         }
-        return out
+        if(isAbbr) {
+            lbl += '.'
+        }
+        out += `${value} ${lbl} `
     }
-    if(months) {
-        if(weeks || days > 2) {
-            out = 'a little over '
-        }
-        if(months === 1) {
-            out += 'a month'
+
+    if(!isHuman) {
+        // the formatToParts doesn't help us here because that just (uselessly) deconstructs the semantics of the sentence,
+        // and does not give us values in the formats we want.
+        // Instead: (todo: change from format to 'digital' hint or non-human)
+        // find largest. display n yr., n mo., n dy., h:m:s  or mininum 0:ss.sss (use in or ago per sign)
+        let out = dparts.sign > 0 ? 'in ' : ''
+        if (dparts.years) express(dparts.years, 'year', 'yr')
+        else if (dparts.months) express(dparts.months, 'month', 'mo')
+        else if (dparts.weeks) express(dparts.weeks, 'week', 'wk')
+        else if (dparts.days) express(dparts.days, 'day', 'dy')
+        else if (dparts.hours) out += formatV('$(-2.0):', dparts.hours)
+        if(dparts.minutes) {
+            if (dparts.milliseconds) {
+                out += formatV('$(02.0):$(02.3)', dparts.minutes, dparts.seconds + dparts.milliseconds / 1000)
+            } else {
+                out += formatV('$(02.0):$(02.0)', dparts.minutes, dparts.seconds)
+            }
         } else {
-            out += `${months} months`
+            // todo: localize
+            let sec = relStyle === 'short' || relStyle === 'narrow' ? 'sec' : 'second'
+            if(sec !== 'sec') {
+                if(dparts.seconds != 1  || dparts.milliseconds) {
+                    sec += 's'
+                }
+            }else{
+                sec += '.'
+            }
+            if (dparts.milliseconds) {
+                out += formatV(`$(-2.3-) ${sec}`, dparts.seconds + dparts.milliseconds / 1000)
+            } else {
+                out += formatV(`$(-2.0) ${sec}`, dparts.seconds)
+            }
+
         }
-        return out
-    }
-    if(weeks) {
-        if(days > 8 )  {
-            out = 'a little over '
-        }
-        if(weeks === 1) {
-            out += 'a week'
-        } else {
-            out += `${weeks} weeks`
-        }
-        return out
-    }
-    if(days) {
-        if(hrs > 8 )  {
-            out = 'a little over '
-        }
-        if(days === 1) {
-            out += 'a day'
-        } else {
-            out += `${days} days`
-        }
-        return out
-    }
-    if(hrs) {
-        if(mins > 15 )  {
-            out = 'a little over '
-        }
-        if(hrs === 1) {
-            out += 'an hour'
-        } else {
-            out += `${hrs} hours`
-        }
-        return out
-    }
-    if(mins) {
-        if(secs > 15 )  {
-            out = 'a little over '
-        }
-        if(mins === 1) {
-            out += 'a minute'
-        } else {
-            out += `${mins} minutes`
-        }
-        return out
-    }
-    if(secs) {
-        if(msecs > 300 )  {
-            out = 'a little over '
-        }
-        if(secs === 1) {
-            out += 'a second'
-        } else {
-            out += `${secs} seconds`
-        }
+        if (dparts.sign < 0) out += ' ago'
         return out
     }
 
+    if(IRTF) {
+        let opts = {
+            numeric: isHuman ? 'auto' : 'always',
+            style: relStyle
+        }
+        const rtf = new IRTF(locale, opts)
+        let type = ''
+        let value = 0
+        if(dparts.years) { value = dparts.years; type = 'years'}
+        else if(dparts.months) { value = dparts.months; type = 'months'}
+        else if(dparts.weeks) { value = dparts.weeks; type = 'weeks'}
+        else if(dparts.days) { value = dparts.days; type = 'days'}
+        else if(dparts.hours) { value = dparts.hours; type = 'hours'}
+        else if(dparts.minutes) { value = dparts.minutes; type = 'minutes'}
+        else if(dparts.seconds) { value = dparts.seconds; type = 'seconds'}
+        else if(dparts.milliseconds) { value = dparts.milliseconds/1000; type = 'seconds'}
+        return rtf.format(value* dparts.sign, type)
+    }
 
 }
+

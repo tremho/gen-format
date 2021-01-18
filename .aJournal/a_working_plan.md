@@ -220,22 +220,12 @@ from findTimezone.</s>
   
 - Updated version that uses Intl for all formatted elements.
 
-```
-MMM D, YYYY =>  MMM D - MMM D, YYYY
-dateLeft = true (because there is no time)
-postYear = true
+Using IRTF for relative time
 
-YYYY M D => YYYY M D - M D
-dateLeft = true 
-postYear = false
+hint:
+diff specifies we are using diff
+'human' maps to numeric: 'auto'  'always'
+long/short/narrow go directly to style
 
-
-M/D/YY hh:mm =>  M/D/YY time - time
-dateLeft = true 
-postYear true, but should be false because of time
-
-hh:mm M/D/YY => time - time M/D/YY  
-dateLeft = false 
-postYear true, but should be false because of time
-
-```
+get a formatted string, but also the parts
+apply the parts to the format

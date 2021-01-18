@@ -5,7 +5,7 @@
   "main": "build/gen-format.js",
   "scripts": {
     "test": "npm run clean && npm run compile && tap --no-timeout ./build/test/*.test.js",
-    "test-direct": "npm run clean && npm run compile && node build/test/DateRangeFormat.test.js",
+    "test-direct": "npm run clean && npm run compile && node build/test/More.test.js",
     "clean": "rm -fr build css",
     "compile": "tsc"
   },
