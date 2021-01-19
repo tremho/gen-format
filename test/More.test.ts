@@ -127,6 +127,8 @@ function moreTest() {
         x = '03:00 p'
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
+        // TODO: The rest of this can be done as documentation and associated tests...
+
         // TODO: .sss, .ss, .s, x
         // TODO: j, u
         // TODO: h H V (12-12, 0-24, 0-11), no ap on 24

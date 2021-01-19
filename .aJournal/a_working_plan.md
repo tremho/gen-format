@@ -216,16 +216,22 @@ When we write it up and publish:
 from findTimezone.</s>
   
 - √ use hint to defne TZ cast date?PST|fmt <s>as well as date|fmt (PST)</s>
-- Remove display of parenthesis around timezone 
+- √ Remove display of parenthesis around timezone 
   
-- Updated version that uses Intl for all formatted elements.
 
-Using IRTF for relative time
+√ Using IRTF for relative time
 
 hint:
-diff specifies we are using diff
-'human' maps to numeric: 'auto'  'always'
-long/short/narrow go directly to style
+- √ diff specifies we are using diff
+- √ 'human' maps to numeric: 'auto'  'always'
+- √ long/short/narrow go directly to style
+- √ other hints pass through to dateformatter (i.e. timezone)
 
-get a formatted string, but also the parts
-apply the parts to the format
+--------------
+
+Next branch:
+- Updated version that uses Intl for all formatted elements.
+
+Branch after that:
+- Documentation and associated tests
+
