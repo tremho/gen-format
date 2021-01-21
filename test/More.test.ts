@@ -129,6 +129,12 @@ function moreTest() {
 
         // TODO: The rest of this can be done as documentation and associated tests...
 
+        // locale and format
+        // r = F('date|full-full~es-ES', 'now')
+        r = F('date~es-ES|WWW DD MMM YYYY hh:mm:ss ++', '2021-02-14:13:23:34Z')
+        x = 'domingo 14 feb. 2021 01:23:34 PM'
+        t.ok(r === x, `expected "${x}", got "${r}"`)
+
         // TODO: .sss, .ss, .s, x
         // TODO: j, u
         // TODO: h H V (12-12, 0-24, 0-11), no ap on 24

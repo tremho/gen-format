@@ -230,8 +230,30 @@ hint:
 --------------
 
 Next branch:
-- Updated version that uses Intl for all formatted elements.
+- √ Updated version that uses Intl for all formatted elements.
+- √ bug: allow locale next to type in spec
+- √ clean: take out the `'' // getFormatParts` items not used
 
 Branch after that:
 - Documentation and associated tests
+
+- [ ] Bug: use of _style_ formats results in cast to local time.
+- [ ] change daterange to use array
+- [ ] typeless $() variable passing
+
+- [ ] typescript .d 
+- [ ] external module import and example cases
+
+--------------
+
+- import into Nativescript and test compliance there (Intl, etc)
+- write a blog (this can be the presentation for your example cases) 
+- nudge folks / start WoM campaign
+
+___Be sure to go through everything again and look for issues that
+might bite us___
+
+--------------
+# Push It!
+
 

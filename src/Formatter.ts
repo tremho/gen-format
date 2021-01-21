@@ -141,8 +141,8 @@ function decodeSpec(str:string):SpecParts {
     else if(di === -1) {
         // neither. so we must be naming a type
         let te = hi
-        if(te === -1) te = fi
         if(te === -1) te = li
+        if(te === -1) te = fi
         if(te === -1) te = str.length
         specParts.type = str.substring(0, te)
     }

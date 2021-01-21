@@ -354,6 +354,7 @@ export class SimpleDateFormat {
     }
     // read the template and format values
     toString() {
+        // use pure IDTF
         if(this.useIntl()) return this.toIntlString()
         // handle timezone cast for non-intl context
         let fmt = this.format
@@ -374,6 +375,32 @@ export class SimpleDateFormat {
                 let adjtime = tzOffset * 60 * 1000
                 this.workingDate.setTime(this.workingDate.getTime() + adjtime) // offset so the UTC values match the cast TZ
                 this.setWorkingDate(this.workingDate)
+            }
+        }
+
+        // use IDTF for format parts
+        const opts = {
+            timeZone: tzName && tzName.replace(/ /g, '_'),
+            dateStyle: 'full',
+            timeStyle: 'long'
+        }
+
+        let dtf = new IDTF(this.locale, opts)
+        const longParts = (dtf as any).formatToParts(this.workingDate)
+        opts.dateStyle = opts.timeStyle = 'short'
+        dtf = new IDTF(this.locale, opts)
+        const shortParts = (dtf as any).formatToParts(this.workingDate)
+        opts.dateStyle = opts.timeStyle = 'medium'
+        dtf = new IDTF(this.locale, opts)
+        const medParts = (dtf as any).formatToParts(this.workingDate)
+
+        const getFormatPart = (key:string, type:string):string => {
+            const list = type === 'short' ? shortParts : type== 'long' ? longParts : medParts
+            for(let i=0; i<list.length; i++) {
+                let p = list[i]
+                if(p.type === key) {
+                    return p.value
+                }
             }
         }
 
@@ -409,10 +436,12 @@ export class SimpleDateFormat {
         }
         const thisYear = new Date().getFullYear()
         // set the year
-        let yr4 = ''+this.yr;
-        let yr3 = thisYear === this.yr ? '' : yr4;
-        let yr2 = yr4.substring(2)
-        let yr1 = thisYear === this.yr ? '' : yr2;
+        let yril = getFormatPart('relatedYear', 'long')
+        let yris = getFormatPart('relatedYear', 'short')
+        let yr4 = yril || ''+this.yr;
+        let yr3 = yril || thisYear === this.yr ? '' : yr4;
+        let yr2 = yris || yr4.substring(2)
+        let yr1 = yris || thisYear === this.yr ? '' : yr2;
         let n = 0;
         while ((n = out.indexOf('YYYY', n)) !== -1) {
             out = out.replace('YYYY', yr4)
@@ -434,8 +463,11 @@ export class SimpleDateFormat {
             n += yr1.length;
         }
         // set the date
-        let dy2 = this.dy < 10 ? '0'+this.dy : ''+this.dy
-        let dy1 = '' + this.dy
+        let dyil = '' //getFormatPart('day', 'long')
+        let dyis = '' //getFormatPart('day', 'short')
+
+        let dy2 = dyil || this.dy < 10 ? '0'+this.dy : ''+this.dy
+        let dy1 = dyis || '' + this.dy
         n = 0;
         while ((n = out.indexOf('DD', n)) !== -1) {
             out = out.replace('DD', dy2)
@@ -447,10 +479,12 @@ export class SimpleDateFormat {
             n += dy1.length;
         }
         // set the hour
-        let hr4 = this.hr < 10 ? '0'+this.hr : ''+this.hr;
-        let hr3 = ''+this.hr;
-        let hr1 = this.hr > 12 ? this.hr - 12 : this.hr == 0 ? 12 : this.hr
-        let hr2 = hr1 < 10 ? '0' + hr1 : ''+hr1;
+        let hril = '' // getFormatPart('hour', 'long')
+        let hris = '' // getFormatPart('hour','short')
+        let hr4 = hril || this.hr < 10 ? '0'+this.hr : ''+this.hr;
+        let hr3 = hril || ''+this.hr;
+        let hr1 = hris || this.hr > 12 ? this.hr - 12 : this.hr == 0 ? 12 : this.hr
+        let hr2 = hris || hr1 < 10 ? '0' + hr1 : ''+hr1;
         let hour12 = false;
         n = 0;
         while ((n = out.indexOf('hhhh', n)) !== -1) {
@@ -475,8 +509,10 @@ export class SimpleDateFormat {
             hour12 = true;
         }
         // do minutes
-        let mn2 = this.mn < 10 ? '0'+this.mn : ''+this.mn;
-        let mn1 = ''+this.mn;
+        let mnil = ''//getFormatPart('minute', 'long')
+        let mnis = ''//getFormatPart('minute', 'short')
+        let mn2 = mnil || this.mn < 10 ? '0'+this.mn : ''+this.mn;
+        let mn1 = mnis || ''+this.mn;
         n = 0;
         while ((n = out.indexOf('mm', n)) !== -1) {
             out = out.replace('mm', mn2)
@@ -489,6 +525,8 @@ export class SimpleDateFormat {
         }
 
         // do milliseconds first
+        let msil = '' //getFormatPart('fractionalSecond', 'long')
+        let msis = '' //getFormatPart('fractionalSecond', 'short')
         let mss;
         if (this.ms < 10) {
             mss = '00'+ this.ms; //009
@@ -503,23 +541,25 @@ export class SimpleDateFormat {
         }
 
         while ((n = out.indexOf('.sss')) !== -1) {
-            out = out.replace('.sss', '.'+mss)
+            out = out.replace('.sss', '.'+(msil||mss))
             n += mss.length+1;
         }
 
         let hnd = mss.substring(0,2)
         while ((n = out.indexOf('.ss')) !== -1) {
-            out = out.replace('.ss', '.'+hnd)
+            out = out.replace('.ss', '.'+(msis||hnd))
             n += hnd.length+1;
         }
         let tnth = mss.substring(1)
         while ((n = out.indexOf('.s')) !== -1) {
-            out = out.replace('.s', '.'+tnth)
+            out = out.replace('.s', '.'+(msis||tnth))
             n += tnth.length+1;
         }
         // do seconds
-        let ss2 = this.ss < 10 ? '0'+this.ss : ''+this.ss;
-        let ss1 = ''+this.ss;
+        let sil = '' //getFormatPart('second', 'long')
+        let sis = '' //getFormatPart('second', 'short')
+        let ss2 = sil || this.ss < 10 ? '0'+this.ss : ''+this.ss;
+        let ss1 = sis || ''+this.ss;
         n = 0;
         while ((n = out.indexOf('ss', n)) !== -1) {
             out = out.replace('ss', ss2)
@@ -546,10 +586,13 @@ export class SimpleDateFormat {
         }
 
         // set the month
-        let mo4 = months[this.mo]
-        let mo3 = monthAbbr[this.mo]
-        let mo2 = this.mo < 10 ? '0'+this.mo : ''+this.mo
-        let mo1 = ''+ this.mo
+        let mil = getFormatPart('month', 'long')
+        let mim = getFormatPart('month', 'medium')
+        let mis = getFormatPart('month', 'short')
+        let mo4 = mil || months[this.mo]
+        let mo3 = mim || monthAbbr[this.mo]
+        let mo2 = mis || this.mo < 10 ? '0'+this.mo : ''+this.mo
+        let mo1 = mis || ''+ this.mo
         n = 0;
         while ((n = out.indexOf('MMMM', n)) !== -1) {
             out = out.replace('MMMM', mo4)
@@ -571,10 +614,14 @@ export class SimpleDateFormat {
             n += mo1.length;
         }
         // set the weekday
-        let wd4 = weekdays[this.wd]
-        let wd3 = weekdayAbbrs[this.wd]
-        let wd2 = weekdayAbbr2[this.wd]
-        let wd1 = weekdayAbbr3[this.wd]
+        let wil = getFormatPart('weekday', 'long')
+        let wim = getFormatPart('weekday', 'medium') || wil
+        let wis = getFormatPart('weekday', 'short')
+
+        let wd4 = wil || weekdays[this.wd]
+        let wd3 = wim ||weekdayAbbrs[this.wd]
+        let wd2 = wis || weekdayAbbr2[this.wd]
+        let wd1 = wis || weekdayAbbr3[this.wd]
         n = 0;
         while ((n = out.indexOf('WWWW', n)) !== -1) {
             out = out.replace('WWWW', wd4)

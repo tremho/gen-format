@@ -279,23 +279,23 @@ function dateFormatTest() {
         x = '1/12/21, 4:00:00 PM PST'
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
-        r = F('date|full-full~es-ES', testDate)
+        r = F('date~es-ES|full-full', testDate)
         x = 'martes, 12 de enero de 2021, 16:00:00 (hora estándar del Pacífico)'
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
-        r = F('date|long-long~es-ES', testDate)
+        r = F('date~es-ES|long-long', testDate)
         x = '12 de enero de 2021, 16:00:00 GMT-8'
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
-        r = F('date|medium-medium~es-ES', testDate)
+        r = F('date~es-ES|medium-medium', testDate)
         x = '12 ene. 2021 16:00:00'
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
-        r = F('date|short-short~es-ES', testDate)
+        r = F('date~es-ES|short-short', testDate)
         x = '12/1/21 16:00'
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
-        r = F('date|short-long~es-ES', testDate)
+        r = F('date~es-ES|short-long', testDate)
         x = '12/1/21 16:00:00 GMT-8'
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
