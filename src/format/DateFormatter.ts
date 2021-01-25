@@ -40,7 +40,10 @@ TODO List for Date
  */
 
 /**
- * For an invalid value passed to the formatter
+ * Error thrown for an invalid value passed to the date formatter.
+ *
+ * This may be due to a string that fails to parse, a non-Date object instance,
+ * an Invalid Date instance, or not a Date or a string.
  *
  * @param message
  * @constructor
@@ -56,6 +59,13 @@ export function BadDateValue(message:string) {
     return new BadDateValue(message)
 }
 
+/**
+ * DateFormatter
+ *
+ * This is the _named handler_ for 'date' formatting.
+ * This main class evaluates the passed value and discerns the desired Date object from this.
+ * It then employs the internal `SimpleDateParser` to represent the date according to format.
+ */
 export default class DateFormatter implements IFormatHandler {
 
     format(specParts: SpecParts, value: any): string {
@@ -223,6 +233,9 @@ const weekdayAbbr2 = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 const weekdayAbbr3 = ['S', 'M', 'T', 'W', 'Th', 'F', 'Sa']
 
 /**
+ * This internal class is the workhorse of DateFormatter.  It transforms a date format string into a correspondingly
+ * formatted Date display utiliing the format components as decribed.  Will utilize `Intl` where appropriate, if available.
+ *
  * format notation:
  *      YYYY = 4 digit year (e.g. 2020)
  *      YYY =  4 digit year, but only show if not the current year
@@ -327,7 +340,8 @@ export class SimpleDateFormat {
             if(this.format.indexOf('full') !== -1
             || this.format.indexOf('long') !== -1
             || this.format.indexOf('medium') !== -1
-            || this.format.indexOf('short') !== -1) {
+            || this.format.indexOf('short') !== -1
+            || this.format.indexOf('none') !== -1 ) {
                 return true
             }
         }
@@ -347,8 +361,14 @@ export class SimpleDateFormat {
             }
         }
         let [dateStyle, timeStyle] = fmt.split('-')
-        let opts:DateTimeFormatOptions
+        if(!timeStyle) timeStyle = dateStyle
+        if(dateStyle === 'none') dateStyle = undefined
+        if(timeStyle === 'none') timeStyle = undefined
+            let opts:DateTimeFormatOptions
         opts = {dateStyle, timeStyle, timeZone} as DateTimeFormatOptions // need to force cast? (bad .d?)
+
+        if(!dateStyle && !timeStyle) return "" // none-none passed
+
         const dtf = new IDTF(this.locale, opts)
         return dtf.format(this.workingDate)
     }
@@ -689,6 +709,15 @@ export class SimpleDateFormat {
 
 //-------------
 
+/**
+ * Picks from the timezone list.
+ * Note: probably unnecessary at this point; it is already
+ * somewhat redundant to findTimezone.
+ * @param tz
+ * @param entries
+ *
+ * @private
+ */
 function pickTimezone(tz, entries) {
     for(let i=0; i<entries.length; i++) {
         const tze = entries[i]
@@ -716,6 +745,8 @@ function pickTimezone(tz, entries) {
 /**
  * Adjust the current time by interval of years
  * @param v
+ *
+ * @private
  */
 function yearMark(v, midnight, top=false) {
     const dt = new Date()
@@ -736,6 +767,8 @@ function yearMark(v, midnight, top=false) {
  * set the date to 4 weeks ahead/back from the current date instead
  * (per setDate)
  * @param v
+ *
+ * @private
  */
 function monthMark(v, midnight, top=false) {
     let dt = new Date()
@@ -758,6 +791,8 @@ function monthMark(v, midnight, top=false) {
 /**
  * Adjust date/time by a relative number of weeks
  * @param v
+ *
+ * @private
  */
 function weekMark(v, midnight, top=false) {
     const dt = new Date()
@@ -773,6 +808,8 @@ function weekMark(v, midnight, top=false) {
 /**
  * Adjust date/time by a relative number of days
  * @param v
+ *
+ * @private
  */
 function dayMark(v, midnight) {
     const dt = new Date()
@@ -784,6 +821,8 @@ function dayMark(v, midnight) {
 /**
  * set time to top of current hour
  * @param v
+ *
+ * @private
  */
 function hourMark(v) {
     const dt = new Date()
@@ -794,6 +833,8 @@ function hourMark(v) {
 /**
  * set time to top of current minute
  * @param v
+ *
+ * @private
  */
 function minuteMark(v) {
     const dt = new Date()
@@ -805,6 +846,8 @@ function minuteMark(v) {
 /**
  * set time to top of current second
  * @param v
+ *
+ * @private
  */
 function secondMark(v) {
     const dt = new Date()
@@ -822,6 +865,8 @@ function secondMark(v) {
  * no time spec results in the current time offset from midnight
  *
  * @param str
+ *
+ * @private
  */
 function parseTimeArg(str) {
     let hr = 0, mn = 0, sn = 0
@@ -870,6 +915,8 @@ function parseTimeArg(str) {
 /**
  * Find the referenced weekday in a string such as 'last Tuesday' or 'next Th'
  * @param str
+ *
+ * @private
  */
 function findWeekdayName(str) {
     let si = str.indexOf(' ')
@@ -889,6 +936,13 @@ function findWeekdayName(str) {
     }
 }
 
+/**
+ * Move to the last occurrence of the given weekday prior to the current day
+ * @param wd
+ * @param midnight
+ *
+ * @private
+ */
 function lastWeekday(wd, midnight) {
     let ndt = new Date()
     let nwd = ndt.getUTCDay()
@@ -901,6 +955,13 @@ function lastWeekday(wd, midnight) {
     return dt.getTime()
 }
 
+/**
+ * Move forward to the next occurrence of the given weekday
+ * @param wd
+ * @param midnight
+ *
+ * @private
+ */
 function nextWeekday(wd, midnight) {
     let ndt = new Date()
     let nwd = ndt.getUTCDay()
@@ -913,6 +974,13 @@ function nextWeekday(wd, midnight) {
     return dt.getTime()
 }
 
+/**
+ * move forward or back to to named weekday within the current week
+ * @param wd
+ * @param midnight
+ *
+ * @private
+ */
 function thisWeekday(wd, midnight) {
     let dt = new Date(weekMark(0, midnight, true)) // reset to sunday of this week or next week
     dt.setUTCDate(dt.getUTCDate()+wd) // move forward to selected day

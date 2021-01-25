@@ -1,6 +1,12 @@
 import {IFormatHandler, SpecParts, IncompatibleValueType} from "../Formatter";
 
-export default class NumberFormatter implements IFormatHandler {
+/**
+ * StringFormatter
+ *
+ * Standard formatter for the padding, truncation, and alignment of strings
+ *
+ */
+export default class StringFormatter implements IFormatHandler {
 
     format(specParts: SpecParts, value: any): string {
         let out: string = ''

@@ -7,27 +7,35 @@ const IDTF = Intl && Intl.DateTimeFormat
 const IRTF = Intl && Intl.RelativeTimeFormat
 
 
+/**
+ * DateRangeFormatter
+ *
+ * This is the _named handler_ for 'daterange' formatting.
+ *
+ * Evaluates the date format passed and uses this to group common aspects as implied by the given format
+ * and then applies the group-separated formatting to the start and end dates of the range.
+ * Uses `Intl` where appropriate and available.
+ */
 export default class DateRangeFormatter implements IFormatHandler {
 
     format(specParts: SpecParts, value: any): string {
         let out: string = ''
-
-        if(typeof value === 'object') {
-            if(!value.hasOwnProperty('startDate') && !value.hasOwnProperty('endDate')) {
-                if(!(value instanceof Date)) {
-                    throw BadDateValue('daterange must be a Date, date string, or {startDate, endDate} object')
-                } else {
-                    // if we pass a date, it is combined in range with 'now'
-                    value = {startDate: value, endDate: 'now'}
-                }
+        if(Array.isArray(value)) {
+            if(value.length !== 2) {
+                throw BadDateValue('daterange must be an array of two Date, or date string, or date milllisecond values')
             }
        } else {
-            // if we pass a date, it is combined in range with 'now'
-            value = {startDate: value, endDate: 'now'}
+            // if we pass a single value, it is assumed to be a date and combined in range with 'now'
+            if((typeof value === 'object' && value instanceof Date)
+             || (typeof value === 'string' || typeof value === 'number')) {
+                value = [value, 'now']
+            } else {
+                throw BadDateValue('daterange with one relative argument must be a Date, date string, or date milllisecond value')
+            }
         }
 
 
-        let {startDate, endDate} = value
+        let [startDate, endDate] = value
         let endIsNow, startIsNow
 
         // if we use they 'now' keyword, default to current time
@@ -241,6 +249,12 @@ class DurationParts {
     
 }
 
+/**
+ * Break down the interval into a DurationParts object that describes the span in graduated unite of time.
+ * @param ms
+ *
+ * @private
+ */
 function getDurationParts(ms):DurationParts {
 
     let out = new DurationParts()
@@ -274,6 +288,18 @@ function getDurationParts(ms):DurationParts {
     return out
 }
 
+/**
+ * Break down the parts and structure a duration display in the proper semantics
+ * based on the options.  Use Intl where appropriate; format our own where not.
+ *
+ * @param dparts
+ * @param locale
+ * @param specParts
+ * @param isHuman
+ * @param relStyle
+ *
+ * @private
+ */
 function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
     let out = ''
     const express = (value, type, abbr) => {
@@ -297,7 +323,7 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
     if(!isHuman) {
         // the formatToParts doesn't help us here because that just (uselessly) deconstructs the semantics of the sentence,
         // and does not give us values in the formats we want.
-        // Instead: (todo: change from format to 'digital' hint or non-human)
+        // Instead:
         // find largest. display n yr., n mo., n dy., h:m:s  or mininum 0:ss.sss (use in or ago per sign)
         let out = dparts.sign > 0 ? 'in ' : ''
         if (dparts.years) express(dparts.years, 'year', 'yr')

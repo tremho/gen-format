@@ -1,5 +1,11 @@
 import {IFormatHandler, SpecParts, IncompatibleValueType} from "../Formatter";
 
+/**
+ * NumberFormatter
+ *
+ * Standard formatter for displaying numbers with various precision and alignment formatting
+ *
+ */
 export default class NumberFormatter implements IFormatHandler {
 
     format(specParts:SpecParts, value:any):string {
