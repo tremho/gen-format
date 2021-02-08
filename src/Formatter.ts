@@ -181,6 +181,7 @@ function decodeSpec(str:string):SpecParts {
         if(fe <= fi) fe = str.length
         specParts.format = str.substring(fi+1, fe)
     }
+    if(!specParts.type) specParts.type = 'string' // default to string formatter
     return specParts
 }
 

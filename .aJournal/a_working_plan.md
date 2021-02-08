@@ -248,8 +248,10 @@ Branch after that:
 - [X] Bug: use of _style_ formats results in cast to local time.
 - [X] change daterange to use array
 
-- [ ] typescript .d 
+- [X] typescript .d
+    - not needed if we export the .ts as we have it
 - [ ] external module import and example cases
+    - Started; working.
 
 -------------
 test and/or accommodate:

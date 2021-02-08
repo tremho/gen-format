@@ -183,7 +183,16 @@ function moreTest() {
         r = F('date?local|full', dt)
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
-
+        // format bug investigation
+        const foo = {
+            foo:'foo',
+            bar: {
+                value: 'world'
+            }
+        }
+        r = formatV('This is a test of object output default $(,),$(,),$(,),$(,),$(,),$(,)', foo, 'hello world', Math.PI, ['apple', 'banana', 'cherry'], null, { more: 'stuff' })
+        x = 'This is a test of object output default [object Object],hello world,3.141592653589793,apple,banana,cherry,,[object Object]'
+        t.ok(r === x, `expected "${x}", got "${r}"`)
 
 
         t.end()

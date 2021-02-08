@@ -759,6 +759,7 @@ function yearMark(v, midnight, top=false) {
     return dt.getTime()
 }
 
+const daysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31]
 /**
  * Adjust the current time by interval of months
  * where (n) is the month relative to current month.
@@ -775,6 +776,10 @@ function monthMark(v, midnight, top=false) {
     let curMo = dt.getUTCMonth()
     let newMo = curMo + v
     let date = dt.getUTCDate()
+    if(date > daysInMonth[newMo]) {
+        date += v*28
+        newMo = curMo
+    }
     if(newMo < 0 || newMo > 11) {
         let yo = /*newMo < 0 ? Math.ceil(newMo/12) :*/ Math.floor(newMo/12)
         dt = new Date(yearMark(yo, midnight))

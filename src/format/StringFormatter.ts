@@ -12,10 +12,21 @@ export default class StringFormatter implements IFormatHandler {
         let out: string = ''
         if(typeof value !== 'string') {
             if(!value) return '' // null and undefined just result in empty string
-            throw IncompatibleValueType(`expected string, got ${typeof value}`)
+            if(typeof value === 'object') {
+                value = value.toString()
+            }
+            if(typeof value !== 'string') {
+                if(typeof value === 'number') {
+                    value = ''+value
+                } else {
+                    throw IncompatibleValueType(`expected string, got ${typeof value}`)
+                }
+            }
         }
 
         let [minStr, maxStr] = specParts.format.split(',')
+        if(!minStr) minStr = ''
+        if(!maxStr) maxStr = ''
         let m = minStr.match(/[0-9]/)
         let ni = m ? minStr.indexOf(m[0]) : minStr.length
         let minValStr = minStr.substring(ni)
