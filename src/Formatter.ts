@@ -1,46 +1,23 @@
 
-/*
-Construction types
-
-F(spec, value)
-
-old spec def:
-hint | format | locale
-
-###### new spec definition:
-Tags:
-    - `?` hint
-    - [`!`] format  ! optional and assumed @0 if not found
-    - `~` locale 
-    
-Nominal form:
-    format [?hint][~locale]
-alternately:
-    ?hint!format~locale
-or
-    ~locale!format?hint
-or
-    ~locale?hint!format
-    
-[number] comma [number] == string type    
-[number] period [number] == number type
-no comma or period = type name
-
-supports:
-
-    F('10,20') - comma indicates string type
-    F('2.2') - period indicates number type
-    F('date!hh::mm::ss~jp') - date type , with format and locale
-    F('>10<') string type because of > form
-    F('2. >4) number type because of period (then padded)
+/**
+ * Object that holds the parsed results of the format specification
+ *
+ * - hints: a string array that holds each hint as specified by ?hint1-hint2-hint3-etc
+ * - type: the named type of this format specification (and thus handler)
+ * - format: the passed format string (after the |)
+ * - locale: the passed locale (after the ~)
  */
-
 export class SpecParts {
     hints:string[]
     type:string
     format:string
     locale:string
 }
+
+/**
+ * Base class that all constituent 'named' format handlers derive from.
+ * Uts sole contract is the `format` function
+ */
 export interface IFormatHandler {
 
     /**
@@ -54,9 +31,38 @@ export interface IFormatHandler {
 }
 const registeredHandlers:any = {}
 
+/**
+ * Attaches a format handler to the general Formatter choices
+ * May be used to create a unique `IFormatHandler` instance as a new named type
+ * @param type
+ * @param handler
+ *
+ * @example
+ *      class MyFoobarFormatter extends IFormatHandler) {
+ *          format(specParts:SpecParts, value:any):string {
+ *              return 'FUBAR!'
+ *          }
+ *      }
+ *      registerFormatHandler('foobar', MyFoobarFormatter)
+ */
 export function registerFormatHandler(type:string, handler:IFormatHandler) {
     registeredHandlers[type] = handler
 }
+
+/**
+ * The primary export of the gen-format module: The `Formatter` operation (sometimes `F` as shorthand)
+ * is represented by this function
+ *
+ * _describe specification format semantics here, and type identification_
+ *
+ * @param spec The format specifier string.
+ * @param value THe value to be formatted
+ *
+ * @example
+ *      import F from 'gen-format
+ *
+ *      console.log( F('date|full', 'now') )
+ */
 export default function formatFactory(spec:string, value:any) {
 
     let specParts: SpecParts = decodeSpec(spec)
@@ -68,7 +74,7 @@ export default function formatFactory(spec:string, value:any) {
 }
 
 /**
- * For a specified type that does not exist
+ * Error thrown for a specified type that does not exist
  *
  * @param message
  * @constructor
@@ -85,7 +91,7 @@ export function UnknownFormatType(message:string) {
 }
 
 /**
- * For the wrong type of value passed to a handler
+ * Error thrown for the wrong type of value passed to a handler
  *
  * @param message
  * @constructor
@@ -102,7 +108,7 @@ export function IncompatibleValueType(message:string) {
 }
 
 /**
- * For a syntax error in the format specifier
+ * Error thrown for a syntax error in the format specifier
  *
  * @param message
  * @constructor
@@ -119,6 +125,12 @@ export function BadFormatSpecifier(message:string) {
 }
 
 
+/**
+ * Parses the format specifier into SpecParts object for processing
+ * @param str
+ *
+ * @private
+ */
 function decodeSpec(str:string):SpecParts {
     let fi = str.indexOf('|') // format, explicit
     let hi = str.indexOf('?') // hint list, dash delimited
@@ -145,6 +157,7 @@ function decodeSpec(str:string):SpecParts {
         if(te === -1) te = fi
         if(te === -1) te = str.length
         specParts.type = str.substring(0, te)
+        if(fi == -1) fi = str.length;
     }
     // TODO: Consider allowing either period or comma and using the value to determine type
     
@@ -168,6 +181,7 @@ function decodeSpec(str:string):SpecParts {
         if(fe <= fi) fe = str.length
         specParts.format = str.substring(fi+1, fe)
     }
+    if(!specParts.type) specParts.type = 'string' // default to string formatter
     return specParts
 }
 
@@ -175,11 +189,17 @@ function decodeSpec(str:string):SpecParts {
 import {parseFormat, applyItems} from './format/TemplateFormatter'
 
 /**
- * use a format string and passed arguments to create
+ * Use a format template string and passed arguments to create
  * a formatted output
  *
- * @param fmt
- * @param args
+ * @param fmt The first parameter is a string that defines the format template
+ * @param args Subsequent arguments represent the value sources that are represented
+ *
+ * @example
+ *
+ *      import {formatV} from 'gen-format'
+ *
+ *      formatV("Pi day, $(date|MMM DD} honors the value Pi which is $(1.2)", '2021-03-14Z', Math.PI)
  */
 export function formatV(fmt:string, ...args):string {
     const items = parseFormat(fmt)

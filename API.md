@@ -1,0 +1,759 @@
+# gen-format API Reference
+
+##### What is a format operation?
+
+A _format operation_ is a single act of converting a value into
+a _formatted display string_ according to the _format specification_ 
+provided.
+
+The default export of the `gen-format` module is the _primary formatter_
+and will perform a single format operation each time it is called.
+
+Typescript:
+
+```typescript
+import F from 'gen-format'
+
+let result:string = F('1.2', Math.PI)
+// result = "3.14"
+```
+
+If you are not using typescript or ES6 imports:  
+
+```javascript
+var F = require('gen-format')
+
+var result = F('1.2', Math.PI)
+// result = "3.14"
+```
+
+A _format operation_ is defined by its _format specifier_ and its _value_
+
+###### The _format specifier_
+
+The string passed as the format specifier may consists of several parts:
+
+_name_?_hints_~_locale_\|_format_
+
+The `name` component, if given, is the first part of the format specifier.
+It need not be used for string or number formatting, as these types are
+determined by inference. It must be used for other types, such as 'date'.
+
+If the named format accepts hints, these may be passed in the
+format specifier string following a '?' character after the name.
+One or more hint keywords may be passed to the formatter in this way, by
+separating subsequent hints with a dash (-).  
+For example: `"name?hint1-hint2-hint3"`
+
+Most formatters accept a _format string_ that encodes a description
+for display of the given value.  If a formatter name is given, the
+format portion of the format specifier is delimited with the vertical pipe (|) character.
+For example: `"date|YYYY MMM DD"`
+
+Locale-aware formatters will accept a 'locale' string passed
+following a tilde (~) character in the format specification string.
+For example: `"date~fr|long"`
+
+locales are specified by the common [IETF BCP 47](https://tools.ietf.org/html/bcp47) standard locale string (2-letter lowercase language code,
+optionally followed by a dash and a 2-letter uppercase country code,
+as in en-US, or jp-JP).  The `date` formatter will accept certain unicode
+extensions also.  See the **DateFormatter** API docmentation.
+
+* * *
+
+### using the _Formatter_ directly vs. using _formatV_
+
+There are two basic ways to generate formatted output. One
+is to use the direct export of `gen-format` to perform a single
+_format operation_ on a value and return the formatted string.
+
+It is sometimes convenient to import the formatter to a short variable
+name (such as 'F') so that it is easy to type and doesn't appear overly
+awkward in code statements that use it often.
+Some examples of using this form:
+
+(typescript)
+
+```typescript
+import F from 'gen-format'
+
+let pi = Math.PI
+let piFmt = F(`1.2`, pi)
+
+console.log('The value of Pi is '+ piFmt)
+```
+
+The 'F' form may be handy for use with Javascript _Template Literal_ strings,
+like this:
+
+```typescript
+import F from 'gen-format'
+
+let name = 'Pi'
+let value = Math.PI
+
+console.log( `The value of ${name} is ${F('1.2', value)}` 
+```
+
+However, if you are composing formatted values into strings like
+this often, you may prefer to use the `formatV` function instead.
+
+The `formatV` function is also imported from the `gen-format` module, 
+but it is not the direct export, so it must be imported indirectly
+using one of these methods:
+
+`import {formatV} from 'gen-format`
+
+or 
+
+`const {formatV} = require('gen-format')`
+
+or
+`var formatV = require('gen-format').formatV`
+
+The _formatV_ function accepts a _format template string_ that defines
+the formats and positions within the string for values that are passed
+as subsequent arguments.
+
+This form is reminiscent of other similar formatter functions found across
+several languages, such as the _sprintf_ function of 'C'.
+
+The _format template string_ passed as the first parameter to 
+_formatV_ is typically a mixture of literal text and one or more _format
+directives_.
+for example:
+
+```typescript
+import {formatV} from 'gen-format'
+
+let outStr = formatV('The value of $() is $(1.2)', 'Pi', Math.PI)
+// outStr == 'The value of Pi is 3.14'
+```
+
+the dollar sign and parentheses patterns in the template string
+designate areas where values will be inserted, and the characters
+between the parentheses (if any) represent the _format specification_ to apply when 
+displaying this value.
+
+###### values associated by natural order
+
+In the following example, the values are pulled from the argument list
+in the order in which they are referenced in the template string.
+
+```typescript
+import {formatV} from 'gen-format'
+
+let weather = 'rain'
+let place = 'Spain'
+let terrain = 'plain'
+
+console.log(formatV('The $() in $() is mainly in the $()', weather, place, terrain))
+```
+
+###### values associated by declaration
+
+Sometimes, the order your parameters are in is not necessarily how
+you wish to refer to them in the format template.  For this case, one
+option is to provide the _ordinal number_ of the value following the
+dollar-sign ($), but prior to the parentheses, like this:
+
+```typescript
+import {formatV} from 'gen-format'
+
+let animal = 'horse'
+let vehicle = 'cart'
+
+console.log(formatV('We are putting the $2() before the $1() here', animal, vehicle)
+```
+
+###### values associated by name
+
+Yet another way is to pass values as properties in an object, and then
+refer to those values by thier property name, as in this example:
+
+```typescript
+import {formatV} from 'gen-format'
+
+let obj = {
+    animal: 'horse',
+    vehicle: 'cart',
+    weather: 'rain',
+    place: 'Spain',
+    terrain: 'plain' 
+}
+
+console.log(formatV('the $animal() pulled his $vehicle() along the $terrain() in $place(), where it would often $weather()', obj)
+```
+
+###### Empty parentheses
+
+Several of the examples above use empty parentheses (no format specifier).
+This is commonly used to display a value without any formatting applied.
+The value may be a string or a number.  In the above examples, these have
+all been strings meant to simply 'pass through' and be placed into the template
+at the designated position.
+
+* * *
+
+## Types of formatters
+
+The formatter type may be designated in the _format specifier_ in
+the _type_ portion, but for strings and number, this name can be
+omitted as the format type will be inferred for these type.
+
+* * *
+
+### The Number formatter
+
+The number formatter is handled by the **NumberFormatter** class.
+
+Number and String types do not need to be explictly named.  The _format specifier_ passed for
+a Number or String type typically consists solely of the _format_ portion.
+
+The Number format type recognizes no hint keywords.
+
+A locale _may_ be passed to a number formatter, as this information may inform the 
+choice of decimal or thousands separation characters appropriate for the display locale.
+a locale is passed using the tilde (~) character either at the end of the _format specifier_ string
+or prior to a | separator that marks the start of the _format_ portion.
+
+##### Basic numeric format
+
+_integer_._decimal_
+
+A Number format is indicated by the presence of a period (.) character in the _format_ string.
+This period character separates the formatting information applied to the _integer_ portion of
+the number frmo the formatting information to apply to the _decimal_ portion of the number.
+
+These format values are numbers:  The max number of digits to reserve for display of the integer
+portion, or the max number of digits to include for the fractional (decimal) portion of the number
+display.
+
+For example, the number 123.456789 may be displayed in full with the format `"4.6"` since this
+allows for four characters of integer display and five for the decimal portion.
+Similarly, the value 1234.56789 would also fit this display, and if aligned to the previous
+formatted value, would align at the decimal point positions because the smaller value, having
+only three digits in its integer portion would be padded with a leading space.  For the larger value,
+the format accommodates its four-digit integer without padding.
+
+If the integer portion of a number is too large to fit into the specified format, # characters
+will be displayed to fill the size of the format allotment, signifying an overflow error.
+For example `F('2.0`, 1234)\` results in '##' because 1234 cannot be represented in two digits.
+
+The absence of a number on either side of the period indicates unconstrained display.  That is, 
+a format of ".3" would allow any size integer, but limit the display to a maximum of three decimal places, 
+whereas a format of "3." would limit integers to a max of 999, but allow unconstrained decimal place display.
+
+An empty format or one consisting of simply "." does not assign a format contraint to the given
+number.
+
+###### Value rounding
+
+Values displayed are rounded up to fit the number of displayed
+digits.
+
+For example, Pi (3.1415927) displayed using format "1.3" will display as 
+3.142, because the next digit, (5) is rounded up.
+Displayed as "1.2" displays 3.14, becuase the next digit (1) does
+not round up.
+Similarly, the value 1.6 displayed with format "1.0" will display 
+as "2" due to rounding.
+To disable rounding, use the ! flag, as shown in the table below.  
+For example: F("!1.0", 1.6) === "1" because rounding is disabled.  
+
+###### Flags
+
+This table lists flags that can be included in the format
+for number formatting:
+
+| flag              | Purpose                                                         | Example                                                                                     |
+| ----------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| !                 | Do not perform rounding of value                                | F("1.3", Math.PI) === "3.142"                                                               |
+| 0                 | use leading zeroes on integer                                   | F("02.3", Math.PI) === "03.142"                                                             |
+| + <br/>(on left)  | show + on positive numbers<br/>(Negative numbers always show -) | F("+1.3", Math.PI) === "+3.142"<br/>F("1.3", -Math.PI) === "-3.142"                         |
+| + <br/>(on right) | pad decimal with trailing 0's to full width                     | F("1.3", 0.5) === "0.500"                                                                   |
+| k                 | use thousands separator                                         | F("k4.0", 1234) === "1,234"                                                                 |
+| - <br/>(on left)  | No alignment padding on left                                    | F("-4.2", 12.34) === "12.34",<br/>instead of  "  12.34"                                     |
+| - <br/>(on left)  | No alignment padding on right                                   | F("3.4-", 12.34) === " 12.34",<br/>instead of  " 12.34  "<br/>F("-2.4-", 12.34) === "12.34" |
+
+<br/>
+
+* * *
+
+### The String formatter
+
+The string formatter is handled by the **StringFormatter** class.
+
+Number and String types do not need to be explictly named.  The _format specifier_ passed for
+a Number or String type typically consists solely of the _format_ portion.
+
+The string formatter is limited to alignment padding of strings
+No hints are recognized, and a passed locale has no effect on the string formatter.
+
+##### Basic string format
+
+_min_,_max_
+
+A String format is indicated by the presence of a comma (,) character in the _format_ string.
+This comma character separates the value for the minimum length of the display string and
+the value for the maximum allowable length of the string.  
+
+These format values are numbers:  The max number of digits to reserve for display of the integer
+portion, or the max number of digits to include for the fractional (decimal) portion of the number
+display.
+
+For example, the format "3,7" applied to the values "This", "is", "a", "test" and "Excellent!"
+would result in display strings of
+
+-   "This"
+-   "is "
+-   "a  "
+-   "test"
+-   "Excelle"
+
+Note that string values shorter than the minimum (3 characters) are
+padding on the right to reach that length.
+The string value "Excellent!" exceeds the maximum (7 characters), and
+thus is truncated to its first seven characters.
+
+The default, as shown above, is to left-align the strings.
+Strings may be right-aligned by including a space preceding
+the format, like this:
+
+     F(" 10,10", 'test') === "      test"
+
+to pad with something other than a space, use that character instead
+
+     F("-10,10", 'test') === "------test"
+
+pad characters can be assigned to either side:
+
+     F("10,10>", 'test') === "test>>>>>>"
+
+text may be centered by padding both sides:
+
+     F(" 10,10 ", "test") === "   test   "
+
+padding may be a multiple character string:
+
+     F("Xo10,10", "test") ==== "XoXoXotest"
+
+* * *
+
+### The Date formatter
+
+Formatting dates and times is handled by the **DateFormatter** class.
+
+The date formatter is a named formatter, and requires its type
+name to be explicitly specifies as the first part of the
+_format specification_ string.
+
+For example: F("date|full", new Date()) will display the 
+current date and time in a verbose format.
+
+the `date` type formatter accepts hints and reacts to locale
+values.  Both of these options are discussed below.
+
+##### Basic date format
+
+date?_hint_~_locale_ \|_format_
+
+Let's look at the options for _format_ first.  There are many.
+For starters, date formats can be specify in two different ways.
+One is to use the set of predefined _style_ keywords that define the 
+way the date is to be formatted for display.  These style
+keywords are:
+
+-   **full**
+-   **long**
+-   **medium**
+-   **short**
+    \_ **none**
+
+With the exception of `none`, these _style_ keywords are used directly when the DateFormatter hands off
+to the `Intl` library for implementation.
+Refer to the documentation for [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat)
+for more information on this and how the _style_ keywords apply.
+
+_style_ keywords apply to both the date portion of the display and the
+time portion of the display.  These may be applied to date and time
+independently, however.  For example, a format directive of 'short-full'
+would apply the 'short' style to date and the 'full' style to time in the
+resulting display.  Use of a single style keyword applies that style to
+both date and time.  That is, 'long-long' is the same as 'long'
+To omit the display of either date or time, specify `none` as the
+keyword for this portion, for example: 'none-long' would produce a time
+display only.  Note that 'none-none' results in an empty display.
+
+###### Timezone hints
+
+The only _hint_ the Date formatter recognizes is one that specifies
+the desired timezone for the display.
+
+To display a time in a specific timezone, enter the name or the abbreviation
+of that timezone as a hint in the _format specification_.
+If no timezone hint is given, the timezone displayed will depend upon
+the type of format used: If using one of the _style_ keywords, the default
+timezone is your current system local timezone.  If using the specific
+format tokens form, the default timezone will be Univeral Time (UTC / GMT).
+
+To control which timezone the time is displayed for, pass either the
+IANA 'representative city' name (e.g. America/Los Angeles), or else
+the name of the time zone (e.g. Pacific, or Pacific Standard Time), or
+else the abbreviation (e.g. PST) as a hint. Daylight time names and abbreviations
+are conflated with Standard time for this purpose of identification, so
+specifying either 'EST' or 'EDT' with both represent US Eastern Time,
+aka America/New York, at any time of year.  The time displayed will be correct
+for the currently observed regional time, as the host system is
+timezone aware and handles these offsets automatically.
+
+For example, the time of ten minutes after midnight in Universal Time
+on January 25, 2021 in different time zones:
+
+    import F from 'gen-format'
+
+    const dt = '2021-01-25T:00:10:00Z'
+    console.log( F('date?gmt|full', 'dt') )
+    console.log( F('date?est|full', 'dt') )
+    console.log( F('date?cst|full', 'dt') )
+    console.log( F('date?mst|full', 'dt') )
+    console.log( F('date?pst|full', 'dt') )
+    console.log( F('date?local|full', 'dt') )
+    console.log( F('date|full', 'dt') )
+
+    // Monday, January 25, 2021 at 12:10:00 AM Greenwich Mean Time
+    // Sunday, January 24, 2021 at 7:10:00 PM Eastern Standard Time
+    // Sunday, January 24, 2021 at 6:10:00 PM Central Standard Time
+    // Sunday, January 24, 2021 at 5:10:00 PM Mountain Standard Time
+    // Sunday, January 24, 2021 at 4:10:00 PM Pacific Standard Time
+    // <Whatever your local timezone display is>
+    // <Whatever your local timezone display is>
+
+###### examples:
+
+TODO
+
+-   full
+-   long
+-   medium
+-   short
+
+##### Specifically defined date and time formats:
+
+A popular Date format utility called 'Moment' has been often used in Javascript applications to
+format date and time.  Some of what 'Moment' offers has been 
+superceded by the (usually built-in) functionality of the 'Intl' libraries,
+but there is still much utility (and legacy need) for applications
+to declare more precisely how date and time elements should be
+reresented in a display string.
+
+Thus, `gen-format` offers a _moment-inspired_ (but note: not neccesarily _moment-compatible_)
+syntax for specifying date and time formats distinctly.
+
+This is done with tokens in the _format_ directive string for year, month,
+day, hour, minute, second, and other elements that may be within a
+Date() value.  Each token represents a display type, like Year or Month,
+and the number of times its representative letter is repeated determines
+the _style_ of this display.  Most token values have more than one style in which
+they can be represented.
+
+For example: MMMM means "Spell out the name of the month in full" (e.g. "January")<br/>
+   whereas    MMM means "Spell out the abbreviated name" (e.g. Jan)
+    and        MM means "Show the month vale as two digits" (e.g. 01)
+    and         M means "Show the month value without leading 0" (e.g. 1)
+
+The full list of this type of format option is here:
+
+        YYYY = 4 digit year (e.g. 2021) 
+        YYY =  4 digit year, but only show if not the current year 
+        YY = 2 digit year (e.g. 20) 
+        Y =  2 digit year only shown if not the current year 
+        (if a year is not shown, characters in format beyond are skipped until the next parse token) 
+
+        MMMM = full name of month (e.g. 'February') 
+        MMM = abbreviated name of month (3 letters, e.g. 'Feb') 
+        MM = 2 digit month (leading 0) (e.g. 02) 
+        M = 1-2 digit month (no leading 0) (e.g. 2) 
+
+        WWWW = Full weekday name (e.g. 'Saturday') 
+        WWW = three letter weekday abbreviation (e.g. 'Sat') 
+        WW = two letter weekday abbreviation (uncommon) (e.g. 'Mo', 'Sa') 
+        W = 1 - 2 letter weekday abbreviation (e.g. 'M', 'Th') 
+
+        DD = 2 digit day, with leading 0 
+        D = 1 - 2 digit day, no leading 0 
+
+        hhhh = 24 hour time, leading 0 
+        hhh = 24 hour time, no leading 0 
+        hh = 12 hour time, leading 0 
+        h  = 12 hour time, no leading 0 
+
+        m = minutes with leading 0 
+        m = minutes without leading 0 
+
+        ss = seconds with leading 0 
+        s  = seconds witout leading 0 
+
+        .sss = milliseconds (includes the .) 
+        .ss` = 1/100th seconds (includes the .) 
+        .s   = 1/10th seconds (includes the .) 
+
+        ++ = AM/PM notation (upper case) 
+        -- = am/pm (lower case) 
+        -+ - PM only (upper case) [ AM not shown ]
+        +- = pm only (lower case) [ am not shown ] 
+
+        x = milliseconds (as an integer without a period) 
+
+        j = javascript standard millisecond timestamp 
+        u = unix standard second timestamp 
+
+ Please note that some options, like YYY or Y _will display nothing_
+if the conditions are not correct (in this case, current year).
+Please keep this in mind when choosing format options for the situation
+at hand.
+
+Note also that the options j, and u represent alternate representations
+of the complete date/time value, rather than a portion thereof, while
+'x' represents only the millisecond value.
+
+###### Default timezone
+
+As noted above in the discussion of _style_ keyword formats,
+use of these specific format tokens will force the default time
+to be displayed in a Universal Time (UTC / GMT) timezone rather
+than local time, by default.  Use a timezone hint (e.g. `'date?pst| -- '`) to 
+control the timezone displayed.
+
+###### Other characters in format string
+
+Other characters that appear in the format string, such as /, - or
+: dividers, or other appear in place within the restulting display
+string.  Avoid using characters from the token list for such 
+purposes.  
+
+###### Reminder to Moment users
+
+Users of _moment_ will quickly recognize the inspiration for these
+format tokens, but will also quickly realize that while similar and
+in some cases the same, the semantics used here are _not_ those of
+_moment_, and some work will indeed be necessary in the case of migrating
+format descriptions designed to work in a _moment_ environment.
+
+###### Localization usage
+
+For maximum portability across different locales, one should prefer the use
+of the _style_ keywords, rather than forming a date display template directly.
+The display format, and of course, the language, may differ per
+locale, and while language may be properly translated for the
+direct tokens, the layout is up to you.  Use of the _style_ keywords
+means you will get an appropriate display for the chosen context
+for any locale.
+
+Furthermore, unicode extensions for numbering system (-nu-) and calendar
+type (-ca-) are recognized by the underlying `Intl` library and
+may be further used to customize locale handling for certain
+areas.  See [Intl.DateTimeFormat locale documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat#using_locales)
+for more information.
+These locale extensions are not recognized by the direct format option.
+
+###### examples:
+
+TODO
+
+-   a few different formats
+-   variation on am/pm
+-   show timezone
+
+### Date Ranges
+
+### Date differences
+
+# API
+
+<!-- Generated by documentation.js. Update this documentation by updating the source code. -->
+
+## BadDateValue
+
+Error thrown for an invalid value passed to the date formatter.
+
+This may be due to a string that fails to parse, a non-Date object instance,
+an Invalid Date instance, or not a Date or a string.
+
+### Parameters
+
+-   `message`  
+
+## DateFormatter
+
+DateFormatter
+
+This is the _named handler_ for 'date' formatting.
+This main class evaluates the passed value and discerns the desired Date object from this.
+It then employs the internal `SimpleDateParser` to represent the date according to format.
+
+## SimpleDateFormat
+
+This internal class is the workhorse of DateFormatter.  It transforms a date format string into a correspondingly
+formatted Date display utiliing the format components as decribed.  Will utilize `Intl` where appropriate, if available.
+
+format notation:
+     YYYY = 4 digit year (e.g. 2020)
+     YYY =  4 digit year, but only show if not the current year
+     YY = 2 digit year (e.g. 20)
+     Y =  2 digit year only shown if not the current year
+     (if a year is not shown, characters in format beyond are skipped until the next parse token)
+
+     MMMM = full name of month (e.g. 'February')
+     MMM = abbreviated name of month (3 letters, e.g. 'Feb')
+     MM = 2 digit month (leading 0) (e.g. 02)
+     M = 1-2 digit month (no leading 0) (e.g. 2)
+
+     WWWW = Full weekday name (e.g. 'Saturday')
+     WWW = three letter weekday abbreviation (e.g. 'Sat')
+     WW = two letter weekday abbreviation (uncommon) (e.g. 'Mo', 'Sa')
+     W = 1 - 2 letter weekday abbreviation (e.g. 'M', 'Th')
+
+     DD = 2 digit day, with leading 0
+     D = 1 - 2 digit day, no leading 0
+
+     hhhh = 24 hour time, leading 0
+     hhh = 24 hour time, no leading 0
+     hh = 12 hour time, leading 0
+     h  = 12 hour time, no leading 0
+
+     m = minutes with leading 0
+     m = minutes without leading 0
+
+     ss = seconds with leading 0
+     s  = seconds witout leading 0
+
+     .sss = milliseconds (includes the .)
+     .ss` = 1/100th seconds (includes the .)
+     .s   = 1/10th seconds (includes the .)
+
+     ++ = AM/PM notation (upper case)
+     -- = am/pm (lower case)
+     -+ - PM only (upper case)
+     +- = PM only (lower case)
+
+     x = milliseconds (as an integer without a period)
+
+     j = javascript standard millisecond timestamp
+     u = unix standard second timestamp
+
+     all other characters are kept in place for format display. Do not use format characters elsewhere.
+
+## DateRangeFormatter
+
+DateRangeFormatter
+
+This is the _named handler_ for 'daterange' formatting.
+
+Evaluates the date format passed and uses this to group common aspects as implied by the given format
+and then applies the group-separated formatting to the start and end dates of the range.
+Uses `Intl` where appropriate and available.
+
+## NumberFormatter
+
+NumberFormatter
+
+Standard formatter for displaying numbers with various precision and alignment formatting
+
+## StringFormatter
+
+StringFormatter
+
+Standard formatter for the padding, truncation, and alignment of strings
+
+## SpecParts
+
+Object that holds the parsed results of the format specification
+
+-   hints: a string array that holds each hint as specified by ?hint1-hint2-hint3-etc
+-   type: the named type of this format specification (and thus handler)
+-   format: the passed format string (after the |)
+-   locale: the passed locale (after the ~)
+
+## registerFormatHandler
+
+Attaches a format handler to the general Formatter choices
+May be used to create a unique `IFormatHandler` instance as a new named type
+
+### Parameters
+
+-   `type`  
+-   `handler`  
+
+### Examples
+
+```javascript
+class MyFoobarFormatter extends IFormatHandler) {
+         format(specParts:SpecParts, value:any):string {
+             return 'FUBAR!'
+         }
+     }
+     registerFormatHandler('foobar', MyFoobarFormatter)
+```
+
+## formatFactory
+
+The primary export of the gen-format module: The `Formatter` operation (sometimes `F` as shorthand)
+is represented by this function
+
+_describe specification format semantics here, and type identification_
+
+### Parameters
+
+-   `spec`  The format specifier string.
+-   `value`  THe value to be formatted
+
+### Examples
+
+```javascript
+import F from 'gen-format
+
+     console.log( F('date|full', 'now') )
+```
+
+## UnknownFormatType
+
+Error thrown for a specified type that does not exist
+
+### Parameters
+
+-   `message`  
+
+## IncompatibleValueType
+
+Error thrown for the wrong type of value passed to a handler
+
+### Parameters
+
+-   `message`  
+
+## BadFormatSpecifier
+
+Error thrown for a syntax error in the format specifier
+
+### Parameters
+
+-   `message`  
+
+## formatV
+
+Use a format template string and passed arguments to create
+a formatted output
+
+### Parameters
+
+-   `fmt`  The first parameter is a string that defines the format template
+-   `args`  Subsequent arguments represent the value sources that are represented
+
+### Examples
+
+```javascript
+import {formatV} from 'gen-format'
+
+     formatV("Pi day, $(date|MMM DD} honors the value Pi which is $(1.2)", '2021-03-14Z', Math.PI)
+```

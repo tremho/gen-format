@@ -10,9 +10,13 @@ class ParsedItem {
 }
 
 /**
- * Parse the format template into parsed items
+ * Support for the `formatV` operation.
+ *
+ * Parses the format template into parsed items
  *
  * new format form is "literal $(fmt) or $2(fmt) or $name(fmt)"
+ *
+ * @private
  */
 export function parseFormat(fmt:string):ParsedItem[] {
     const parsedItems:ParsedItem[] = []
@@ -74,6 +78,15 @@ export function parseFormat(fmt:string):ParsedItem[] {
     return parsedItems
 }
 
+/**
+ * Applies the values to the corresponding formats
+ *
+ * @param formatter
+ * @param items
+ * @param args
+ *
+ * @private
+ */
 export function applyItems(formatter:any, items:ParsedItem[], args:any[]):string {
 
     let out:string = ''

@@ -4537,12 +4537,16 @@ const tztable = [
 /**
  * Detail about a timezone.
  * Subject to updates of the IANA Timezone database and a rerunning of the 'tztable' utility and integration by TBD.
- * There are two TimezoneDetail objects per TimezoneEntry.
- * One is the 'standard' (january) time
- * the other is the 'daylight' (july) time
+ * - There are two TimezoneDetail objects per TimezoneEntry.
+ * - One is the 'standard' (january) time
+ * - the other is the 'daylight' (july) time
+ *
  * Not all timezones have a different designation for daylight savings.
+ *
  * Jurisdictions that are not in daylight/standard in the july/january time frames are not supported. (are there any of these?)
- * Note that in the southern hemisphere 'standard / daylight' take opposite meanings, since summer is in January there
+ * _Note that in the southern hemisphere 'standard / daylight' take opposite meanings, since summer is in January there_
+ *
+ * @private
  */
 export class TimezoneDetail {
     public name:string
@@ -4553,6 +4557,8 @@ export class TimezoneDetail {
 /**
  * Timezone info per anchor city
  * contains name of anchor and standard/daylight TimezoneDetail data
+ *
+ * @private
  */
 export class TimezoneEntry {
     public anchor:string
@@ -4566,10 +4572,11 @@ export class TimezoneEntry {
  * which detail is in effect is not provided by this API
  * To do that requires recording and checking the rules for switch-over date/times
  * and would require us to pass in the date as well, so it could be tested against the rule.
-
+ *
  * @param {string} tzString
-
  * @return {TimezoneEntry[]} array of entries that match this string
+ *
+ * @private
  */
 export function findTimezone(tzString:string) {
     let found = []

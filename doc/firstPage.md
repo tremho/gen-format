@@ -55,7 +55,7 @@ let result = Formatter('-2.3', v)
 
 // ...without rounding
 let result = Formatter('!2.3', v)
-// result = "3.141"
+// result = " 3.141"
 ```
 This form can be used in the formatting of a larger string
 by calling the formatter function as part of a backtick defined 
@@ -63,6 +63,7 @@ expansion string:
 ```
 result = `The value of PI, ${Formatter('1.3',Math.PI)}, is useful for many math calculations.` 
 ```
+
 If you are going to use this form, you may want to import to a smaller
 variable name, for brevity.  e.g.:
 ```
@@ -193,7 +194,7 @@ For example,
 
 ```
 let dt = new Date('2021-02-14:19:30:00Z') 
-let result = F(`date|MMMM DD YYYY h:mm ++', dt) 
+let result = F('date|MMMM DD YYYY h:mm ++', dt) 
 // Feburary 14, 2021 7:30 PM
 ```
 Check the API documentation for more on the display options for 

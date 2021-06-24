@@ -237,13 +237,27 @@ Next branch:
 Branch after that:
 - Documentation and associated tests
 
-- [ ] Bug: use of _style_ formats results in cast to local time.
-- [ ] change daterange to use array
-- [ ] typeless $() variable passing
+- [ ] date examples using styles
+    - [ ] include one locale example
+- [ ] date examples using format
+    - [ ] include one locale example
 
-- [ ] typescript .d 
+- [X] test that we can name number and string as well as not
+- [X] typeless $() variable passing
+
+- [X] Bug: use of _style_ formats results in cast to local time.
+- [X] change daterange to use array
+
+- [X] typescript .d
+    - not needed if we export the .ts as we have it
 - [ ] external module import and example cases
+    - Started; working.
 
+-------------
+test and/or accommodate:
+
+- [ ] locale for number
+- [ ] decimal and thousands setting from locale/static 
 --------------
 
 - import into Nativescript and test compliance there (Intl, etc)
