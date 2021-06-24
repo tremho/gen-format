@@ -2,7 +2,59 @@ import {IFormatHandler, SpecParts, IncompatibleValueType} from "../Formatter";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 import {findTimezone,TimezoneEntry, TimezoneDetail} from './Timezone'
 
-const IDTF = Intl && Intl.DateTimeFormat
+import * as LocaleStringTables from "@tremho/locale-string-tables"
+import * as fs from "fs";
+import * as path from "path";
+const sysloc = LocaleStringTables.getSystemLocale()
+
+const root = './'
+class NodeFileOps {
+    read(realPath:string): string {
+        // let apath = path.normalize(path.join(root, relPath))
+        let contents = fs.readFileSync(realPath).toString()
+        return contents
+    }
+    enumerate(dirPath:string, callback:any) {
+        let apath = path.resolve(path.normalize(path.join(root, dirPath)))
+        if(!fs.existsSync(apath)) return;
+        let entries = fs.readdirSync(apath)
+        entries.forEach(file => {
+            let pn = path.join(root, dirPath, file)
+            let state = fs.lstatSync(pn)
+            if(state.isDirectory()) {
+                this.enumerate(path.join(dirPath, file), callback)
+            } else {
+                callback(pn)
+            }
+        })
+    }
+    get rootPath() { return root}
+}
+
+
+let i18n
+i18n = new LocaleStringTables.LocaleStrings()
+i18n.init(new NodeFileOps())
+i18n.loadForLocale(sysloc)
+
+// We'll use Intl if it is available and has language support
+
+let IDTF = Intl && Intl.DateTimeFormat
+
+function hasLanguages() {
+    try {
+        const january = new Date(9e8);
+        const spanish = new Intl.DateTimeFormat('es', { month: 'long' });
+        return spanish.format(january) === 'enero';
+    } catch (err) {
+        return false;
+    }
+}
+if(IDTF) {
+    if(!hasLanguages()) IDTF = null
+}
+
+
 
 
 /*
@@ -40,7 +92,10 @@ TODO List for Date
  */
 
 /**
- * For an invalid value passed to the formatter
+ * Error thrown for an invalid value passed to the date formatter.
+ *
+ * This may be due to a string that fails to parse, a non-Date object instance,
+ * an Invalid Date instance, or not a Date or a string.
  *
  * @param message
  * @constructor
@@ -56,6 +111,13 @@ export function BadDateValue(message:string) {
     return new BadDateValue(message)
 }
 
+/**
+ * DateFormatter
+ *
+ * This is the _named handler_ for 'date' formatting.
+ * This main class evaluates the passed value and discerns the desired Date object from this.
+ * It then employs the internal `SimpleDateParser` to represent the date according to format.
+ */
 export default class DateFormatter implements IFormatHandler {
 
     format(specParts: SpecParts, value: any): string {
@@ -210,7 +272,8 @@ export default class DateFormatter implements IFormatHandler {
         sdf.setFormat(specParts.format)
         sdf.setLocale(specParts.locale)
         sdf.setTimezoneCast(tzCast)
-        return sdf.toString()
+        let rt =  sdf.toString()
+        return rt
     }
 }
 
@@ -223,6 +286,9 @@ const weekdayAbbr2 = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 const weekdayAbbr3 = ['S', 'M', 'T', 'W', 'Th', 'F', 'Sa']
 
 /**
+ * This internal class is the workhorse of DateFormatter.  It transforms a date format string into a correspondingly
+ * formatted Date display utiliing the format components as decribed.  Will utilize `Intl` where appropriate, if available.
+ *
  * format notation:
  *      YYYY = 4 digit year (e.g. 2020)
  *      YYY =  4 digit year, but only show if not the current year
@@ -327,7 +393,8 @@ export class SimpleDateFormat {
             if(this.format.indexOf('full') !== -1
             || this.format.indexOf('long') !== -1
             || this.format.indexOf('medium') !== -1
-            || this.format.indexOf('short') !== -1) {
+            || this.format.indexOf('short') !== -1
+            || this.format.indexOf('none') !== -1 ) {
                 return true
             }
         }
@@ -347,15 +414,22 @@ export class SimpleDateFormat {
             }
         }
         let [dateStyle, timeStyle] = fmt.split('-')
-        let opts:DateTimeFormatOptions
+        if(!timeStyle) timeStyle = dateStyle
+        if(dateStyle === 'none') dateStyle = undefined
+        if(timeStyle === 'none') timeStyle = undefined
+            let opts:DateTimeFormatOptions
         opts = {dateStyle, timeStyle, timeZone} as DateTimeFormatOptions // need to force cast? (bad .d?)
+
+        if(!dateStyle && !timeStyle) return "" // none-none passed
+
         const dtf = new IDTF(this.locale, opts)
         return dtf.format(this.workingDate)
     }
     // read the template and format values
     toString() {
         // use pure IDTF
-        if(this.useIntl()) return this.toIntlString()
+        // if(this.useIntl()) return this.toIntlString()
+
         // handle timezone cast for non-intl context
         let fmt = this.format
         let tzDisp = ''
@@ -385,14 +459,19 @@ export class SimpleDateFormat {
             timeStyle: 'long'
         }
 
-        let dtf = new IDTF(this.locale, opts)
-        const longParts = (dtf as any).formatToParts(this.workingDate)
-        opts.dateStyle = opts.timeStyle = 'short'
-        dtf = new IDTF(this.locale, opts)
-        const shortParts = (dtf as any).formatToParts(this.workingDate)
-        opts.dateStyle = opts.timeStyle = 'medium'
-        dtf = new IDTF(this.locale, opts)
-        const medParts = (dtf as any).formatToParts(this.workingDate)
+        let longParts = []
+        let medParts = []
+        let shortParts = []
+        if(IDTF) {
+            let dtf = new IDTF(this.locale, opts)
+            longParts = (dtf as any).formatToParts(this.workingDate)
+            opts.dateStyle = opts.timeStyle = 'short'
+            dtf = new IDTF(this.locale, opts)
+            shortParts = (dtf as any).formatToParts(this.workingDate)
+            opts.dateStyle = opts.timeStyle = 'medium'
+            dtf = new IDTF(this.locale, opts)
+            medParts = (dtf as any).formatToParts(this.workingDate)
+        }
 
         const getFormatPart = (key:string, type:string):string => {
             const list = type === 'short' ? shortParts : type== 'long' ? longParts : medParts
@@ -434,6 +513,8 @@ export class SimpleDateFormat {
                 }
             }
         }
+
+
         const thisYear = new Date().getFullYear()
         // set the year
         let yril = getFormatPart('relatedYear', 'long')
@@ -589,8 +670,8 @@ export class SimpleDateFormat {
         let mil = getFormatPart('month', 'long')
         let mim = getFormatPart('month', 'medium')
         let mis = getFormatPart('month', 'short')
-        let mo4 = mil || months[this.mo]
-        let mo3 = mim || monthAbbr[this.mo]
+        let mo4 = mil || i18nMonth(this.locale, this.mo, 'long')
+        let mo3 = mim || i18nMonth(this.locale, this.mo, 'medium')
         let mo2 = mis || this.mo < 10 ? '0'+this.mo : ''+this.mo
         let mo1 = mis || ''+ this.mo
         n = 0;
@@ -618,29 +699,32 @@ export class SimpleDateFormat {
         let wim = getFormatPart('weekday', 'medium') || wil
         let wis = getFormatPart('weekday', 'short')
 
-        let wd4 = wil || weekdays[this.wd]
-        let wd3 = wim ||weekdayAbbrs[this.wd]
-        let wd2 = wis || weekdayAbbr2[this.wd]
-        let wd1 = wis || weekdayAbbr3[this.wd]
+        let wd4 = wil || i18nWeekday(this.locale, this.wd, 'long')
+        let wd3 = wim || i18nWeekday(this.locale, this.wd, 'medium')
+        let wd2 = wis || i18nWeekday(this.locale, this.wd, 'short')
+        let wd1 = wis || i18nWeekday(this.locale, this.wd, 'shortest')
+
         n = 0;
-        while ((n = out.indexOf('WWWW', n)) !== -1) {
+        let nn = 0;
+        while ((nn = out.indexOf('WWWW', n)) !== -1) {
             out = out.replace('WWWW', wd4)
-            n += wd4.length;
+            nn += wd4.length;
+            n = nn;
         }
-        n = 0;
-        while ((n = out.indexOf('WWW', n)) !== -1) {
+        while ((nn = out.indexOf('WWW', n)) !== -1) {
             out = out.replace('WWW', wd3)
-            n += wd3.length;
+            nn += wd3.length;
+            n = nn;
         }
-        n = 0;
-        while ((n = out.indexOf('WW', n)) !== -1) {
+        while ((nn = out.indexOf('WW', n)) !== -1) {
             out = out.replace('WW', wd2)
-            n += wd2.length;
+            nn += wd2.length;
+            n = nn;
         }
-        n = 0;
-        while ((n = out.indexOf('W', n)) !== -1) {
+        while ((nn = out.indexOf('W', n)) !== -1) {
             out = out.replace('W', wd1)
-            n += wd1.length;
+            nn += wd1.length;
+            n = nn;
         }
 
         // timezone
@@ -689,6 +773,15 @@ export class SimpleDateFormat {
 
 //-------------
 
+/**
+ * Picks from the timezone list.
+ * Note: probably unnecessary at this point; it is already
+ * somewhat redundant to findTimezone.
+ * @param tz
+ * @param entries
+ *
+ * @private
+ */
 function pickTimezone(tz, entries) {
     for(let i=0; i<entries.length; i++) {
         const tze = entries[i]
@@ -716,6 +809,8 @@ function pickTimezone(tz, entries) {
 /**
  * Adjust the current time by interval of years
  * @param v
+ *
+ * @private
  */
 function yearMark(v, midnight, top=false) {
     const dt = new Date()
@@ -728,6 +823,7 @@ function yearMark(v, midnight, top=false) {
     return dt.getTime()
 }
 
+const daysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31]
 /**
  * Adjust the current time by interval of months
  * where (n) is the month relative to current month.
@@ -736,12 +832,18 @@ function yearMark(v, midnight, top=false) {
  * set the date to 4 weeks ahead/back from the current date instead
  * (per setDate)
  * @param v
+ *
+ * @private
  */
 function monthMark(v, midnight, top=false) {
     let dt = new Date()
     let curMo = dt.getUTCMonth()
     let newMo = curMo + v
     let date = dt.getUTCDate()
+    if(date > daysInMonth[newMo]) {
+        date += v*28
+        newMo = curMo
+    }
     if(newMo < 0 || newMo > 11) {
         let yo = /*newMo < 0 ? Math.ceil(newMo/12) :*/ Math.floor(newMo/12)
         dt = new Date(yearMark(yo, midnight))
@@ -758,6 +860,8 @@ function monthMark(v, midnight, top=false) {
 /**
  * Adjust date/time by a relative number of weeks
  * @param v
+ *
+ * @private
  */
 function weekMark(v, midnight, top=false) {
     const dt = new Date()
@@ -773,6 +877,8 @@ function weekMark(v, midnight, top=false) {
 /**
  * Adjust date/time by a relative number of days
  * @param v
+ *
+ * @private
  */
 function dayMark(v, midnight) {
     const dt = new Date()
@@ -784,6 +890,8 @@ function dayMark(v, midnight) {
 /**
  * set time to top of current hour
  * @param v
+ *
+ * @private
  */
 function hourMark(v) {
     const dt = new Date()
@@ -794,6 +902,8 @@ function hourMark(v) {
 /**
  * set time to top of current minute
  * @param v
+ *
+ * @private
  */
 function minuteMark(v) {
     const dt = new Date()
@@ -805,6 +915,8 @@ function minuteMark(v) {
 /**
  * set time to top of current second
  * @param v
+ *
+ * @private
  */
 function secondMark(v) {
     const dt = new Date()
@@ -822,6 +934,8 @@ function secondMark(v) {
  * no time spec results in the current time offset from midnight
  *
  * @param str
+ *
+ * @private
  */
 function parseTimeArg(str) {
     let hr = 0, mn = 0, sn = 0
@@ -870,6 +984,8 @@ function parseTimeArg(str) {
 /**
  * Find the referenced weekday in a string such as 'last Tuesday' or 'next Th'
  * @param str
+ *
+ * @private
  */
 function findWeekdayName(str) {
     let si = str.indexOf(' ')
@@ -889,6 +1005,13 @@ function findWeekdayName(str) {
     }
 }
 
+/**
+ * Move to the last occurrence of the given weekday prior to the current day
+ * @param wd
+ * @param midnight
+ *
+ * @private
+ */
 function lastWeekday(wd, midnight) {
     let ndt = new Date()
     let nwd = ndt.getUTCDay()
@@ -901,6 +1024,13 @@ function lastWeekday(wd, midnight) {
     return dt.getTime()
 }
 
+/**
+ * Move forward to the next occurrence of the given weekday
+ * @param wd
+ * @param midnight
+ *
+ * @private
+ */
 function nextWeekday(wd, midnight) {
     let ndt = new Date()
     let nwd = ndt.getUTCDay()
@@ -913,8 +1043,40 @@ function nextWeekday(wd, midnight) {
     return dt.getTime()
 }
 
+/**
+ * move forward or back to to named weekday within the current week
+ * @param wd
+ * @param midnight
+ *
+ * @private
+ */
 function thisWeekday(wd, midnight) {
     let dt = new Date(weekMark(0, midnight, true)) // reset to sunday of this week or next week
     dt.setUTCDate(dt.getUTCDate()+wd) // move forward to selected day
     return dt.getTime()
+}
+
+function i18nMonth(locale, mn, style) {
+    i18n.setLocale(locale)
+    if(style === 'medium') style = 'short' // TODO: Update tables to include medium
+    let ikey = `date.month.${mn}.${style}`
+    // lookup this key in the tables
+    let value = i18n.getLocaleString(ikey, '', true)
+    if(!value) {
+        // fallback to hard-coded en-US
+        value = style === 'long' ? months[mn] : monthAbbr[mn]
+    }
+    return value
+}
+function i18nWeekday(locale, wd, style) {
+    i18n.setLocale(locale)
+    if(style === 'medium') style = 'long' // TODO: Update tables to include medium
+    let ikey = `date.weekday.${wd}.${style}`
+    // lookup this key in the tables
+    let value = i18n.getLocaleString(ikey, '', true)
+    if(!value) {
+        // fallback to hard-coded en-US
+        value = style === 'long' ? weekdays[wd] : style === 'medium' ? weekdayAbbrs[wd] : weekdayAbbr2[wd]
+    }
+    return value
 }
