@@ -1,0 +1,20 @@
+{
+    "date.month.1.short" : "Jan.",
+    "date.month.2.short" : "Feb.",
+    "date.month.3.short" : "Mar.",
+    "date.month.4.short" : "Apr.",
+    "date.month.6.short" : "Jun.",
+    "date.month.7.short" : "Jul.",
+    "date.month.8.short" : "Aug.",
+    "date.month.9.short" : "Sep.",
+    "date.month.10.short" : "Oct.",
+    "date.month.11.short" : "Nov.",
+    "date.month.12.short" : "Dec.",
+    "date.weekday.0.short" : "Sun.",
+    "date.weekday.1.short" : "Mon.",
+    "date.weekday.2.short" : "Tue.",
+    "date.weekday.3.short" : "Wed.",
+    "date.weekday.4.short" : "Thu.",
+    "date.weekday.5.short" : "Fri.",
+    "date.weekday.6.short" : "Sat."
+}
