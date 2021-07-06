@@ -1,4 +1,78 @@
 
+
+import fileOps from './NodeFileOps'
+
+let gFileOps:FileOps = fileOps // default; can override
+
+let useIntlChoice = false
+
+export function setFileOps(fileOps:FileOps) {
+    gFileOps = fileOps
+}
+
+export function getFileOps():FileOps {
+    return gFileOps
+}
+
+let IDTF = Intl && Intl.DateTimeFormat
+
+function hasLanguages() {
+    try {
+        const january = new Date(9e8);
+        const spanish = new Intl.DateTimeFormat('es', { month: 'long' });
+        const japanese = new Intl.DateTimeFormat('ja', { month: 'long' });
+        return spanish.format(january) === 'enero' && japanese.format(january) === '1月'
+    } catch (err) {
+        return false;
+    }
+}
+
+/**
+ * Returns a string describing the availability and support for
+ * W3C "Intl" library for DateTimeFormat
+ * If availability is complete, and the function `useIntl(true)` is called (with `true`),
+ * this library will be used for most of the localization aspects of the date/time formatting.
+ * Intl support may be necessary to support extended numbering systems or calendar options, or
+ * to faithfully represent formats for certain locales.
+ *
+ * @returns {string} one of:
+ *  - `complete` :  the Intl library appears to support languages beyond the system locale
+ *  - `partial` : the Intl libary appears to support the system locale, but perhaps not others
+ *  - `none` : there is no Intl support available on this system.
+ */
+export function checkIntlSupport() {
+    if(IDTF) {
+        if(hasLanguages()) return 'complete'
+        else return 'partial'
+    } else {
+        return 'none'
+    }
+}
+
+/**
+ * Call with the option to utilize the W3C Intl library, if available.
+ * Use the `checkIntlSupport()` function to determine type of support available on this system.
+ * If set true, Intl.DateTimeFormat will be called where appropriate rather than using the formatting and localization
+ * entirely through this library.
+ *
+ * Default is `false`: no use of Intl.
+ *
+ * @param use - pass `true` to enable Intl support, false to disable
+ */
+export function useIntl(use) {
+    useIntlChoice = use
+}
+
+/**
+ * Returns the current setting of the `useIntl` choice
+ *
+ * @return {boolean} the choice currently in effect
+ */
+export function getUseIntlChoice() {
+    return useIntlChoice
+}
+
+
 /**
  * Object that holds the parsed results of the format specification
  *
@@ -12,6 +86,12 @@ export class SpecParts {
     type:string
     format:string
     locale:string
+}
+
+export interface FileOps {
+    read(path:string):string
+    enumerate(relDir:string, callback:any):void
+    rootPath:string
 }
 
 /**
@@ -152,7 +232,10 @@ function decodeSpec(str:string):SpecParts {
     }
     else if(di === -1) {
         // neither. so we must be naming a type
-        let te = hi
+
+        let te = Math.min(hi, li)
+        if(te == -1) te = hi
+
         if(te === -1) te = li
         if(te === -1) te = fi
         if(te === -1) te = str.length
@@ -163,14 +246,14 @@ function decodeSpec(str:string):SpecParts {
     
     if(hi !== -1) {
         let he = -1
-        if(fi > hi) he = fi
-        if(he === -1 && li > hi) he = li
+        if(li > hi) he = li
+        if(he === -1 && fi > hi) he = fi
         if(he === -1) he = str.length
         specParts.hints = str.substring(hi+1, he).split('-')
     }
     if(li !== -1) {
-        let le = -1
-        if(fi > li) le = fi
+        let le = Math.min(hi, fi)
+        if(le < li) le = fi
         if(le === -1 && hi > li) le = hi
         if(le === -1) le = str.length
         specParts.locale = str.substring(li+1, le)

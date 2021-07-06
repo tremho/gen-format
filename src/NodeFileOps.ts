@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import {FileOps} from "../src/Formatter";
+import {FileOps} from "./Formatter";
 
 const root = './'
 class NodeFileOps implements FileOps {

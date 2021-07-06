@@ -18,7 +18,7 @@ class ParsedItem {
  *
  * @private
  */
-export function parseFormat(fmt:string):ParsedItem[] {
+export function parseFormat(fmt:string= ''):ParsedItem[] {
     const parsedItems:ParsedItem[] = []
     // find the next '$'
     let natOrder = 0
