@@ -4,8 +4,8 @@ import F from '../src/Formatter'
 import {formatV} from '../src/Formatter'
 
 function dateRangeFormatTest() {
+    let desc, r, x;
     Tap.test('date range', t => {
-        let r,x
         // date range tests
         let label
         let count = 0;
@@ -145,6 +145,27 @@ function dateRangeFormatTest() {
         x = '4/3/61 02:12 am - 04:50 am (PST)'
         t.ok(r === x, `${name()} expected "${x}", got "${r}"`)
 
+
+
+        desc = "style = full"
+        r = (F('daterange|full', [tn, tn2]))
+        x = 'Monday, April 3, 1961, 10:12:00 AM - 12:50:00 PM Coordinated Universal Time'
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+
+        desc = "style = long"
+        r = (F('daterange|long', [tn, tn2]))
+        x = 'April 3, 1961, 10:12:00 AM - 12:50:00 PM UTC'
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+
+        desc = "style = medium"
+        r = (F('daterange|medium', [tn, tn2]))
+        x = 'Mon, Apr 3, 1961, 10:12:00 AM - 12:50:00 PM'
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+
+        desc = "style = short"
+        r = (F('daterange|short', [tn, tn2]))
+        x = '4/03/61, 10:12 AM - 12:50 PM'
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
 
         t.end()
     })

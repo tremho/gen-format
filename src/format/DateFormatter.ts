@@ -1,61 +1,23 @@
-import {IFormatHandler, SpecParts, IncompatibleValueType} from "../Formatter";
+import {getFileOps, IFormatHandler, SpecParts, getUseIntlChoice} from "../Formatter";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
-import {findTimezone,TimezoneEntry, TimezoneDetail} from './Timezone'
+import {findTimezones, findTimezoneBlocks, findTimezoneBlocksForDate} from './Timezone'
 
 import * as LocaleStringTables from "@tremho/locale-string-tables"
-import * as fs from "fs";
-import * as path from "path";
+import DateRangeFormatter from "./DateRangeFormatter";
+
 const sysloc = LocaleStringTables.getSystemLocale()
-
-const root = './'
-class NodeFileOps {
-    read(realPath:string): string {
-        // let apath = path.normalize(path.join(root, relPath))
-        let contents = fs.readFileSync(realPath).toString()
-        return contents
-    }
-    enumerate(dirPath:string, callback:any) {
-        let apath = path.resolve(path.normalize(path.join(root, dirPath)))
-        if(!fs.existsSync(apath)) return;
-        let entries = fs.readdirSync(apath)
-        entries.forEach(file => {
-            let pn = path.join(root, dirPath, file)
-            let state = fs.lstatSync(pn)
-            if(state.isDirectory()) {
-                this.enumerate(path.join(dirPath, file), callback)
-            } else {
-                callback(pn)
-            }
-        })
-    }
-    get rootPath() { return root}
-}
-
+let localTimeZone;
 
 let i18n
-i18n = new LocaleStringTables.LocaleStrings()
-i18n.init(new NodeFileOps())
-i18n.loadForLocale(sysloc)
 
 // We'll use Intl if it is available and has language support
 
+// TO Enable full icu for Node, run test like this:
+//>NODE_ICU_DATA="/Users/sohmert/.npm-global/lib/node_modules/full-icu" npm test
+// Otherwise, it will run with a limited ICU
+
+
 let IDTF = Intl && Intl.DateTimeFormat
-
-function hasLanguages() {
-    try {
-        const january = new Date(9e8);
-        const spanish = new Intl.DateTimeFormat('es', { month: 'long' });
-        return spanish.format(january) === 'enero';
-    } catch (err) {
-        return false;
-    }
-}
-if(IDTF) {
-    if(!hasLanguages()) IDTF = null
-}
-
-
-
 
 /*
 TODO List for Date
@@ -120,7 +82,19 @@ export function BadDateValue(message:string) {
  */
 export default class DateFormatter implements IFormatHandler {
 
+    constructor() {
+        i18n = new LocaleStringTables.LocaleStrings()
+        i18n.init(getFileOps())
+        i18n.loadForLocale(sysloc)
+    }
+
     format(specParts: SpecParts, value: any): string {
+
+        if(specParts.format && specParts.format.indexOf('human') !== -1
+        || Array.isArray(value)) {
+            return new DateRangeFormatter().format(specParts, value)
+        }
+
         let out: string = ''
         // if(typeof value !== 'string') {
         //     if(!value) return '' // null and undefined just result in empty string
@@ -260,19 +234,58 @@ export default class DateFormatter implements IFormatHandler {
 
         // the only type of hint we recognize is a single cast to a timezone
         const hints = specParts.hints
-        let tzCast = '' // UTC is the default
+        let tzCast
         if(hints) {
             if (hints.length > 1) {
                 throw RangeError('Unsupported number of hints')
             }
             tzCast = hints[0]
         }
+        if(!tzCast) tzCast = 'UTC' // default to UTC
 
-        let sdf = new SimpleDateFormat(timestamp)
-        sdf.setFormat(specParts.format)
-        sdf.setLocale(specParts.locale)
-        sdf.setTimezoneCast(tzCast)
-        let rt =  sdf.toString()
+        if(!localTimeZone) {
+            let ds = new Date().toString()
+            let abbr = ds.substring(ds.lastIndexOf('(')+1, ds.lastIndexOf(')'))
+            let name
+            if(abbr.indexOf(' ') !== -1) {
+                name = abbr;
+                abbr = ''
+            }
+            let gmti = ds.lastIndexOf('GMT')
+            let endi = ds.lastIndexOf('(')
+            if(endi === -1) endi=ds.length
+            localTimeZone = ds.substring(gmti, endi).trim() // default if we have no named zone
+
+            let dt = new Date()
+            let blocks = findTimezoneBlocksForDate(dt)
+            for(let i=0; i<blocks.length; i++) {
+                if(abbr && blocks[i].abbr === abbr
+                || name && blocks[i].name === name) {
+                    localTimeZone = blocks[i].city
+                    break
+                }
+            }
+        }
+        if(tzCast && tzCast.toLowerCase() === 'local') tzCast = localTimeZone
+
+        let rt = ''
+        try {
+            let sdf = new SimpleDateFormat(timestamp)
+            sdf.setFormat(specParts.format)
+            sdf.setLocale(specParts.locale)
+            sdf.setTimezoneCast(tzCast)
+            rt = sdf.toString()
+            if(tzCast && tzCast.toLowerCase() === 'utc') {
+                let parts = (specParts.format || '').split('-')
+                let style = parts[1] || parts[0]
+                let utcName = 'UTC'
+                if( style.indexOf('Z') !== -1) style = 'full'
+                if( style === 'full') utcName = 'Coordinated Universal Time'
+                rt = rt.replace('Greenwich Mean Time', utcName)
+            }
+        } catch(e) {
+            console.error(e)
+        }
         return rt
     }
 }
@@ -382,32 +395,42 @@ export class SimpleDateFormat {
     setFormat(fmt:string) {
         this.format = fmt;
     }
-    setLocale(locale:string) {
-        this.locale = locale
+    setLocale(locale:string = '') {
+        if(locale.toLowerCase().trim() === 'default') locale = ''
+        let invalid = false
+        if(locale) {
+            let lc = locale.split('-')
+            let ln = (lc[0] && lc[0].trim().length) || 0
+            if(lc[0] !== 'u') { // unicode extension without specifying locale
+                if (ln !== 2 && ln !== 3) {
+                   invalid = true
+                }
+            }
+            ln = (lc[1] && lc[1].trim().length) || 0
+            if (ln !== 0 && ln !== 2) {
+                invalid = true
+            }
+            if (invalid) {
+                throw Error('Invalid Locale ' + locale)
+            }
+            if(lc[0] === 'u') {
+                locale = sysloc+'-'+locale
+            }
+
+            this.locale = locale
+        }
     }
     setTimezoneCast(tzCast:string) {
         this.tzCast = tzCast
     }
-    useIntl() {
-        if(IDTF) {
-            if(this.format.indexOf('full') !== -1
-            || this.format.indexOf('long') !== -1
-            || this.format.indexOf('medium') !== -1
-            || this.format.indexOf('short') !== -1
-            || this.format.indexOf('none') !== -1 ) {
-                return true
-            }
-        }
-        return false
-    }
     toIntlString() {
         let fmt = this.format
         let tzr = this.tzCast
+        if(!tzr || tzr.toLowerCase() === 'utc') tzr = 'UTC'
         let timeZone
-        if(tzr) {
-            let tzes = findTimezone(tzr)
-            // let n = 0
-            // let tze = tzes[n]
+        if(tzr === 'UTC') timeZone = 'UTC'
+        else if(tzr) {
+            let tzes = findTimezones(tzr)
             let tze = pickTimezone(tzr, tzes)
             if(tze && tze.anchor) {
                 timeZone = tze.anchor.replace(/ /g, '_')
@@ -428,7 +451,15 @@ export class SimpleDateFormat {
     // read the template and format values
     toString() {
         // use pure IDTF
-        // if(this.useIntl()) return this.toIntlString()
+        if(useIntl()) {
+            if(this.format.indexOf('full') !== -1
+            || this.format.indexOf('long') !== -1
+            || this.format.indexOf('medium') !== -1
+            || this.format.indexOf('short') !== -1
+            || this.format.indexOf('none') !== -1 ) {
+                return this.toIntlString()
+            }
+        }
 
         // handle timezone cast for non-intl context
         let fmt = this.format
@@ -436,15 +467,13 @@ export class SimpleDateFormat {
         let tzName = 'UTC', tzOffset = 0
         let tzr = this.tzCast
         if(tzr) {
-            let tzes = findTimezone(tzr)
-            // let n = 0
-            // let tze = tzes[n]
-            let tze = pickTimezone(tzr, tzes)
-            if(tze) {
-                tzName = tze.anchor
-                tzDisp = tze.shortHand || tze.standard.abbr.toUpperCase()
-                tzOffset = -tze.standard.offset
-                // timeZone = tze.anchor.replace(/ /g,'_')
+            let blocks = findTimezoneBlocks(tzr, this.workingDate)
+            let block = pickTimezoneBlock(tzr, blocks)
+            if(block) {
+                tzName = block.city.replace(/_/g, ' ')
+                tzDisp = block.abbr
+                tzOffset = -block.offset
+                if(block.abbr === 'GMT') tzOffset = 0 // TODO: Fix Table
 
                 let adjtime = tzOffset * 60 * 1000
                 this.workingDate.setTime(this.workingDate.getTime() + adjtime) // offset so the UTC values match the cast TZ
@@ -462,7 +491,7 @@ export class SimpleDateFormat {
         let longParts = []
         let medParts = []
         let shortParts = []
-        if(IDTF) {
+        if(useIntl()) {
             let dtf = new IDTF(this.locale, opts)
             longParts = (dtf as any).formatToParts(this.workingDate)
             opts.dateStyle = opts.timeStyle = 'short'
@@ -483,6 +512,17 @@ export class SimpleDateFormat {
             }
         }
 
+        if(this.format.indexOf('full') !== -1
+            || this.format.indexOf('long') !== -1
+            || this.format.indexOf('medium') !== -1
+            || this.format.indexOf('short') !== -1
+            || this.format.indexOf('none') !== -1 ) {
+
+            let [dateStyle, timeStyle] = fmt.split('-')
+            if (!timeStyle) timeStyle = dateStyle
+            const isUtc = this.tzCast && this.tzCast.toLowerCase() === 'utc'
+            fmt = i18nFormatByStyle(this.locale, dateStyle, timeStyle,isUtc)
+        }
         let out = fmt
 
         let tzStyle
@@ -496,10 +536,14 @@ export class SimpleDateFormat {
         // use Intl to get timezone
         if(!tzDisp || tzStyle === 'long' || tzDisp.toLowerCase() === 'local') {
             if (tzName === 'UTC') {
-                tzDisp = tzStyle === 'short' ? 'UTC' : 'Universal Time'
+                // // do the opposite of the other fix-up here
+                // let gmtName = 'GMT'
+                // if( tzStyle === 'full') gmtName = 'Greenwich Mean Time'
+                // if( tzStyle === 'short') gmtName = ''
+                tzDisp = 'Greenwich Mean Time' // this gets fixed later for UTC
             } else {
                 try {
-                    if (IDTF && tzStyle) {
+                    if (tzStyle && useIntl()) {
                         let opts = {
                             timeZone: tzName,
                             timeZoneName: tzStyle
@@ -507,9 +551,11 @@ export class SimpleDateFormat {
                         let dtf = new IDTF(this.locale, opts)
                         let dstr = dtf.format(this.workingDate)
                         tzDisp = dstr.substring(dstr.lastIndexOf(',') + 2)
+                    } else {
+                        tzDisp = i18nTimezone(this.locale, tzName, tzStyle, this.workingDate)
                     }
                 } catch (e) {
-
+                    console.warn('Error w/ tzDisp ', e)
                 }
             }
         }
@@ -675,24 +721,26 @@ export class SimpleDateFormat {
         let mo2 = mis || this.mo < 10 ? '0'+this.mo : ''+this.mo
         let mo1 = mis || ''+ this.mo
         n = 0;
-        while ((n = out.indexOf('MMMM', n)) !== -1) {
+        let nn = 0;
+        while ((nn = out.indexOf('MMMM', n)) !== -1) {
             out = out.replace('MMMM', mo4)
-            n += mo4.length;
+            nn += mo4.length;
+            n = nn;
         }
-        n = 0;
-        while ((n = out.indexOf('MMM', n)) !== -1) {
+        while ((nn = out.indexOf('MMM', n)) !== -1) {
             out = out.replace('MMM', mo3)
-            n += mo3.length;
+            nn += mo3.length;
+            n = nn;
         }
-        n = 0;
-        while ((n = out.indexOf('MM', n)) !== -1) {
+        while ((nn = out.indexOf('MM', n)) !== -1) {
             out = out.replace('MM', mo2)
-            n += mo2.length;
+            nn += mo2.length;
+            n = nn;
         }
-        n = 0;
-        while ((n = out.indexOf('M', n)) !== -1) {
+        while ((nn = out.indexOf('M', n)) !== -1) {
             out = out.replace('M', mo1)
-            n += mo1.length;
+            nn += mo1.length;
+            n = nn;
         }
         // set the weekday
         let wil = getFormatPart('weekday', 'long')
@@ -705,7 +753,7 @@ export class SimpleDateFormat {
         let wd1 = wis || i18nWeekday(this.locale, this.wd, 'shortest')
 
         n = 0;
-        let nn = 0;
+        nn = 0;
         while ((nn = out.indexOf('WWWW', n)) !== -1) {
             out = out.replace('WWWW', wd4)
             nn += wd4.length;
@@ -783,10 +831,15 @@ export class SimpleDateFormat {
  * @private
  */
 function pickTimezone(tz, entries) {
+    let bestEntry
+    let tzu = tz.toUpperCase()
+    let tzl = tz.toLowerCase()
+    if(tzu === 'UTC') {
+        tzu = 'GMT'
+        tzl = 'gmt'
+    }
     for(let i=0; i<entries.length; i++) {
         const tze = entries[i]
-        const tzu = tz.toUpperCase()
-        const tzl = tz.toLowerCase()
         let anchor = tze.anchor
         if(anchor) {
             let city = anchor.substring(anchor.indexOf('/') + 1)
@@ -797,13 +850,36 @@ function pickTimezone(tz, entries) {
         let sabbr = tze.standard && tze.standard.abbr && tze.standard.abbr.toUpperCase()
         let dabbr = tze.daylight && tze.daylight.abbr && tze.daylight.abbr.toUpperCase()
         if(sabbr === tzu || dabbr === tzu) {
-            return tze
+            bestEntry = tze
+            if(tze.shortHand && tze.shortHand.toUpperCase() === tzu) {
+                return tze
+            }
         }
-        if(tze.shortHand && tze.shortHand.toUpperCase() === tzu) {
-            return tze
+    }
+    return bestEntry
+}
+function pickTimezoneBlock(tz, blocks) {
+    let bestBlock
+    const tzu = tz.toUpperCase()
+    const tzl = tz.toLowerCase()
+    for(let i=0; i<blocks.length; i++) {
+        const block = blocks[i]
+        let anchor = block.city
+        if(anchor) {
+            let city = anchor.substring(anchor.indexOf('/') + 1)
+            if (anchor.toLowerCase() === tzl || city.toLowerCase() === tzl) {
+                bestBlock = block
+                if(findTimezones(anchor)[0].shortHand === tzu) return block
+            }
         }
 
+        if(findTimezones(anchor)[0].shortHand === tzu) return block
+
+        if(block.abbr && block.abbr.toUpperCase() === tzu) {
+            bestBlock = block
+        }
     }
+    return bestBlock
 }
 
 /**
@@ -1057,8 +1133,9 @@ function thisWeekday(wd, midnight) {
 }
 
 function i18nMonth(locale, mn, style) {
+    if(!locale) locale = sysloc
     i18n.setLocale(locale)
-    if(style === 'medium') style = 'short' // TODO: Update tables to include medium
+    if(style === 'medium') style = 'short'
     let ikey = `date.month.${mn}.${style}`
     // lookup this key in the tables
     let value = i18n.getLocaleString(ikey, '', true)
@@ -1069,8 +1146,9 @@ function i18nMonth(locale, mn, style) {
     return value
 }
 function i18nWeekday(locale, wd, style) {
+    if(!locale) locale = sysloc
     i18n.setLocale(locale)
-    if(style === 'medium') style = 'long' // TODO: Update tables to include medium
+    if(style === 'medium') style = 'long'
     let ikey = `date.weekday.${wd}.${style}`
     // lookup this key in the tables
     let value = i18n.getLocaleString(ikey, '', true)
@@ -1079,4 +1157,70 @@ function i18nWeekday(locale, wd, style) {
         value = style === 'long' ? weekdays[wd] : style === 'medium' ? weekdayAbbrs[wd] : weekdayAbbr2[wd]
     }
     return value
+}
+
+function i18nFormatByStyle(locale, dateStyle, timeStyle, isUtc) {
+    if(!locale) locale = sysloc
+    i18n.setLocale(locale)
+    if(!dateStyle) dateStyle = 'none'
+    if(!timeStyle) timeStyle = 'none'
+    i18n.setLocale(locale)
+    let ikeyDate = `date.format.${dateStyle}`
+    let ikeyTime = `time.format.${timeStyle}`
+    let dateFmt = i18n.getLocaleString(ikeyDate, '', false)
+    if(dateFmt === '') {
+        // console.log('missing '+ ikey+ ' for '+locale)
+        if(dateStyle === 'full') {
+            dateFmt = "WWWW, MMMM D YYYY"
+        }
+        else if (dateStyle === 'long') {
+            dateFmt = 'MMMM D, YYYY'
+        } else if (dateStyle === 'medium') {
+            dateFmt = 'WW, MMM D, YYY'
+        } else if (dateStyle === 'short' || dateStyle === 'numeric') {
+            if (locale.split('-')[1] === 'US') {
+                dateFmt = 'MM/DD/YY'
+            } else {
+                dateFmt = 'DD/MM/YY'
+            }
+        }
+    }
+
+    let timeFmt = dateFmt ? i18n.getLocaleString(`date.format.time.separator.${timeStyle}`, timeStyle === 'short'? ', ': ' at ', false) : ''
+
+    if(timeStyle.indexOf(':') !== -1) {
+        timeFmt += timeStyle
+    } else {
+        timeFmt += i18n.getLocaleString(ikeyTime, '', false)
+    }
+
+    if(!timeFmt && timeStyle !== 'none') {
+        let h = 'hhh' // 24 hour, no lead
+        if (locale.split('-')[1] === 'US') h = 'h' // 12 hour, no lead
+        timeFmt += `${h}:mm:ss`
+        if (locale.split('-')[1] === 'US') timeFmt += ' ++ ' // AM/PM
+        if (isUtc || timeStyle === 'long' || timeStyle === 'full') {
+            timeFmt += 'Z' // timezone
+        }
+    }
+
+
+    return dateFmt + timeFmt
+}
+function i18nTimezone(locale, tzName, style, dt) {
+    if(!locale) locale = sysloc
+    i18n.setLocale(locale)
+    let blocks = findTimezoneBlocks(tzName, dt)
+    let block = pickTimezoneBlock(tzName, blocks)
+    let value = style === 'long' ? 'Greenwich Mean Time' : 'GMT'
+    if(block) {
+        let abbr = block.abbr
+        let name = block.name
+        value = i18n.getLocaleString(`date.format.timezone.${abbr}.${style}`, style === 'long' ? name : abbr)
+    }
+    return value;
+}
+
+function useIntl() {
+    return IDTF && getUseIntlChoice()
 }

@@ -1,7 +1,11 @@
 import Tap from 'tap'
 
+import fileOps from '../src/NodeFileOps'
+import {setFileOps} from "../src/Formatter";
 import F from '../src/Formatter'
 import {formatV} from '../src/Formatter'
+
+setFileOps(fileOps)
 
 function dateFormatTest() {
     Tap.test('date', t => {
@@ -268,11 +272,11 @@ function dateFormatTest() {
 
         // intl full, long, medium, short
         r = F('date|full-full', testDate)
-        x = 'Tuesday, January 12, 2021 at 4:00:00 PM Pacific Standard Time'
+        x = 'Tuesday, January 12, 2021, 4:00:00 PM Pacific Standard Time'
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
         r = F('date|long-long', testDate)
-        x = 'January 12, 2021 at 4:00:00 PM PST'
+        x = 'January 12, 2021, 4:00:00 PM PST'
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
         r = F('date|medium-medium', testDate)
@@ -383,5 +387,7 @@ function dateFormatTest() {
         t.end()
     })
 }
+
+
 
 dateFormatTest()

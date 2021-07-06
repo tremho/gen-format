@@ -2,6 +2,10 @@ import Tap from 'tap'
 
 import F from '../src/Formatter'
 import {formatV} from '../src/Formatter'
+import fileOps from '../src/NodeFileOps'
+import {setFileOps} from "../src/Formatter";
+
+setFileOps(fileOps)
 
 function moreTest() {
     Tap.test('diffs and more', t => {
@@ -15,92 +19,93 @@ function moreTest() {
 
         // TODO: diffs (different display options, human)
 
-        let tn2 = tn.getTime() - 500
-        r = F('daterange?diff', [tn, tn2])
-        x = '0.5 seconds ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('daterange?diff-digital', [tn, tn2])
-        x = '0.5 seconds ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('daterange?diff-human', [tn, tn2])
-        x = '0.5 seconds ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-
-        tn2 = tn.getTime() - 5000
-        r = F('daterange?diff-digital', [tn, tn2])
-        x = '5 seconds ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('daterange?diff-human', [tn, tn2])
-        x = '5 seconds ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-
-        tn2 = tn.getTime() - 50000
-        r = F('daterange?diff-digital', [tn, tn2])
-        x = '50 seconds ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('daterange?diff-human', [tn, tn2])
-        x = '50 seconds ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-
-        tn2 = tn.getTime() - 500000
-        r = F('daterange?diff-digital', [tn, tn2])
-        x = '08:20 ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('daterange?diff-human', [tn, tn2])
-        x = '8 minutes ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-
-        tn2 = tn.getTime() - 5000000
-        r = F('daterange?diff-digital', [tn, tn2])
-        x = '1:23:20 ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('daterange?diff-human', [tn, tn2])
-        x = '1 hour ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        // Superceded by RelativeTime.test.ts
+        // let tn2 = tn.getTime() - 500
+        // r = F('daterange?diff', [tn, tn2])
+        // x = '0.5 seconds ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        // r = F('daterange?diff-digital', [tn, tn2])
+        // x = '0.5 seconds ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        // r = F('daterange?diff-human', [tn, tn2])
+        // x = '0.5 seconds ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        //
+        // tn2 = tn.getTime() - 5000
+        // r = F('daterange?diff-digital', [tn, tn2])
+        // x = '5 seconds ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        // r = F('daterange?diff-human', [tn, tn2])
+        // x = '5 seconds ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        //
+        // tn2 = tn.getTime() - 50000
+        // r = F('daterange?diff-digital', [tn, tn2])
+        // x = '50 seconds ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        // r = F('daterange?diff-human', [tn, tn2])
+        // x = '50 seconds ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        //
+        // tn2 = tn.getTime() - 500000
+        // r = F('daterange?diff-digital', [tn, tn2])
+        // x = '08:20 ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        // r = F('daterange?diff-human', [tn, tn2])
+        // x = '8 minutes ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        //
+        // tn2 = tn.getTime() - 5000000
+        // r = F('daterange?diff-digital', [tn, tn2])
+        // x = '1:23:20 ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        // r = F('daterange?diff-human', [tn, tn2])
+        // x = '1 hour ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
 
         //-------
-        tn2 = tn.getTime() - 500
-        r = F('daterange?diff-short', [tn, tn2])
-        x = '0.5 sec. ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('daterange?diff-short-digital', [tn, tn2])
-        x = '0.5 sec. ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('daterange?diff-short-human', [tn, tn2])
-        x = '0.5 sec. ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-
-        tn2 = tn.getTime() - 5000
-        r = F('daterange?diff-short-digital', [tn, tn2])
-        x = '5 sec. ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('daterange?diff-short-human', [tn, tn2])
-        x = '5 sec. ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-
-        tn2 = tn.getTime() - 50000
-        r = F('daterange?diff-short-digital', [tn, tn2])
-        x = '50 sec. ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('daterange?diff-short-human', [tn, tn2])
-        x = '50 sec. ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-
-        tn2 = tn.getTime() - 500000
-        r = F('daterange?diff-short-digital', [tn, tn2])
-        x = '08:20 ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('daterange?diff-short-human', [tn, tn2])
-        x = '8 min. ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-
-        tn2 = tn.getTime() - 5000000
-        r = F('daterange?diff-short-digital', [tn, tn2])
-        x = '1:23:20 ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('daterange?diff-short-human', [tn, tn2])
-        x = '1 hr. ago'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        // let tn2 = tn.getTime() - 500
+        // r = F('daterange?diff-short', [tn, tn2])
+        // x = '0.5 sec. ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        // r = F('daterange?diff-short-digital', [tn, tn2])
+        // x = '0.5 sec. ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        // r = F('daterange?diff-short-human', [tn, tn2])
+        // x = '0.5 sec. ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        //
+        // tn2 = tn.getTime() - 5000
+        // r = F('daterange?diff-short-digital', [tn, tn2])
+        // x = '5 sec. ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        // r = F('daterange?diff-short-human', [tn, tn2])
+        // x = '5 sec. ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        //
+        // tn2 = tn.getTime() - 50000
+        // r = F('daterange?diff-short-digital', [tn, tn2])
+        // x = '50 sec. ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        // r = F('daterange?diff-short-human', [tn, tn2])
+        // x = '50 sec. ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        //
+        // tn2 = tn.getTime() - 500000
+        // r = F('daterange?diff-short-digital', [tn, tn2])
+        // x = '08:20 ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        // r = F('daterange?diff-short-human', [tn, tn2])
+        // x = '8 min. ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        //
+        // tn2 = tn.getTime() - 5000000
+        // r = F('daterange?diff-short-digital', [tn, tn2])
+        // x = '1:23:20 ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
+        // r = F('daterange?diff-short-human', [tn, tn2])
+        // x = '1 hr. ago'
+        // t.ok(r === x, `expected "${x}", got "${r}"`)
 
         // Support + - (for A a) as well as ++, -- (AM am)
 
@@ -133,7 +138,7 @@ function moreTest() {
         // r = F('date|full-full~es-ES', 'now')
         r = F('date~es-ES|WWW DD MMM YYYY hh:mm:ss ++', '2021-02-14:13:23:34Z')
         x = 'domingo 14 feb. 2021 01:23:34 PM'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        t.ok(r === x, `expected "${x}", got "${r}"`) //30
 
             /*
         - [X] test that we can name number and string as well as not
@@ -144,44 +149,27 @@ function moreTest() {
 
         r = F('1.3', Math.PI)
         x = '3.142'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        t.ok(r === x, `expected "${x}", got "${r}"`) // 31
         r = F('number|1.3', Math.PI)
         x = '3.142'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        t.ok(r === x, `expected "${x}", got "${r}"`) //32
 
         r = formatV('one $() two $() three $() four $()', 'hello', Math.PI, 4, 2)
         x = 'one hello two 3.141592653589793 three 4 four 2'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        t.ok(r === x, `expected "${x}", got "${r}"`) //33
 
-        r = F('date|none-long', '2021-01-24:10:30:00Z')
+        r = F('date|none-full', '2021-01-24:10:30:00Z')
+        x = '10:30:00 AM Coordinated Universal Time'
+        t.ok(r === x, `expected "${x}", got "${r}"`) //34
+
         x = '2:30:00 AM PST'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-
-        x = r
         r = F('date?local|h:mm:ss ++ z', '2021-01-24:10:30:00Z')
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        t.ok(r === x, `expected "${x}", got "${r}"`) //35
 
+        x = '3:30:00 AM PDT'
+        r = F('date?local|h:mm:ss ++ z', '2021-06-24:10:30:00Z')
+        t.ok(r === x, `expected "${x}", got "${r}"`) //36
 
-        const dt = '2021-01-25T00:10:00Z'
-        r = F('date?gmt|full', dt)
-        x = 'Monday, January 25, 2021 at 12:10:00 AM Greenwich Mean Time'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('date?est|full', dt)
-        x = "Sunday, January 24, 2021 at 7:10:00 PM Eastern Standard Time"
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        x = "Sunday, January 24, 2021 at 6:10:00 PM Central Standard Time"
-        r = F('date?cst|full', dt)
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        x = "Sunday, January 24, 2021 at 5:10:00 PM Mountain Standard Time"
-        r = F('date?mst|full', dt)
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        x = "Sunday, January 24, 2021 at 4:10:00 PM Pacific Standard Time"
-        r = F('date?pst|full', dt)
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('date|full', dt)
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('date?local|full', dt)
-        t.ok(r === x, `expected "${x}", got "${r}"`)
 
         // format bug investigation
         const foo = {
@@ -192,7 +180,7 @@ function moreTest() {
         }
         r = formatV('This is a test of object output default $(,),$(,),$(,),$(,),$(,),$(,)', foo, 'hello world', Math.PI, ['apple', 'banana', 'cherry'], null, { more: 'stuff' })
         x = 'This is a test of object output default [object Object],hello world,3.141592653589793,apple,banana,cherry,,[object Object]'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        t.ok(r === x, `expected "${x}", got "${r}"`) // 43
 
 
         t.end()
