@@ -55,12 +55,18 @@ consistent between different types of formatting, and
 to be portable and malleable enough to fullfill localization
 needs.
 
+`gen-format` presently does not have support for currency 
+or unit display. However, currency display and unit display/conversion
+features are planned for a later (possibly 2.0) release,, so watch this space.
+
 `gen-format` provides support for over 50 languages and
 multiple regions (matching a survey of Intl support under Chromium
 and Node).
 This support comes from the `i18n` localization files
 which are downloaded separately.  See the setup instructions
 in this document for more information.
+
+
 
 
 ### Installation
