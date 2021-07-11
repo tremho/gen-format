@@ -1,3 +1,6 @@
+
+import i18n from '../i18n'
+
 /*
  * Support for `formatV` action
  */
@@ -24,6 +27,7 @@ export function parseFormat(fmt:string= ''):ParsedItem[] {
     let natOrder = 0
     let pi = 0
     let ps = 0
+    fmt = i18n.getTokenDefault(fmt) || fmt
     while(pi !== -1) {
         pi = fmt.indexOf('$', ps)
         if(pi !== -1) {

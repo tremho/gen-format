@@ -120,27 +120,22 @@ function dateRangeFormatTest() {
         x = '2021 Jan 20 - 23'
         t.ok(r === x, `${name()} expected "${x}", got "${r}"`)
 
-        // √ TODO: break test into different groups
 
-        // √ TODO: group with date decorators M/D/YY
         tn = new Date('1961-04-03T10:12:00Z').getTime()
         tn2 = new Date('1961-04-03T12:50:00Z').getTime()
         r = F('daterange|M/D/YY hh:mm --', [tn, tn2])
         x = '4/3/61 10:12 am - 12:50 pm'
         t.ok(r === x, `${name()} expected "${x}", got "${r}"`)
 
-        // √ TODO: group with time zone displays and casts
         r = F('daterange|M/D/YY hh:mm -- z', [tn, tn2])
         x = '4/3/61 10:12 am - 12:50 pm UTC'
         t.ok(r === x, `${name()} expected "${x}", got "${r}"`)
 
-        // √ TODO: Current debug puzzler
         // weird truncation bug...
         r = F('daterange|M/D/YY hh:mm -- (z)', [tn, tn2])
         x = '4/3/61 10:12 am - 12:50 pm (UTC)'
         t.ok(r === x, `${name()} expected "${x}", got "${r}"`)
 
-        // √ TODO: Refactor to cast with hints instead of format then do this test
         r = F('daterange?pst|M/D/YY hh:mm -- (z)', [tn, tn2])
         x = '4/3/61 02:12 am - 04:50 am (PST)'
         t.ok(r === x, `${name()} expected "${x}", got "${r}"`)

@@ -3,6 +3,8 @@ import Tap from 'tap'
 import F from '../src/Formatter'
 import {formatV} from '../src/Formatter'
 
+import i18n from "../src/i18n";
+
 /**
  * This test just checks to see if we have weekday names in the i18n tables correctly.
  * It does not check month names, or any abbreviations.
@@ -29,5 +31,8 @@ function localeTest() {
     })
 }
 
-localeTest()
+let stats:any = i18n.setLocale() // default locale
+if(stats && stats.totalStrings) {// looks like we have i18n tables
+    localeTest()
+}
 

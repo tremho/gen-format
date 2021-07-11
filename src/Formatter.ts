@@ -6,10 +6,21 @@ let gFileOps:FileOps = fileOps // default; can override
 
 let useIntlChoice = false
 
+/**
+ * Sets up the file operation functions needed for the `i18n` / `locale-string-tables` support
+ * This must be done prior to any use of the features of this module.
+ * By default, file operations for a typical NodeJS environment are loaded.  If this does not
+ * fit your needs, you MUST call this setup function.
+ * @param {FileOps} fileOps
+ */
 export function setFileOps(fileOps:FileOps) {
     gFileOps = fileOps
 }
 
+/**
+ * Returns the currently loaded fileOps object
+ * @return {FileOps} fileOps
+ */
 export function getFileOps():FileOps {
     return gFileOps
 }
@@ -29,13 +40,16 @@ function hasLanguages() {
 
 /**
  * Returns a string describing the availability and support for
- * W3C "Intl" library for DateTimeFormat
+ * W3C "Intl" library for DateTimeFormat.
+ *
  * If availability is complete, and the function `useIntl(true)` is called (with `true`),
  * this library will be used for most of the localization aspects of the date/time formatting.
+ *
  * Intl support may be necessary to support extended numbering systems or calendar options, or
  * to faithfully represent formats for certain locales.
  *
  * @returns {string} one of:
+ *
  *  - `complete` :  the Intl library appears to support languages beyond the system locale
  *  - `partial` : the Intl libary appears to support the system locale, but perhaps not others
  *  - `none` : there is no Intl support available on this system.
@@ -51,7 +65,9 @@ export function checkIntlSupport() {
 
 /**
  * Call with the option to utilize the W3C Intl library, if available.
+ *
  * Use the `checkIntlSupport()` function to determine type of support available on this system.
+ *
  * If set true, Intl.DateTimeFormat will be called where appropriate rather than using the formatting and localization
  * entirely through this library.
  *
@@ -133,15 +149,30 @@ export function registerFormatHandler(type:string, handler:IFormatHandler) {
  * The primary export of the gen-format module: The `Formatter` operation (sometimes `F` as shorthand)
  * is represented by this function
  *
- * _describe specification format semantics here, and type identification_
+ * A _specifier string_ defines the type of format handler either by name (e.g. 'date') or by inference (i.e. numbers and strings)
+ * as well as the format and any hints or locale.
  *
- * @param spec The format specifier string.
- * @param value THe value to be formatted
+ * format type names are given first, followed by any locale or hint declarations, followed by a "|" character and
+ * then the format.
+ *
+ * locales are preceded by a tilde character (~).  Locales passed to date or number formatters may include
+ * unicode extended values for calendar and numbering system if Intl support is available and enabled.
+ *
+ * hints are indicated by a ? character.  If there are multiple hints, each is separated by a dash (-) character.
+ * Hints vary according to the type of formatter used. Refer to the documentation for the specific formatter type.
+ *
+ * Refer to the examples elsewhere in the `gen-format` module documentation
+ * for the types of specifier strings and values that can be passed.
+ *
+ *
+ * @param {string} spec The format specifier string.
+ * @param {any} value The value to be formatted
  *
  * @example
- *      import F from 'gen-format
+ *      import F, {useIntl} from '@tremho/gen-format
+ *      useIntl(true) // assumes Intl is available. see `checkIntlSupport`
  *
- *      console.log( F('date|full', 'now') )
+ *      console.log( F('date~zh-ZH-u-nu-hans-ca-chinese?Asia/Hong Kong|full', 'now') )
  */
 export default function formatFactory(spec:string, value:any) {
 
@@ -214,6 +245,7 @@ export function BadFormatSpecifier(message:string) {
 function decodeSpec(str:string):SpecParts {
     let fi = str.indexOf('|') // format, explicit
     let hi = str.indexOf('?') // hint list, dash delimited
+    if(hi > fi) hi = -1
     let li = str.indexOf('~') // locale specifier
     // don't let explicit formatting (e.g. date) interfere
     let di = fi === -1 ? str.indexOf('.') : -1 // period (number)
@@ -232,19 +264,18 @@ function decodeSpec(str:string):SpecParts {
     }
     else if(di === -1) {
         // neither. so we must be naming a type
+        if(fi === -1) fi = str.length;
 
         let te = Math.min(hi, li)
         if(te == -1) te = hi
 
         if(te === -1) te = li
-        if(te === -1) te = fi
-        if(te === -1) te = str.length
+        if(te === -1 || fi < te) te = fi
         specParts.type = str.substring(0, te)
-        if(fi == -1) fi = str.length;
     }
     // TODO: Consider allowing either period or comma and using the value to determine type
     
-    if(hi !== -1) {
+    if(hi !== -1 ) {
         let he = -1
         if(li > hi) he = li
         if(he === -1 && fi > hi) he = fi

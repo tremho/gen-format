@@ -33,7 +33,35 @@ including support for
 - Uses `@tremho/locale-string-tables` to support i18n localization 
 - date and time (with/without i18n support format definitions)
 - date range and durations (w/wo i18n)  
-- future units of measure and currency to be added (via `@tremho/locale-string-tables`)
+
+Number and Date features will utilize the W3C Intl subsystem
+internally if this is available.  Use of Intl is controllable
+to insure consistent behavior across installations that may
+or may not have this installed.
+
+`gen-format` aims to be faithful to the Intl behavior in the
+display of equivalent format functionality.
+But `gen-format` also goes further in many cases, with
+features such as:
+
+- _Number Formatting_: Ability to align output with space padding
+- _Number Formatting_: Ability to __not__ round a value
+- _Date Formatting_: Expanded human-like descriptions for date ranges and relative times
+
+While many of the formatting features of `gen-format`
+may be possible to achieve in other ways, the `gen-format`
+approach using template strings aims to be more syntactically
+consistent between different types of formatting, and
+to be portable and malleable enough to fullfill localization
+needs.
+
+`gen-format` provides support for over 50 languages and
+multiple regions (matching a survey of Intl support under Chromium
+and Node).
+This support comes from the `i18n` localization files
+which are downloaded separately.  See the setup instructions
+in this document for more information.
+
 
 ### Installation
 
@@ -55,42 +83,167 @@ Read [the API documentation](API.md) for details.
 ### Internationalization
 
 If you only need formatting for non-localizable purposes,
-there is nothing else to do.  Just use the API as directed.
+there may be nothing else to do.  Just use the API as directed.
 
-To use the localized features of gen-format (for example, the DateTime formatter),
-you must set up an `i18n` folder tree per `@tremho/locale-string-tables`
-to hold the translation strings and formats.
+For gen-format, internationalization / localization support
+is mostly in regard to the Date/Time formatting, although there
+are some aspects to number formatting that are subject to
+locale rules as well.
 
-This involves two parts.  The first is to create (or copy) the
-`i18n` folder tree and populate it with the proper string identifiers.
-You will find a copy of what you need in the gen-format distribution.
-After installing gen-format, go to your project directory and
-type 
+Internationalization support is available via two different
+possibilities.
 
-    cp -r ./node_modules/@tremho/gen-format/i18n ./i18n
+If your system supports the [W3C Intl library](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl)
+then many of the formatting features can redirect through these APIs.
 
-(_note the copy command above is for linux-lke operating systems.
-For Windows, please adjust, or use File Explorer to perform the copy_)
+Note that many Javascript runtime environments either do not support 
+the Intl library or else only have it implemented for the system locale.
 
-If you have other localization needs for your application, you 
-may wish to install and use `@tremho/locale-string-tables` for
-your own purposes as well.  Just add your additional localization
-string files into this pre-existing `i18n` tree
+Note that if you are running NodeJS, capabilities of tje
+Intl solution may vary depending upon the version of Node,
+how it was built, and/or the existence of the full icu4c-data module
+and the environment Node is running within.  
 
-You may also safely remove any language/region folders you do not wish
-to support in  your application.  You may also edit the localized
-terms if you need to.  You should check these files into your repository
-as they are now effectively part of your application sources.
+See this link for [icu4c-data](https://www.npmjs.com/package/icu4c-data)
+and this one for [Node Intl information](https://nodejs.org/api/intl.html#intl_internationalization_support)
+for more information about setting up full icu data.
 
-##### Assigning FileOps
+Within `gen-format`, you can use the `checkIntlSupport` and `useIntl`
+functions from `Formatter` to determine your Intl capabilities
+and control whether or not you wish `gen-format` to use it.
+ 
+`checkIntlSupport()` will return either 'complete', 'partial', or 'none',
+reflecting the discovery of Intl namespace and its capabilities.
 
-The second part to integrating i18n support is to supply a
-`FileOps` object. This object links the library to your file
-system (which may be Node-based, or may be another).
+If support is 'complete' or 'partial', it may be used.  
+To enable its use, you must call `useIntl(true)`.
 
+Note that a partial Intl availability is limited to the local
+system locale. A practical option may be to not include string
+table data in your app, and rely on the partial implementation
+of Intl to correctly format Dates for the current locale.
 
+If the support is 'none', you must include string table data 
+for any locales you wish to support outside of `en-US`
 
+#### Internationalization support via string tables
 
+With or without Intl support, at least some locale-aware Date and Time formatting
+will use language and region specific string translation tables
+as provided for by the [@tremho/locale-string-tables]() 
+module.
 
+The string table data is not provided in the npm package for
+`gen-format`, as it is technically optional to use it, and it
+should reside at the root of your app project, not couched within the 
+node_modules directory structure.  In this way, you are able to use
+the `i18n` tree for your app's own localization needs and/or
+can manage which languages you wish to support and ship with.
+
+##### Downloading the `i18n` data
+
+Point your web browser to [this web location](https://github.com/tremho/gen-format/releases/tag/v1.0.1)
+and click on the `i18n.zip` attachment link to download the
+data to your computer.  Unpack the zip file into the folder tree
+and place the whole of the `i18n` folder into the root of your
+app project.
+
+##### Setting up for your environment
+
+For many NodeJS projects, you will not need to do anything
+further.  The presence of the `i18n` folder will be detected and utilized
+by the `gen-format` code and will provide localized terms and 
+formats even if Intl is not available or you have chosen
+not to use it.
+
+If you are running in an environment other than NodeJS (such as a 
+web browser, or perhaps a NativeScript context or something similar), you will need
+to supply a custom `FileOps` object that is used to access
+the `i18n` files using the file system of your runtime environment,
+and/or to provide the correct relative path to the root where
+your `i18n` folder resides.
+
+If you need to set up a custom FileOps object for your runtime context,
+please refer to [this documentation](https://github.com/tremho/locale-string-tables#using-locale-string-tables)
+for how to construct such an object.
+
+##### Initializing Formatter and i18n
+
+Full initialization, including setting of a `FileOps` object can
+be seen in the example below.
+_Note that this is optional for a typical NodeJS project, because
+by default, the `Formatter` is initialized with an internally
+supplied version of `NodeFileOps`. The default setting for
+`useIntl` is `false`, so if you wish to enable Intl support (
+assuming it is availale), you must do that directly by calling 
+`useIntl(true)`.
+
+```
+import {checkIntlSupport, useIntl, setFileOps} from "@tremho/gen-format"'"
+import fileOps from '../src/NodeFileOps' // or whatever your own FileOps implementation is
+
+// Set up your custom FileOps object
+setFileOps(fileOps)
+
+// Use Intl if it is complete, otherwise no.
+let intlStatus = checkIntlSupport()
+// intlStatus will be one of `complete`, 'partial', or 'none'
+if(intlStatus === 'complete') {
+    useIntl(true) // enable Intl use (default is false)
+}
+
+```
+These initialization steps, if used, should occur once before any
+other use of the `Formatter` in your application, such as at app startup.
+
+### Using the `gen-format` module
+
+The core `Formatter` object is the default export of
+the `gen-format` module.  Use it like this:
+
+```
+import Formatter from "@tremho/gen-format"
+```
+or, if you are using `require` syntax:
+
+```
+const Formatter = require("@tremho/gen-format").default
+```
+
+For brevity, the `Formatter` object is often abbreviated 
+as simply `F`, so importing may look like this instead:
+
+```
+import F from "@tremho/gen-format"
+```
+or
+```
+const F = require("@tremho/gen-format").default
+```
+
+Other API items are imported indirectly. For example
+
+```
+import {checkIntlSupport, useIntl, setFileOps, getFileOps} from "@tremho/gen-format"
+```
+(or `const {import {checkIntlSupport, useIntl, setFileOps, getFileOps} = require("@tremho/gen-format")`)
+
+to use the `formatV` function:
+```
+import {formatV} from "@tremho/gen-format"
+```
+(or `const {formatV} = require("@tremho/gen-format")`)
+
+to gain access to the `i18n` API:
+```
+import {i18n} from "@tremho/gen-format"
+```
+(or `const {i18n} = require("@tremho/gen-format")`)
+
+Refer to the [API docs](./API.md)
+for how to use the formatter
+
+and to the [i18n API doc]() for how to use the access to the 
+locale-string-tables support for localization.
 
 

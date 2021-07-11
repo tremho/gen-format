@@ -1,14 +1,15 @@
 import {getFileOps, IFormatHandler, SpecParts, getUseIntlChoice} from "../Formatter";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 import {findTimezones, findTimezoneBlocks, findTimezoneBlocksForDate} from './Timezone'
-
+import {i18nFormatByStyle} from "./Shared";
 import * as LocaleStringTables from "@tremho/locale-string-tables"
+import {LoadStats} from "@tremho/locale-string-tables"
 import DateRangeFormatter from "./DateRangeFormatter";
 
 const sysloc = LocaleStringTables.getSystemLocale()
 let localTimeZone;
 
-let i18n
+import i18n from '../i18n'
 
 // We'll use Intl if it is available and has language support
 
@@ -81,12 +82,6 @@ export function BadDateValue(message:string) {
  * It then employs the internal `SimpleDateParser` to represent the date according to format.
  */
 export default class DateFormatter implements IFormatHandler {
-
-    constructor() {
-        i18n = new LocaleStringTables.LocaleStrings()
-        i18n.init(getFileOps())
-        i18n.loadForLocale(sysloc)
-    }
 
     format(specParts: SpecParts, value: any): string {
 
@@ -269,24 +264,30 @@ export default class DateFormatter implements IFormatHandler {
         if(tzCast && tzCast.toLowerCase() === 'local') tzCast = localTimeZone
 
         let rt = ''
+        let sdf = new SimpleDateFormat(timestamp)
+        sdf.setFormat(specParts.format)
         try {
-            let sdf = new SimpleDateFormat(timestamp)
-            sdf.setFormat(specParts.format)
             sdf.setLocale(specParts.locale)
+        } catch(e) {
+            console.error(e.message)
+            i18n.setLocale() // revert to system locale on error
+        }
+
+        try {
             sdf.setTimezoneCast(tzCast)
             rt = sdf.toString()
             if(tzCast && tzCast.toLowerCase() === 'utc') {
                 let parts = (specParts.format || '').split('-')
                 let style = parts[1] || parts[0]
-                let utcName = 'UTC'
+                let utcName = i18n.getLocaleString('date.format.timezone.UTC.short', 'UTC', false)
                 if( style.indexOf('Z') !== -1) style = 'full'
-                if( style === 'full') utcName = 'Coordinated Universal Time'
+                if( style === 'full') utcName = i18n.getLocaleString('date.format.timezone.UTC.long', 'Coordinated Universal Time', false)
                 rt = rt.replace('Greenwich Mean Time', utcName)
             }
         } catch(e) {
             console.error(e)
         }
-        return rt
+        return rt.trim()
     }
 }
 
@@ -295,8 +296,8 @@ const months = ['--', 'January', 'February', 'March', 'April', 'May', 'June', 'J
 const monthAbbr = ['--', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 const weekdayAbbrs = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-const weekdayAbbr2 = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
-const weekdayAbbr3 = ['S', 'M', 'T', 'W', 'Th', 'F', 'Sa']
+const weekdayAbbr2 = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']  // deprecated
+const weekdayAbbr3 = ['S', 'M', 'T', 'W', 'Th', 'F', 'Sa']  // deprecated
 
 /**
  * This internal class is the workhorse of DateFormatter.  It transforms a date format string into a correspondingly
@@ -341,6 +342,8 @@ const weekdayAbbr3 = ['S', 'M', 'T', 'W', 'Th', 'F', 'Sa']
  *      -- = am/pm (lower case)
  *      -+ - PM only (upper case)
  *      +- = PM only (lower case)
+ *      -? = a/p (lower case)
+ *      +? = A/P (upper case)
  *
  *      x = milliseconds (as an integer without a period)
  *
@@ -418,6 +421,10 @@ export class SimpleDateFormat {
             }
 
             this.locale = locale
+            const stats:LoadStats = i18n.setLocale(locale)
+            if(!stats.languageFiles  && !stats.regionFiles && !stats.commonRegionFiles) {
+                throw Error('No Locale files loaded for '+locale)
+            }
         }
     }
     setTimezoneCast(tzCast:string) {
@@ -521,7 +528,7 @@ export class SimpleDateFormat {
             let [dateStyle, timeStyle] = fmt.split('-')
             if (!timeStyle) timeStyle = dateStyle
             const isUtc = this.tzCast && this.tzCast.toLowerCase() === 'utc'
-            fmt = i18nFormatByStyle(this.locale, dateStyle, timeStyle,isUtc)
+            fmt = i18nFormatByStyle(this.locale, dateStyle, timeStyle,isUtc, ' at ')
         }
         let out = fmt
 
@@ -787,15 +794,19 @@ export class SimpleDateFormat {
         }
 
         // do AM/PM
-        let ampm = this.hr >= 12 ? 'pm' : 'am';
-        let pm = this.hr >= 12 ? 'pm' : '';
+        i18n.setLocale(this.locale)
+        let ampm = this.hr >= 12 ? i18n.getLocaleString('time.pm.lowercase', 'pm') : i18n.getLocaleString('time.am.lowercase', 'am');
+        let pm = this.hr >= 12 ? i18n.getLocaleString('time.pm.lowercase', 'pm') : '';
+
+        let AMPM = this.hr >= 12 ? i18n.getLocaleString('time.pm', 'PM') : i18n.getLocaleString('time.am', 'AM');
+        let PM = this.hr >= 12 ? i18n.getLocaleString('time.pm', 'PM') : '';
 
         while ((n = out.indexOf('--')) !== -1) {
             out = out.replace('--', ampm)
             n += ampm.length;
         }
         while ((n = out.indexOf('++')) !== -1) {
-            out = out.replace('++', ampm.toUpperCase())
+            out = out.replace('++', AMPM)
             n += ampm.length;
         }
         while ((n = out.indexOf('+-')) !== -1) {
@@ -803,7 +814,7 @@ export class SimpleDateFormat {
             n += ampm.length;
         }
         while ((n = out.indexOf('-+')) !== -1) {
-            out = out.replace('-+', pm.toUpperCase())
+            out = out.replace('-+', PM)
             n += ampm.length;
         }
         while ((n = out.indexOf('-?')) !== -1) {
@@ -811,7 +822,7 @@ export class SimpleDateFormat {
             n += ampm.length;
         }
         if ((n = out.indexOf('+?')) !== -1) {
-            out = out.replace('+?', ampm.charAt(0).toUpperCase())
+            out = out.replace('+?', AMPM.charAt(0))
             n += ampm.length;
         }
 
@@ -1154,59 +1165,11 @@ function i18nWeekday(locale, wd, style) {
     let value = i18n.getLocaleString(ikey, '', true)
     if(!value) {
         // fallback to hard-coded en-US
-        value = style === 'long' ? weekdays[wd] : style === 'medium' ? weekdayAbbrs[wd] : weekdayAbbr2[wd]
+        value = style === 'long' ? weekdays[wd] : style === 'medium' ? weekdayAbbrs[wd] : weekdayAbbrs[wd]//weekdayAbbr2[wd]
     }
     return value
 }
 
-function i18nFormatByStyle(locale, dateStyle, timeStyle, isUtc) {
-    if(!locale) locale = sysloc
-    i18n.setLocale(locale)
-    if(!dateStyle) dateStyle = 'none'
-    if(!timeStyle) timeStyle = 'none'
-    i18n.setLocale(locale)
-    let ikeyDate = `date.format.${dateStyle}`
-    let ikeyTime = `time.format.${timeStyle}`
-    let dateFmt = i18n.getLocaleString(ikeyDate, '', false)
-    if(dateFmt === '') {
-        // console.log('missing '+ ikey+ ' for '+locale)
-        if(dateStyle === 'full') {
-            dateFmt = "WWWW, MMMM D YYYY"
-        }
-        else if (dateStyle === 'long') {
-            dateFmt = 'MMMM D, YYYY'
-        } else if (dateStyle === 'medium') {
-            dateFmt = 'WW, MMM D, YYY'
-        } else if (dateStyle === 'short' || dateStyle === 'numeric') {
-            if (locale.split('-')[1] === 'US') {
-                dateFmt = 'MM/DD/YY'
-            } else {
-                dateFmt = 'DD/MM/YY'
-            }
-        }
-    }
-
-    let timeFmt = dateFmt ? i18n.getLocaleString(`date.format.time.separator.${timeStyle}`, timeStyle === 'short'? ', ': ' at ', false) : ''
-
-    if(timeStyle.indexOf(':') !== -1) {
-        timeFmt += timeStyle
-    } else {
-        timeFmt += i18n.getLocaleString(ikeyTime, '', false)
-    }
-
-    if(!timeFmt && timeStyle !== 'none') {
-        let h = 'hhh' // 24 hour, no lead
-        if (locale.split('-')[1] === 'US') h = 'h' // 12 hour, no lead
-        timeFmt += `${h}:mm:ss`
-        if (locale.split('-')[1] === 'US') timeFmt += ' ++ ' // AM/PM
-        if (isUtc || timeStyle === 'long' || timeStyle === 'full') {
-            timeFmt += 'Z' // timezone
-        }
-    }
-
-
-    return dateFmt + timeFmt
-}
 function i18nTimezone(locale, tzName, style, dt) {
     if(!locale) locale = sysloc
     i18n.setLocale(locale)

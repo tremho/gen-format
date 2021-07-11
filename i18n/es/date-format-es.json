@@ -1,0 +1,33 @@
+{
+  "date.format.timezone.GMT.long": "Hora del meridiano de Greenwich",
+  "date.format.timezone.GMT + 1.long": "Horario de verano británico",
+  "date.format.timezone.GMT.short": "GMT",
+
+  "date.format.timezone.UTC.long": "(tiempo universal coordinado)",
+  "date.format.timezone.UTC.short": "UTC",
+
+
+  "date.format.timezone.EST.long": "Hora estándar del este",
+  "date.format.timezone.EST.short": "EST",
+  "date.format.timezone.CST.long": "Hora estándar central",
+  "date.format.timezone.CST.short": "CST",
+  "date.format.timezone.MST.long": "Hora estándar de la montaña",
+  "date.format.timezone.MST.short": "MST",
+  "date.format.timezone.PST.long": "Hora estándar del Pacífico",
+  "date.format.timezone.PST.short": "PST",
+  "date.format.timezone.EDT.long": "Hora de verano del este",
+  "date.format.timezone.EDT.short": "EDT",
+  "date.format.timezone.CDT.long": "Hora de verano central",
+  "date.format.timezone.CDT.short": "CDT",
+  "date.format.timezone.MDT.long": "Hora de verano de la montaña",
+  "date.format.timezone.MDT.short": "MDT",
+  "date.format.timezone.PDT.long": "Hora de verano del Pacífico",
+  "date.format.timezone.PDT.short": "PDT",
+
+
+  "time.pm" : "",
+  "time.am" : "",
+  "time.pm.lowercase" : "",
+  "time.am.lowercase" : ""
+
+}

@@ -1,0 +1,4 @@
+{
+  "number.format.decimal" : "\u002c",
+  "number.format.thousand" : "\u00a0"
+}

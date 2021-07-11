@@ -4,8 +4,8 @@
   "description": "General formatting system; string, number, date, currency, (expandable)",
   "main": "build/src/Formatter.js",
   "scripts": {
-    "test": "npm run clean && npm run compile && tap ./build/test/*.test.js",
-    "test-direct": "npm run clean && npm run compile && node build/test/Localized.test.js",
+    "test": "npm run clean && npm run compile && tap --no-coverage ./build/test/*.test.js",
+    "test-direct": "npm run clean && npm run compile && node build/test/DateFormat.test.js",
     "clean": "rm -fr build css",
     "compile": "tsc",
     "doc": "npm run clean && npm run compile && inchjs && cd build; tsccd ./; documentation lint src; documentation readme --readme-file ../API.md --markdown-toc false --section API src"
@@ -13,14 +13,18 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tremho/gen-format"
+  },
   "devDependencies": {
-    "@types/node": "^15.12.4",
+    "@types/node": "^15.14.2",
     "inchjs": "^0.4.1",
     "tap": "^14.11.0",
     "ts-clear-classdoc": "^1.0.1"
   },
   "dependencies": {
-    "@tremho/locale-string-tables": "^0.5.0",
+    "@tremho/locale-string-tables": "^1.0.1",
     "fs-extra": "^10.0.0",
     "moment-timezone": "^0.5.33",
     "timezone-support": "^2.0.2"

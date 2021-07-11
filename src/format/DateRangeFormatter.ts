@@ -2,63 +2,48 @@ import {IFormatHandler, SpecParts, formatV, IncompatibleValueType, getFileOps, g
 import F from '../Formatter'
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 import DateFormatter, {BadDateValue} from "./DateFormatter";
+import {i18nFormatByStyle} from "./Shared";
 
 import * as LocaleStringTables from "@tremho/locale-string-tables"
 
 const sysloc = LocaleStringTables.getSystemLocale()
 
-let i18n
+import i18n from '../i18n'
 
 const IDTF = Intl && Intl.DateTimeFormat
 // @ts-ignore
 const IRTF = Intl && Intl.RelativeTimeFormat
 
-// TODO: switch to @token form passing to formatV
-const loc = {
-    "date.range.time.separator" : " at ",
-    "date.range.now": "now",
-    "date.range.one": "one",
-    "date.term.year": "year",
-    "date.abbr.year": "yr.",
-    "date.abbr.year.plural": "yr.",
-    "date.term.month": "month",
-    "date.abbr.month": "mo.",
-    "date.abbr.month.plural": "mo.",
-    "date.term.week": "week",
-    "date.abbr.week": "wk.",
-    "date.abbr.week.plural": "wk.",
-    "date.term.day": "day",
-    "date.abbr.day": "dy.",
-    "date.abbr.day.plural": "dy.",
-    "date.term.hour": "hour",
-    "date.abbr.hour": "hr.",
-    "date.abbr.hour.plural": "hr.",
-    "date.term.minute": "minute",
-    "date.abbr.minute": "min.",
-    "date.abbr.minute.plural": "min.",
-    "date.term.second": "second",
-    "date.abbr.second": "sec.",
-    "date.abbr.second.plural": "sec.",
-    "date.range.moments.ago": "a few moments ago",
-    "date.range.moments.away": "in a few moments",
-    "date.range.ago": "ago",
-    "date.range.today": "today",
-    "date.range.tomorrow": "tomorrow",
-    "date.range.yesterday": "yesterday",
-    "date.range.weekday.next": "next $weekday()",
-    "date.range.weekday.previous": "$weekday(), last week",
-    "date.range.weekday.weeks.ago": "$weekday(), $weeks(-1.0) weeks ago",
-    "date.range.weekday.week.ahead": "a week from $weekday()",
-    "date.range.weekday.weeks.ahead": "in $weeks(-1.0) weeks, on $weekday()",
-    "date.range.days.ago": "$days(-1.0) days ago",
-    "date.range.days.ahead": "in $days(-1.0) days",
-    "date.range.in.span.on.date": "in $span() on $date()"
+
+let artificialNow = 0
+
+/**
+ * Complement to `setArtificialNow`, returns
+ * the agreed upon current time
+ *
+ * @return {number} real or artificial current timestamp, in milliseconds
+ */
+export function getNow() {
+    return artificialNow || Date.now()
 }
 
-function setupLoc() {
-    Object.getOwnPropertyNames(loc).forEach(p => {
-        loc[p] = i18n.getLocaleString(p)
-    })
+/**
+ * Set an artificial value for 'currentTime'.
+ * Useful for debugging, or for setting up relative time scenarios
+ * against a non-current context.
+ * A string or number or Date suitable for a Date constructor
+ * can be passed. Pass 0 or undefined to turn off.
+ *
+ * @param [datevalue] - a value suitable for a Date constructor, or none to turn off
+ *
+ */
+export function setArtificialNow(datevalue) {
+    if(!datevalue) artificialNow = 0
+    if(typeof datevalue === 'number') {
+        artificialNow = datevalue
+    } else {
+        artificialNow = new Date(datevalue).getTime()
+    }
 }
 
 /**
@@ -74,12 +59,6 @@ export default class DateRangeFormatter implements IFormatHandler {
 
     format(specParts: SpecParts, value: any): string {
 
-        if(!i18n) {
-            i18n = new LocaleStringTables.LocaleStrings()
-            i18n.init(getFileOps())
-            i18n.loadForLocale(sysloc)
-        }
-
         let out: string = ''
         if(Array.isArray(value)) {
             if(value.length !== 2) {
@@ -89,7 +68,7 @@ export default class DateRangeFormatter implements IFormatHandler {
             // if we pass a single value, it is assumed to be a date and combined in range with 'now'
             if((typeof value === 'object' && value instanceof Date)
              || (typeof value === 'string' || typeof value === 'number')) {
-                value = [value, loc['date.range.now']]
+                value = [value, 'now']
             } else {
                 throw BadDateValue('daterange with one relative argument must be a Date, date string, or date milllisecond value')
             }
@@ -101,11 +80,11 @@ export default class DateRangeFormatter implements IFormatHandler {
 
         // if we use they 'now' keyword, default to current time
         if(typeof startDate === 'string' && startDate.trim().toLowerCase() === 'now') {
-            startDate = Date.now()
+            startDate = getNow()
             startIsNow = true;
         }
         if(typeof endDate === 'string'  && endDate.trim().toLowerCase() === 'now') {
-            endDate = Date.now()
+            endDate = getNow()
             endIsNow = true;
         }
 
@@ -115,11 +94,6 @@ export default class DateRangeFormatter implements IFormatHandler {
         let isDiff, isHuman, timeStyle
 
         let format = specParts.format
-
-        if(format.indexOf(' db') !== -1) {
-            format = format.substring(0, format.indexOf(' db'))
-            console.log('break')
-        }
 
         if(format.indexOf('full') !== -1
             || format.indexOf('long') !== -1
@@ -141,7 +115,7 @@ export default class DateRangeFormatter implements IFormatHandler {
                 timeStyle = 'full'
                 isDiff = true
             }
-            format = i18nFormatByStyle(specParts.locale, dateStyle, timeStyle,isUtc)
+            format = i18nFormatByStyle(specParts.locale, dateStyle, timeStyle,isUtc, ', ')
             // if we have a discrete format, timeStyle will not be part of format
             if(tStyle && tStyle.indexOf(':') !== -1) {
                 format += timeStyle
@@ -267,9 +241,9 @@ export default class DateRangeFormatter implements IFormatHandler {
         let spec = Object.assign({}, specParts) // copy
         // spec.hints = hints // pass any remaining hints not pulled above to the date formatter (i.e. timezone cast)
         spec.format = leftFormat || format
-        let startStr = startIsNow ? loc['date.range.now'] : dateFormatter.format(spec, dtStart)
+        let startStr = startIsNow ? i18n.getLocaleString('date.range.now','now') : dateFormatter.format(spec, dtStart)
         spec.format = rightFormat || format
-        let endStr = endIsNow ? loc['date.range.now'] : dateFormatter.format(spec, dtEnd)
+        let endStr = endIsNow ? i18n.getLocaleString('date.range.now','now') : dateFormatter.format(spec, dtEnd)
 
         let stTime = dtStart.getTime()
         let endTime = dtEnd.getTime()
@@ -282,7 +256,7 @@ export default class DateRangeFormatter implements IFormatHandler {
             if(!isToday) {
                 out = datePart
             }
-            if(out) out += loc['date.range.time.separator']
+            if(out) out += i18n.getLocaleString('date.range.time.separator',' at ')
         }
 
 
@@ -406,8 +380,9 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
     }
     const expressHMS = (hours, minutes, seconds) => {
         let lbl = ''
+        let term = relStyle === 'full' || relStyle === 'long' ? 'term' : 'abbr'
         if(minutes) {
-            lbl = '' //i18n.getPluralizedString(`date.term.minute.${relStyle}`, minutes)
+            lbl = i18n.getPluralizedString(locale,`date.${term}.minute`, minutes)
             if(!lbl) {
                 const choices = {
                     full: ['minute', 'minutes'],
@@ -420,7 +395,7 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
             }
         }
         else if(seconds) {
-            lbl = '' //i18n.getPluralizedString(`date.term.second.${relStyle}`, seconds)
+            lbl = i18n.getPluralizedString(locale,`date.${term}.second`, seconds)
             if(!lbl) {
                 const choices = {
                     full: ['second', 'seconds'],
@@ -435,7 +410,7 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
 
         let fmt = ''
         if(hours) {
-            lbl = '' //i18n.getPluralizedString(`date.term.hour.${relStyle}`, hours)
+            lbl = i18n.getPluralizedString(locale,`date.${term}.hour`, hours)
             if(!lbl) {
                 const choices = {
                     full: ['hour', 'hours'],
@@ -474,7 +449,7 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
     // fast out for now
     if(!dparts.years && !dparts.months && !dparts.weeks && !dparts.days
         && !dparts.hours && !dparts.minutes && !dparts.seconds && !dparts.milliseconds) {
-        return loc['date.range.now']
+        return i18n.getLocaleString('date.range.now','now')
     }
 
     if(!useIntl() || (relStyle && relStyle.indexOf(':') !== -1)) {
@@ -489,9 +464,9 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
                 if(dparts.hours || dparts.minutes) dparts.seconds = dparts.milliseconds = 0
                 if ((dparts.seconds || dparts.milliseconds) && dparts.seconds < 6) {
                     if (dparts.sign < 0) {
-                        return loc["date.range.moments.ago"]
+                        return i18n.getLocaleString("date.range.moments.ago","a few moments ago")
                     } else {
-                        return loc["date.range.moments.away"]
+                        return i18n.getLocaleString("date.range.moments.away","in a few moments")
                     }
                 }
             }
@@ -512,7 +487,7 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
         }
 
         out = out.trim()
-        if (dparts.sign < 0) out += ' '+ loc["date.range.ago"]
+        if (dparts.sign < 0) out += ' '+ i18n.getLocaleString("date.range.ago","ago")
         return out
 
     } else {
@@ -534,9 +509,9 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
         if(relStyle === 'full') {
             if (type === 'seconds' && dparts.seconds < 6) {
                 if (dparts.sign < 0) {
-                    return loc['date.range.moments.ago']
+                    return i18n.getLocaleString('date.range.moments.ago','a few moments ago')
                 } else {
-                    return loc['date.range.moments.away']
+                    return i18n.getLocaleString('date.range.moments.away','in a few moments')
                 }
             }
         }
@@ -567,7 +542,7 @@ function roundUpDParts(dparts) {
 function fitRelativeDate(dt) {
     let out = ''
     let isToday = false
-    let today = new Date()
+    let today = new Date(getNow())
     let timeDiff = dt.getTime() - today.getTime()
     let years = Math.floor(dt.getUTCFullYear() - today.getUTCFullYear())
     let months = dt.getUTCMonth() - today.getUTCMonth()
@@ -589,31 +564,31 @@ function fitRelativeDate(dt) {
         let weekday = F('date|WWWW', dt)
         if(weeks < 0) {
             if(weeks === -1) {
-                out = formatV(loc['date.range.weekday.previous'], {weekday})
+                out = formatV('@date.range.weekday.previous:$weekday(), last week', {weekday})
             } else {
-                out = formatV(loc['date.range.weekday.weeks.ago'], {weekday, weeks: -weeks})
+                out = formatV('@date.range.weekday.weeks.ago:$weekday(), $weeks(-1.0) weeks ago', {weekday, weeks: -weeks})
             }
         } else {
             if(days <= 7) {
-                out = formatV(loc['date.range.weekday.next'], {weekday})
+                out = formatV('@date.range.weekday.next:next $weekday()', {weekday})
             } else {
                 if(weeks === 1) {
-                    out = formatV(loc['date.range.weekday.week.ahead'], {weekday})
+                    out = formatV('@date.range.weekday.week.ahead:a week from $weekday()', {weekday})
 
                 } else {
-                    out = formatV(loc['date.range.weekday.weeks.ahead'], {weekday, weeks})
+                    out = formatV('@date.range.weekday.weeks.ahead:in $weeks(-1.0) weeks, on $weekday()', {weekday, weeks})
                 }
             }
         }
     } else {
         // express as days
         if(days === 0) {
-            out = loc['date.range.today']
+            out = i18n.getLocaleString('date.range.today','today')
             isToday = true
         } else if(days === 1) {
-            out = loc['date.range.tomorrow']
+            out = i18n.getLocaleString('date.range.tomorrow','tomorrow')
         } else if(days === -1) {
-            out = loc['date.range.yesterday']
+            out = i18n.getLocaleString('date.range.yesterday','yesterday')
         }
         if(Math.abs(days) < 7 && Math.abs(days) > 2) {
             let weekday = F('date|WWWW', dt)
@@ -621,9 +596,9 @@ function fitRelativeDate(dt) {
             out += weekday
         } else if(!out) {
             if (days < 0) {
-                out = formatV(loc['date.range.days.ago'], {days: -days})
+                out = formatV('@date.range.days.ago:$days(-1.0) days ago', {days: -days})
             } else {
-                out = formatV(loc['date.range.days.ahead'], {days})
+                out = formatV('@date.range.days.ahead:in $days(-1.0) days', {days})
             }
         }
     }
@@ -631,61 +606,7 @@ function fitRelativeDate(dt) {
 
 }
 
-// TODO: The following functions are mostly in common with DateFormatter. Combine for better maintainability
-
 function useIntl() {
     return IRTF && getUseIntlChoice()
 }
 
-function i18nFormatByStyle(locale, dateStyle, timeStyle, isUtc) {
-    if(!locale) locale = sysloc
-    i18n.setLocale(locale)
-    if(!dateStyle) dateStyle = 'none'
-    if(!timeStyle) timeStyle = 'none'
-    i18n.setLocale(locale)
-    let ikeyDate = `date.format.${dateStyle}`
-    let ikeyTime = `time.format.${timeStyle}`
-    let dateFmt = i18n.getLocaleString(ikeyDate, '', false)
-    if(dateFmt === '') {
-        // console.log('missing '+ ikey+ ' for '+locale)
-        if (dateStyle === 'long' || dateStyle === 'full') {
-            dateFmt = 'WWWW, MMMM D, YYYY'
-        } else if (dateStyle === 'medium') {
-            dateFmt = 'WW, MMM D, YYY'
-        } else if (dateStyle === 'short' || dateStyle === 'numeric') {
-            if (locale.split('-')[1] === 'US') {
-                dateFmt = 'MM/DD/YYYY'
-            } else {
-                dateFmt = 'DD/MM/YYYY'
-            }
-        }
-    }
-
-
-    let timeFmt = dateFmt ? i18n.getLocaleString('date.format.time.separator', ', ', false) : ''
-
-    if(timeStyle.indexOf(':') !== -1) {
-        timeFmt += timeStyle
-    } else {
-        if(isUtc) {
-            timeFmt += 'h:mm:ss ++ Z' // Intl chooses this style for UTC
-        } else {
-            timeFmt += i18n.getLocaleString(ikeyTime, '', false)
-        }
-    }
-
-
-
-    if(!timeFmt && timeStyle !== 'none') {
-        let h = 'hhh' // 24 hour, no lead
-        if (locale.split('-')[1] === 'US') h = 'h' // 12 hour, no lead
-        timeFmt += `${h}:mm:ss`
-        if (locale.split('-')[1] === 'US') timeFmt += ' ++ ' // AM/PM
-        if (isUtc || timeStyle === 'long' || timeStyle === 'full') {
-            timeFmt += 'Z' // timezone
-        }
-    }
-
-
-    return dateFmt + timeFmt
-}

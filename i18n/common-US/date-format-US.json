@@ -1,0 +1,10 @@
+
+{
+  "date.format.short" : "M/DD/YY",
+
+  "time.format.full": "h:mm:ss ++ Z",
+  "time.format.long": "h:mm:ss ++ z",
+  "time.format.medium": "h:mm:ss ++",
+  "time.format.short": "h:mm ++",
+  "time.format.narrow": "h:mm -?"
+}

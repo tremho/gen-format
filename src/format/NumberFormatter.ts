@@ -1,4 +1,6 @@
 import {IFormatHandler, SpecParts, IncompatibleValueType} from "../Formatter";
+import i18n from '../i18n'
+import {getUseIntlChoice} from "../Formatter";
 
 /**
  * NumberFormatter
@@ -36,14 +38,28 @@ export default class NumberFormatter implements IFormatHandler {
         let dss = decSide.substring(0, ni)
         let decSize = dss ? Number(dss) : undefined
 
-        // let decimal = (props.decimal === undefined ? this.decimalSeparator : props.decimal)
-        // let thousands = ksep ? (props.thousands === undefined ? this.thousandsSeparator : props.thousandsSeparator) : ''
+        // TODO: Attach to i18n
+        let hasI18n = false
+        // i18n or Intl
+        let stats:any = i18n.setLocale(specParts.locale) // default locale
+        if(stats && stats.totalStrings) {// looks like we have i18n tables
+            hasI18n = true
+        }
+        // start out with the english and then we'll change it
         let decimal = '.'
         let thousands = ksep ? ',' : ''
+        let i18nDecimal = decimal, i18nThousands = thousands
+        if(hasI18n) {
+            i18n.setLocale(specParts.locale)
+            i18nDecimal = i18n.getLocaleString('number.format.decimal', decimal)
+            i18nThousands = i18n.getLocaleString('number.format.thousand', thousands)
+        }
+
 
         let sign = ''
         let maxDigs = 0
         let limitVal = 0
+        let didRound = false
 
         value = Number(value)
 
@@ -59,6 +75,7 @@ export default class NumberFormatter implements IFormatHandler {
 
         if (!noRound && decSize !== undefined) {
             value += 5 / Math.pow(10, decSize + 1) // round up
+            didRound = true
         }
 
         let n = Math.floor(value)
@@ -150,6 +167,56 @@ export default class NumberFormatter implements IFormatHandler {
             } else {
                 out = strIntVal
             }
+
+
+            if(getUseIntlChoice()) {
+                if (Intl && Intl.NumberFormat) {
+
+                    // for compatibility, convert our formatted number string back to a value
+                    // so Intl inherits our rounding (or no-rounding) strategy per spec.
+                    // but bail out if we have overflow
+                    if(out.indexOf('#') !== -1) return out
+
+                    out = out.replace(/[^0-9\-.]/g, '') // get rid of any spaces or kseps
+                    value = parseFloat(out)
+
+                    let opts: any = {
+                        maximumIntegerDigits: intSize,
+                        minimumIntegerDigits: lead0 ? intSize : undefined,
+                        maximumFractionDigits: decSize,
+                        minimumFractionDigits: noAlignDec ? undefined : decSize,
+                        signDisplay: plus ? 'exceptZero' : undefined,
+
+                    }
+                    const nf = new Intl.NumberFormat(specParts.locale, opts)
+                    let v = Number(value)
+                    out = nf.format(v)
+                    let n = intSize - strIntVal.trim().length
+                    if(strIntVal.charAt(0) === '-') n--
+                    if (!lead0 && n > 0 && !noAlignInt) out = ' '.repeat(n) + out
+                    if(!noAlignDec && paddedSpaces) {
+                        let n = out.length
+                        let t = n
+                        while(--n && out.charAt(n) !== '0') {}
+                        out = out.substring(0, --n)
+                        if(t-n > 0) out +=' '.repeat(t-n)
+                    }
+                }
+            } else {
+                if(i18nThousands !== ',') {
+                    while(out.indexOf(',') !== -1) {
+                        out = out.replace(',', i18nThousands)
+                    }
+                }
+                if(i18nDecimal !== '.') {
+                    let ci = out.lastIndexOf('.')
+                    if(ci !== -1) {
+                        out = out.substring(0,ci)+i18nDecimal+out.substring(ci+1)
+                    }
+                }
+
+            }
+
         }
         return out
     }

@@ -1,0 +1,5 @@
+{
+  "COMMENT" : "Intl is required to properly format numbers.  separator at 100K.",
+  "number.format.decimal" : ".",
+  "number.format.thousand" : ","
+}

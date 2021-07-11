@@ -41,10 +41,6 @@ function dateFormatTest() {
         x = 'Wednesday, January 6, 2021 3:00pm'
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
-        t.end()
-        return
-
-
         // test parseable string
         r = F('date|WWWW, MMMM D, YYYY h:mm--', 'Tuesday, January 12, 2021 11:36 AM')
         x = 'Tuesday, January 12, 2021 7:36pm' // because of UTC to local conversion
@@ -272,117 +268,124 @@ function dateFormatTest() {
 
         // intl full, long, medium, short
         r = F('date|full-full', testDate)
-        x = 'Tuesday, January 12, 2021, 4:00:00 PM Pacific Standard Time'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        x = 'Wednesday, January 13, 2021 at 12:00:00 AM Coordinated Universal Time'
+        t.ok(r === x, `(full) expected "${x}", got "${r}"`)
 
         r = F('date|long-long', testDate)
-        x = 'January 12, 2021, 4:00:00 PM PST'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        x = 'January 13, 2021 at 12:00:00 AM UTC'
+        t.ok(r === x, `(long) expected "${x}", got "${r}"`)
 
         r = F('date|medium-medium', testDate)
-        x = 'Jan 12, 2021, 4:00:00 PM'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        x = 'Wed, Jan 13,  at 12:00:00 AM UTC'
+        t.ok(r === x, `(medium) expected "${x}", got "${r}"`)
 
         r = F('date|short-short', testDate)
-        x = '1/12/21, 4:00 PM'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        x = '1/13/21 at 12:00:00 AM UTC'
+        t.ok(r === x, `(short) expected "${x}", got "${r}"`)
 
         r = F('date|short-long', testDate)
-        x = '1/12/21, 4:00:00 PM PST'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        x = '1/13/21 at 12:00:00 AM UTC'
+        t.ok(r === x, `(short-long) expected "${x}", got "${r}"`)
 
-        r = F('date~es-ES|full-full', testDate)
-        x = 'martes, 12 de enero de 2021, 16:00:00 (hora estándar del Pacífico)'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        r = F('date?pst|full', testDate)
+        x = 'Tuesday, January 12, 2021 at 4:00:00 PM Pacific Standard Time'
+        t.ok(r === x, `(full pst) expected "${x}", got "${r}"`)
 
-        r = F('date~es-ES|long-long', testDate)
-        x = '12 de enero de 2021, 16:00:00 GMT-8'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        r = F('date?pst|long', testDate)
+        x = 'January 12, 2021 at 4:00:00 PM PST'
+        t.ok(r === x, `(long pst) expected "${x}", got "${r}"`)
 
-        r = F('date~es-ES|medium-medium', testDate)
-        x = '12 ene. 2021 16:00:00'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        r = F('date?pst|medium', testDate)
+        x = 'Tue, Jan 12,  at 4:00:00 PM'
+        t.ok(r === x, `(medium pst) expected "${x}", got "${r}"`)
 
-        r = F('date~es-ES|short-short', testDate)
-        x = '12/1/21 16:00'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        r = F('date?pst|short', testDate)
+        x = '1/12/21 at 4:00 PM'
+        t.ok(r === x, `(short pst) expected "${x}", got "${r}"`)
 
-        r = F('date~es-ES|short-long', testDate)
-        x = '12/1/21 16:00:00 GMT-8'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        r = F('date?pst|short-long', testDate)
+        x = '1/12/21 at 4:00:00 PM PST'
+        t.ok(r === x, `(short-long pst) expected "${x}", got "${r}"`)
 
+        r = F('date~es-ES?pst|full', testDate)
+        x = 'martes, enero 12, 2021 at 16:00:00  Hora estándar del Pacífico'
+        t.ok(r === x, `(ES) expected "${x}", got "${r}"`)
 
-        // all should be equivalent
-        r = F('date?America/Los Angeles|short-long', testDate)
-        let lr = r
-        x = '1/12/21, 4:00:00 PM PST'
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('date?Los Angeles|short-long', testDate)
-        x = lr
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('date?Pacific Standard Time|short-long', testDate)
-        x = lr
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('date?Pacific Daylight Time|short-long', testDate)
-        x = lr
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('date?PST|short-long', testDate)
-        x = lr
-        t.ok(r === x, `expected "${x}", got "${r}"`)
-        r = F('date?PDT|short-long', testDate)
-        x = lr
-        t.ok(r === x, `expected "${x}", got "${r}"`)
+        r = F('date~es-ES?pst|long', testDate)
+        x = 'enero 12, 2021 at 16:00:00  PST'
+        t.ok(r === x, `(ES long) expected "${x}", got "${r}"`)
+
+        r = F('date~es-ES?pst|medium', testDate)
+        x = 'mar., ene. 12,  at 16:00:00'
+        t.ok(r === x, `(ES med) expected "${x}", got "${r}"`)
+
+        r = F('date~es-ES?pst|short', testDate)
+        x = '12/01/21 at 16:00'
+        t.ok(r === x, `(ES short) expected "${x}", got "${r}"`)
+
+        r = F('date~es-ES?pst|short-long', testDate)
+        x = '12/01/21 at 16:00:00  PST'
+        t.ok(r === x, `(ES short-long) expected "${x}", got "${r}"`)
 
 
-        // sanity TZ cast test
-        r = F('date|MM/DD hh:mm:ss', '2021-01-14T10:00:00Z')
-        x = '01/14 10:00:00'
-        t.ok(r === x, `default utc expected "${x}", got "${r}"`)
+        // am-pm
+        let amTest = '2021-07-11T01:23:00Z'
+        let pmTest = '2021-07-11T13:23:00Z'
+        let desc = "upper case AM/PM"
+        r = F('date|h:mm ++', amTest)
+        x = "1:23 AM"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
+        r = F('date|h:mm ++', pmTest)
+        x = "1:23 PM"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
 
-        r = F('date?utc|MM/DD hh:mm:ss', '2021-01-14T10:00:00Z')
-        x = '01/14 10:00:00'
-        t.ok(r === x, `cast utc expected "${x}", got "${r}"`)
-        r = F('date?est|MM/DD hh:mm:ss', '2021-01-14T10:00:00Z')
-        x = '01/14 05:00:00'
-        t.ok(r === x, `cast est expected "${x}", got "${r}"`)
-        r = F('date?cst|MM/DD hh:mm:ss', '2021-01-14T10:00:00Z')
-        x = '01/14 04:00:00'
-        t.ok(r === x, `cast cst expected "${x}", got "${r}"`)
-        r = F('date?mst|MM/DD hh:mm:ss', '2021-01-14T10:00:00Z')
-        x = '01/14 03:00:00'
-        t.ok(r === x, `cast mst expected "${x}", got "${r}"`)
-        r = F('date?pst|MM/DD hh:mm:ss', '2021-01-14T10:00:00Z')
-        x = '01/14 02:00:00'
-        t.ok(r === x, `cast pst expected "${x}", got "${r}"`)
-        r = F('date?local|MM/DD hh:mm:ss', '2021-01-14T10:00:00Z')
-        x = '01/14 02:00:00'
-        t.ok(r === x, `cast loc expected "${x}", got "${r}"`)
+        desc = "lower case am/pm"
+        r = F('date|h:mm --', amTest)
+        x = "1:23 am"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
+        r = F('date|h:mm --', pmTest)
+        x = "1:23 pm"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
 
-        // timezone display
-        r = F('date|MM/DD hh:mm:ss z', '2021-01-14T10:00:00Z')
-        x = '01/14 10:00:00 UTC'
-        t.ok(r === x, `tz z expected "${x}", got "${r}"`)
-        r = F('date|MM/DD hh:mm:ss Z', '2021-01-14T10:00:00Z')
-        x = '01/14 10:00:00 Universal Time'
-        r = F('date|MM/DD hh:mm:ss (z)', '2021-01-14T10:00:00Z')
-        x = '01/14 10:00:00 (UTC)'
-        t.ok(r === x, `tz z expected "${x}", got "${r}"`)
-        r = F('date|MM/DD hh:mm:ss (Z)', '2021-01-14T10:00:00Z')
-        x = '01/14 10:00:00 (Universal Time)'
-        t.ok(r === x, `tz Z expected "${x}", got "${r}"`)
-        r = F('date?EST|MM/DD hh:mm:ss z', '2021-01-14T10:00:00Z')
-        x = '01/14 05:00:00 EST'
-        t.ok(r === x, `tz Z expected "${x}", got "${r}"`)
-        r = F('date?EST|MM/DD hh:mm:ss Z', '2021-01-14T10:00:00Z')
-        x = '01/14 05:00:00 Eastern Standard Time'
-        t.ok(r === x, `tz Z expected "${x}", got "${r}"`)
+        desc = "PM only (upper case)"
+        r = F('date|h:mm -+', amTest)
+        x = "1:23"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
+        r = F('date|h:mm -+', pmTest)
+        x = "1:23 PM"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
 
-        r = F('date?PST|MM/DD hh:mm:ss z', '2021-01-14T10:00:00Z')
-        x = '01/14 02:00:00 PST'
-        t.ok(r === x, `tz Z expected "${x}", got "${r}"`)
-        r = F('date?local|MM/DD hh:mm:ss z', '2021-01-14T10:00:00Z')
-        x = '01/14 02:00:00 PST'
-        t.ok(r === x, `tz Z expected "${x}", got "${r}"`)
+        desc = "PM only (lower case)"
+        r = F('date|h:mm +-', amTest)
+        x = "1:23"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
+        r = F('date|h:mm +-', pmTest)
+        x = "1:23 pm"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
+
+        desc = "A/P (upper case)"
+        r = F('date| h:mm +?', amTest)
+        x = "1:23 A"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
+        r = F('date| h:mm +?', pmTest)
+        x = "1:23 P"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
+
+        desc = "a/p (lower case)"
+        r =  F('date| h:mm -?', amTest)
+        x = "1:23 a"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
+        r = F('date| h:mm -?', pmTest)
+        x = "1:23 p"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
+
+        desc = "using 24-hour time"
+        r = F('date| hhh:mm', amTest)
+        x = "1:23"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
+        r = F('date| hhh:mm', pmTest)
+        x = "13:23"
+        t.ok(r === x, `${desc} expected "${x}", got "${r}"`)
 
         t.end()
     })

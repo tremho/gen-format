@@ -45,6 +45,7 @@ import {checkIntlSupport, useIntl} from "../src/Formatter";
 import {formatV} from '../src/Formatter'
 import fileOps from '../src/NodeFileOps'
 import {setFileOps} from "../src/Formatter";
+import i18n from "../src/i18n";
 
 setFileOps(fileOps)
 
@@ -69,12 +70,12 @@ function extLocaleTest() {
 
         desc = 'Check use with locale = "default"'
         r = F(`date?utc~default|full`, dts)
-        x = fbx
+        x = fbx  // equivalent
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 
         desc = 'Check use with invalid locale, foobar'
         r = F(`date?utc~foobar|full`, dts)
-        x = ''
+        x = fbx  // fallback to system (en-US)
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 
         desc = 'Check use with invalid locale, fu-BR'
@@ -84,27 +85,27 @@ function extLocaleTest() {
 
         desc = 'Check use with undefined locale and no tz cast'
         r = F(`date|full`, dts)
-        x = 'Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time'
+        x = fbx  // default full
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 
         desc = 'Check use with "" locale'
         r = F(`date?utc~|full`, dts)
-        x = 'Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time'
+        x = fbx  // default full
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 
         desc = 'Check use with "default" locale'
         r = F(`date?utc~default|full`, dts)
-        x = 'Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time'
+        x = fbx  // default full
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 
         desc = 'Check use with valid but unsupported locale'
         r = F(`date?utc~ban-UD|full`, dts)
-        x = 'Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time'
+        x = fbx  // default full
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 
         desc = 'Check attempt to include a fallback locale'
         r = F(`date?utc~ban-UD, es-ES|full`, dts)
-        x = '' // no return on error, expected
+        x = fbx  // default full
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 
         desc = 'check invalid calendar option'
@@ -194,8 +195,16 @@ function extLocaleTest() {
         if(intlAvailable) {
             x = '二千零二十一辛丑年五月廿二星期四 协调世界时 下午四:三:零'
         } else {
-            // extension ignored if no intl, but we do get the Thursday, July part translated by i18n
-            x = '星期四, 七月 1, 2021 at 4:03:00 PM Coordinated Universal Time'
+            let stats:any = i18n.setLocale() // default locale
+            // extension ignored if no intl, but we do get the Thursday, July part translated by i18n, or fallback if no tables
+            if(stats && stats.totalStrings) {// looks like we have i18n tables
+                // assume we have the right translations in place
+                x = '星期四, 七月 1, 2021 at 4:03:00 PM Coordinated Universal Time'
+            } else {
+                // fallback to hard coded defaults (en-US)
+                x = 'Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time'
+            }
+
         }
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 

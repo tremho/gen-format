@@ -1,0 +1,4 @@
+{
+  "number.format.decimal" : "\u002e",
+  "number.format.thousand" : "\u002c"
+}
