@@ -42,7 +42,7 @@ function dateFormatTest() {
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
         // test parseable string
-        r = F('date|WWWW, MMMM D, YYYY h:mm--', 'Tuesday, January 12, 2021 11:36 AM')
+        r = F('date|WWWW, MMMM D, YYYY h:mm--', 'Tuesday, January 12, 2021 11:36 AM PST')
         x = 'Tuesday, January 12, 2021 7:36pm' // because of UTC to local conversion
         t.ok(r === x, `expected "${x}", got "${r}"`)
 
