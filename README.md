@@ -148,8 +148,8 @@ can manage which languages you wish to support and ship with.
 
 ##### Downloading the `i18n` data
 
-Point your web browser to [this web location](https://github.com/tremho/gen-format/releases/tag/v1.0.1)
-and click on the `i18n.zip` attachment link to download the
+Point your web browser to [this web location](https://github.com/tremho/gen-format/releases), 
+find the latest release, and click on the `i18n.zip` attachment link to download the
 data to your computer.  Unpack the zip file into the folder tree
 and place the whole of the `i18n` folder into the root of your
 app project.
