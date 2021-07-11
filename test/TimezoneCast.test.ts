@@ -68,7 +68,9 @@ function TimezoneTest() {
 
         desc = 'cast to local'
         r = F('date?local|full', dt)
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        let x2 = "Monday, January 25, 2021 at 12:10:00 AM Greenwich Mean Time" // for local is GMT (travis)
+        let localTimeIsGMT = r === x2
+        t.ok(r === x || r === x2, `${desc}: expected "${x}", got "${r}"`)
         
 
         // wintertime
@@ -136,6 +138,7 @@ function TimezoneTest() {
 
         desc = 'cast to local, summer'
         r = F('date?local|full', dt)
+        if(localTimeIsGMT) x = "Friday, June 25, 2021 at 12:10:00 AM Greenwich Mean Time"
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
 
 
