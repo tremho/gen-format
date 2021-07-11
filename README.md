@@ -247,9 +247,43 @@ import {i18n} from "@tremho/gen-format"
 (or `const {i18n} = require("@tremho/gen-format")`)
 
 Refer to the [API docs](./API.md)
-for how to use the formatter
+for how to use the formatter, and the _i18n API_ section
+found there for how to access the _i18n_ features for
+your own uses.
 
-and to the [i18n API doc]() for how to use the access to the 
-locale-string-tables support for localization.
+### Reporting issues and contributing
+
+Please tell us if there are any problem you are having
+with this module package.  We strive to create highly useable
+products, but sometimes (as you may know as a developer yourself),
+things "work fine on our systems" but may not go as smoothly on everyone
+else's.  
+
+Those of you fluent in languages can be of great service by
+pointing out any localization errors you may find in the output
+and/or the _i18n_ string tables.  
+Most of the translation source comes either directly or
+indirectly from the _W3C Intl_ subsystem as implemented in 
+Chromium, so these aspects are probably okay, but the other
+extended features rely on Google Translate for the first iteration of
+translation, which I'm sure must have some contextual errors involved
+for at least some languages.
+
+Report any issues on the [Project Github Issues Page](https://github.com/tremho/gen-format/issues)
+Please use the appropriate tags to identify your issue, such as "bug", "enhancement",
+"documentation", or "question".
+
+If you prefer to work with the Github source directly, that's great.
+If you make changes, especially useful ones, please submit a Pull Request
+with your updates.
+
+If you simply have a question that can't be answered by the documentation,
+you may also submit this as an issue.  Please use the "question"
+tag to identify your post as a question.
+
+Thank you for your interest in @tremho/gen-format.
+
+Happy formatting!
+
 
 
