@@ -1,5 +1,5 @@
 {
-  "name": "gen-format",
+  "name": "@tremho/gen-format",
   "version": "1.0.0",
   "description": "General formatting system; string, number, date, currency, (expandable)",
   "main": "build/src/Formatter.js",
