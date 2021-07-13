@@ -24,9 +24,6 @@
     "ts-clear-classdoc": "^1.0.1"
   },
   "dependencies": {
-    "@tremho/locale-string-tables": "^1.0.1",
-    "fs-extra": "^10.0.0",
-    "moment-timezone": "^0.5.33",
-    "timezone-support": "^2.0.2"
+    "@tremho/locale-string-tables": "^1.1.0-prerelease-1"
   }
 }
