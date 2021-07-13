@@ -199,7 +199,7 @@ function extLocaleTest() {
             // extension ignored if no intl, but we do get the Thursday, July part translated by i18n, or fallback if no tables
             if(stats && stats.totalStrings) {// looks like we have i18n tables
                 // assume we have the right translations in place
-                x = '星期四, 7月 1, 2021 at 4:03:00 PM Coordinated Universal Time'
+                x = '星期四, 七月 1, 2021 at 4:03:00 PM Coordinated Universal Time'
             } else {
                 // fallback to hard coded defaults (en-US)
                 x = 'Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time'
