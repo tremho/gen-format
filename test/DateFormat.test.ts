@@ -68,12 +68,13 @@ function dateFormatTest() {
         // ------------------
 
 
-        let mo = F('date|MMM', 'now')
-        let dy = F('date|D', 'now')
+        let tn = getNow()
+        let mo = F('date|MMM', tn)
+        let dy = F('date|D', tn)
         let td = mo + ' '+dy
-        let hr = Number(F('date|hh', 'now'))
-        let mn = Number(F('date|m', 'now'))
-        let ap = F('date|++', 'now')
+        let hr = Number(F('date|hh', tn))
+        let mn = Number(F('date|m', tn))
+        let ap = F('date|++', tn)
 
 
         // future (seconds)
@@ -202,11 +203,11 @@ function dateFormatTest() {
 
         // this year, month, week, day, hour, minute, second
 
-        let top = F('date|YYYY-MMM-D hh:mm:ss', 'now')
+        let top = F('date|YYYY-MMM-D hh:mm:ss', getNow())
         let [datePart, timePart] = top.split(' ')
         let [yrTop,moTop, dyTop] = datePart.split('-')
         let [hrTop, mnTop, scTop] = timePart.split(':')
-        let wd = new Date().getUTCDay()
+        let wd = new Date(getNow()).getUTCDay()
         let wkdTop = Number(dyTop) - wd
         if(hrTop > 12) {
             hrTop = Number(hrTop) - 12
@@ -288,11 +289,11 @@ function dateFormatTest() {
         t.ok(r === x, `(medium) expected "${x}", got "${r}"`)
 
         r = F('date|short-short', testDate)
-        x = '1/13/21 12:00 AM'
+        x = '1/13/21, 12:00 AM'
         t.ok(r === x, `(short) expected "${x}", got "${r}"`)
 
         r = F('date|short-long', testDate)
-        x = '1/13/21 12:00:00 AM UTC'
+        x = '1/13/21, 12:00:00 AM UTC'
         t.ok(r === x, `(short-long) expected "${x}", got "${r}"`)
 
         r = F('date?pst|full', testDate)
@@ -308,11 +309,11 @@ function dateFormatTest() {
         t.ok(r === x, `(medium pst) expected "${x}", got "${r}"`)
 
         r = F('date?pst|short', testDate)
-        x = '1/12/21 4:00 PM'
+        x = '1/12/21, 4:00 PM'
         t.ok(r === x, `(short pst) expected "${x}", got "${r}"`)
 
         r = F('date?pst|short-long', testDate)
-        x = '1/12/21 4:00:00 PM PST'
+        x = '1/12/21, 4:00:00 PM PST'
         t.ok(r === x, `(short-long pst) expected "${x}", got "${r}"`)
 
         if(hasI18nStrings) {

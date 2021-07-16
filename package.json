@@ -5,7 +5,7 @@
   "main": "build/src/Formatter.js",
   "scripts": {
     "test": "npm run clean && npm run compile && tap --no-coverage ./build/test/*.test.js",
-    "test-direct": "npm run clean && npm run compile && node build/test/Localized.test.js",
+    "test-direct": "npm run clean && npm run compile && node build/test/DateFormat.test.js",
     "clean": "rm -fr build css",
     "compile": "tsc",
     "doc": "npm run clean && npm run compile && inchjs && cd build; tsccd ./; documentation lint src; documentation readme --readme-file ../API.md --markdown-toc false --section API src"

@@ -150,14 +150,12 @@ function dateRangeFormatTest() {
 
         desc = "style = full"
         r = (F('daterange|full', [tn, tn2]))
-        x = hasI18nStrings ? 'Monday, April 3, 1961 at 10:12:00 AM - 12:50:00 PM Coordinated Universal Time'
-            : 'Monday, April 3, 1961, 10:12:00 AM - 12:50:00 PM Coordinated Universal Time'
+        x = 'Monday, April 3, 1961 at 10:12:00 AM - 12:50:00 PM Coordinated Universal Time'
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
 
         desc = "style = long"
         r = (F('daterange|long', [tn, tn2]))
-        x = hasI18nStrings ? 'April 3, 1961 at 10:12:00 AM - 12:50:00 PM UTC'
-            : 'April 3, 1961, 10:12:00 AM - 12:50:00 PM UTC'
+        x = 'April 3, 1961 at 10:12:00 AM - 12:50:00 PM UTC'
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
 
         desc = "style = medium"
@@ -168,7 +166,7 @@ function dateRangeFormatTest() {
 
         desc = "style = short"
         r = (F('daterange|short', [tn, tn2]))
-        x = hasI18nStrings ? '4/3/61 10:12 AM - 12:50 PM' : '4/03/61, 10:12 AM - 12:50 PM'
+        x = '4/3/61, 10:12 AM - 12:50 PM'
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
 
         t.end()

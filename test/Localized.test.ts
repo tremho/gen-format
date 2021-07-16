@@ -409,7 +409,9 @@ if(stats && stats.totalStrings) {// looks like we have i18n tables
     //         // buildDateStringsFromExpectations(loc)
     //     }
     // })
+    localizationTests('en')
     localizationTests('es')
+
 }
 
 function writeOrDie(loc, ti, desc, r, x, t) {

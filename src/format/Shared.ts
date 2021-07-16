@@ -20,9 +20,9 @@ export function i18nFormatByStyle(locale, dateStyle, timeStyle, isUtc, fallbackS
             dateFmt = 'WW, MMM D, YYY'
         } else if (dateStyle === 'short' || dateStyle === 'numeric') {
             if (locale.split('-')[1] === 'US') {
-                dateFmt = 'M/DD/YY'
+                dateFmt = 'M/D/YY'
             } else {
-                dateFmt = 'D/MM/YY'
+                dateFmt = 'D/M/YY'
             }
         }
         else if(dateStyle === 'none') {
@@ -38,9 +38,28 @@ export function i18nFormatByStyle(locale, dateStyle, timeStyle, isUtc, fallbackS
             useSep = false
         }
     }
+
+    // TODO: refactor out the pass-in of fallbackSeparator, because we do that all here
+    let fbs
+    if(locale.split('-')[0] === 'en') {
+        if(dateStyle === 'short') {
+            fbs = ', '
+        } else if(dateStyle === 'narrow') {
+            fbs = ' '
+        } else {
+            fbs = ' at '
+        }
+    } else {
+        fbs = ', '
+        if(dateStyle === 'short' || dateStyle === 'narrow') fbs = ' '
+    }
+
     let sep = i18n.getLocaleString(`date.format.time.separator.${dateStyle}`, '')
-    if(!sep) sep = i18n.getLocaleString('date.format.time.separator', fallbackSeparator, false)
+    if(!sep) sep = i18n.getLocaleString('date.format.time.separator', fbs, false)
     let timeFmt = useSep ? sep : ' '
+
+    // short: ' ' common, ', ' en
+
 
     if(timeStyle.indexOf(':') !== -1) {
         timeFmt += timeStyle

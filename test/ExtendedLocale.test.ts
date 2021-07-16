@@ -85,11 +85,7 @@ function extLocaleTest() {
         let fbx2 = fbx
         if(!getUseIntlChoice()) {
             // separator changes on the reset... (minor weirdness)
-            if(hasI18nStrings) {
-                fbx2 = "Thursday, July 1, 2021, 16:03:00 PM Coordinated Universal Time"
-            } else {
-                fbx2 = 'Thursday, July 1, 2021 at 16:03:00 PM Coordinated Universal Time'
-            }
+            fbx2 = "Thursday, July 1, 2021, 16:03:00 PM Coordinated Universal Time"
         }
         desc = 'Check use with invalid locale, fu-BR'
         r = F(`date?utc~fu-BR|full`, dts)
