@@ -26,12 +26,7 @@
   "date.format.timezone.MDT.long": "Hora de verano de la montaña",
   "date.format.timezone.MDT.short": "MDT",
   "date.format.timezone.PDT.long": "Hora de verano del Pacífico",
-  "date.format.timezone.PDT.short": "PDT",
+  "date.format.timezone.PDT.short": "PDT"
 
-
-  "time.pm" : "",
-  "time.am" : "",
-  "time.pm.lowercase" : "",
-  "time.am.lowercase" : ""
 
 }

@@ -74,6 +74,10 @@ function dateFormatTest() {
         let td = mo + ' '+dy
         let hr = Number(F('date|hh', tn))
         let mn = Number(F('date|m', tn))
+        if(mn >=60) {
+            mn -= 60;
+            hr++
+        }
         let ap = F('date|++', tn)
 
 

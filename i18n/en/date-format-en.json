@@ -13,6 +13,15 @@
   "date.format.timezone.UTC.long" : "Coordinated Universal Time",
   "date.format.timezone.UTC.short" : "UTC",
 
+  "date.format.full": "WWWW, MMMM D, YYYY",
+  "date.format.long": "MMMM D, YYYY",
+
+  "time.pm" : "PM",
+  "time.am" : "AM",
+  "time.pm.lowercase" : "pm",
+  "time.am.lowercase" : "am",
+
+
 
   "date.format.timezone.EST.long" : "Eastern Standard Time",
   "date.format.timezone.EST.short" : "EST",

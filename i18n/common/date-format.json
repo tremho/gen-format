@@ -22,10 +22,10 @@
   "time.format.short": "hhh:mm ++",
   "time.format.narrow": "hhh:mm",
 
-  "time.pm" : "PM",
-  "time.am" : "AM",
-  "time.pm.lowercase" : "pm",
-  "time.am.lowercase" : "am"
+  "time.pm" : "",
+  "time.am" : "",
+  "time.pm.lowercase" : "",
+  "time.am.lowercase" : ""
 
 
 }

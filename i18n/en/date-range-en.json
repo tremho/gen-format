@@ -42,5 +42,9 @@
     "date.range.weekday.week.ahead" : "a week from $weekday()",
     "date.range.weekday.weeks.ahead" : "in $weeks(-1.0) weeks, on $weekday()",
     "date.range.days.ago" : "$days(-1.0) days ago",
-    "date.range.days.ahead" : "in $days(-1.0) days"
+    "date.range.days.ahead" : "in $days(-1.0) days",
+
+    "date.range.time.ago" : "$count() $unit() ago",
+    "date.range.time.ahead" : "in $count() $unit()"
+
 }

@@ -1,0 +1,37 @@
+{
+
+  "date.format.time.separator": " à ",
+  "date.format.time.separator.full": " à ",
+  "date.format.time.separator.long": " à ",
+  "date.format.time.separator.medium": " à ",
+
+  "date.format.timezone.GMT.long" : "Méridien de Greenwich",
+  "date.format.timezone.GMT+1.long" : "Heure d'été britannique",
+  "date.format.timezone.GMT.short" : "GMT",
+
+  "date.format.timezone.UTC.long" : "Temps universel coordonné",
+  "date.format.timezone.UTC.short" : "UTC",
+
+  "date.format.full": "WWWW D MMMM YYYY",
+  "date.format.long": "D MMMM YYYY",
+  "date.format.short": "D/MM/YYYY",
+
+
+  "date.format.timezone.EST.long" : "Heure normale de l'Est",
+  "date.format.timezone.EST.short" : "EST",
+  "date.format.timezone.CST.long" : "Heure normale du Centre",
+  "date.format.timezone.CST.short" : "CST",
+  "date.format.timezone.MST.long" : "Heure normale des Rocheuses",
+  "date.format.timezone.MST.short" : "MST",
+  "date.format.timezone.PST.long" : "Heure Standard du Pacifique",
+  "date.format.timezone.PST.short" : "PST",
+  "date.format.timezone.EDT.long" : "Heure avancée de l'Est",
+  "date.format.timezone.EDT.short" : "EDT",
+  "date.format.timezone.CDT.long" : "Heure avancée du Centre",
+  "date.format.timezone.CDT.short" : "CDT",
+  "date.format.timezone.MDT.long" : "Heure d'été des montagnes",
+  "date.format.timezone.MDT.short" : "MDT",
+  "date.format.timezone.PDT.long" : "Heure avancée du Pacifique",
+  "date.format.timezone.PDT.short" : "PDT"
+
+}

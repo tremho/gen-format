@@ -19,7 +19,7 @@
     "date.abbr.day" : "journée",
     "date.abbr.day.plural" : "journées",
     "date.term.hour" : "heure",
-    "date.term.hour.plural" : "les heures",
+    "date.term.hour.plural" : "heures",
     "date.abbr.hour" : "heure",
     "date.abbr.hour.plural" : "heures",
     "date.term.minute" : "minute",
@@ -42,5 +42,9 @@
     "date.range.weekday.week.ahead" : "une semaine à partir du $weekday()",
     "date.range.weekday.weeks.ahead" : "dans $weeks() semaines, le $weekday()",
     "date.range.days.ago" : "Il ya $days(-1.0) jours",
-    "date.range.days.ahead" : "dans $days(-1.0) jours"
+    "date.range.days.ahead" : "dans $days(-1.0) jours",
+
+    "date.range.time.ago" : "il y a $count() $unit()",
+    "date.range.time.ahead" : "dans $count() $unit()"
+
 }
