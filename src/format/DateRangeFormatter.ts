@@ -9,6 +9,7 @@ import * as LocaleStringTables from "@tremho/locale-string-tables"
 const sysloc = LocaleStringTables.getSystemLocale()
 
 import i18n from '../i18n'
+import {getSystemLocale} from "@tremho/locale-string-tables";
 
 const IDTF = Intl && Intl.DateTimeFormat
 // @ts-ignore
@@ -230,7 +231,7 @@ export default class DateRangeFormatter implements IFormatHandler {
         const fmtchars = ['Y','M','D','H','V','h','m','s','-','+','z','Z']
         leftFormat = leftFormat.trim()
         let sep = i18n.getLocaleString('date.format.time.separator', '', true)
-        if(sep) leftFormat = leftFormat.replace(sep, ', ') // we use a comma in this form
+        // if(sep) leftFormat = leftFormat.replace(sep, ', ') // we use a comma in this form
         rightFormat = rightFormat.trim()
         let llc = leftFormat.charAt(leftFormat.length-1)
         if(fmtchars.indexOf(llc) === -1) {
@@ -249,14 +250,14 @@ export default class DateRangeFormatter implements IFormatHandler {
         let endTime = dtEnd.getTime()
 
         if(endIsNow && isHuman) {
-            let {datePart, isToday} =  fitRelativeDate(dtStart)
+            let {datePart, isToday} =  fitRelativeDate(dtStart, specParts.locale)
             if(timeStyle === 'none') {
                 return datePart
             }
             if(!isToday) {
                 out = datePart
             }
-            if(out) out += i18n.getLocaleString('date.range.time.separator',' at ')
+            if(out) out += i18n.getLocaleString('date.range.time.separator',', ')
         }
 
 
@@ -361,24 +362,8 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
     dparts.sign = -dparts.sign
     dparts = roundUpDParts(dparts)
     let out = ''
-    const express = (value, type, abbr) => {
-        let lbl = type
-        let isAbbr = false
-        if(relStyle === 'short' || relStyle === 'narrow') {
-            lbl = abbr
-            isAbbr = true
-        }
-        if(value == 1) {
-            value = 'one'
-        } else {
-            lbl += 's'
-        }
-        if(isAbbr) {
-            lbl += '.'
-        }
-        out += `${value} ${lbl} `
-    }
     const expressHMS = (hours, minutes, seconds) => {
+        let hms = ''
         let lbl = ''
         let term = relStyle === 'full' || relStyle === 'long' ? 'term' : 'abbr'
         if(minutes) {
@@ -423,13 +408,13 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
             }
 
             if(!minutes && !seconds) {
-                out += formatV('$(-2.0)', hours, minutes, seconds)
+                hms += formatV('$(-2.0)', hours)
             } else {
                 if(!seconds) {
-                    out += formatV('$(-2.0):$(02.0)', hours, minutes)
+                    hms += formatV('$(-2.0):$(02.0)', hours, minutes)
 
                 } else {
-                    out += formatV('$(-2.0):$(02.0):$(02.3)', hours, minutes, seconds)
+                    hms += formatV('$(-2.0):$(02.0):$(02.3)', hours, minutes, seconds)
                     lbl = ''
                 }
             }
@@ -437,60 +422,126 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
 
             let ms = formatV('$(-2.0):$(02.3)', minutes, seconds)
             if(minutes && !seconds) out += formatV('$(-2.0)', minutes)
-            else out += ms
+            else hms += ms
         } else if(seconds) {
             out += formatV('$(-2.-3)', seconds)
         }
 
-        out += ' ' + lbl
+        hms += ' ' + lbl
+        return hms
     }
 
 
     // fast out for now
+    i18n.setLocale(locale)
     if(!dparts.years && !dparts.months && !dparts.weeks && !dparts.days
         && !dparts.hours && !dparts.minutes && !dparts.seconds && !dparts.milliseconds) {
         return i18n.getLocaleString('date.range.now','now')
     }
 
+
+
     if(!useIntl() || (relStyle && relStyle.indexOf(':') !== -1)) {
-        out = dparts.sign > 0 ? 'in ' : ''
 
-        if (dparts.years) express(dparts.years, 'year', 'yr')
-        else if (dparts.months) express(dparts.months, 'month', 'mo')
-        else if (dparts.weeks) express(dparts.weeks, 'week', 'wk')
-        else if (dparts.days) express(dparts.days, 'day', 'dy')
-        else {
-            if(relStyle === 'full') {
-                if(dparts.hours || dparts.minutes) dparts.seconds = dparts.milliseconds = 0
-                if ((dparts.seconds || dparts.milliseconds) && dparts.seconds < 6) {
-                    if (dparts.sign < 0) {
-                        return i18n.getLocaleString("date.range.moments.ago","a few moments ago")
-                    } else {
-                        return i18n.getLocaleString("date.range.moments.away","in a few moments")
-                    }
-                }
-            }
-            if(relStyle && relStyle.indexOf(':') !== -1) {
-                let tDate = new Date(0)
-                tDate.setUTCHours(dparts.hours)
-                tDate.setUTCMinutes(dparts.minutes)
-                tDate.setUTCSeconds(dparts.seconds)
-                tDate.setUTCMilliseconds(dparts.milliseconds)
-                out += F('date|'+relStyle, tDate)
-            } else {
-                if(dparts.hours) dparts.minutes = dparts.seconds = dparts.milliseconds = 0
-                if(dparts.minutes) dparts.seconds = dparts.milliseconds = 0
-                if (dparts.seconds)  dparts.milliseconds = 0
-                expressHMS(dparts.hours, dparts.minutes, dparts.seconds + dparts.milliseconds / 1000)
-            }
-
+        let inago
+        let count, unit
+        let n = 0;
+        let hms = false
+        if(dparts.years) {
+            dparts.months = dparts.weeks = dparts.days = dparts.hours = dparts.minutes = dparts.seconds = dparts.milliseconds = 0
+            unit = 'year'
+            count = dparts.years
+            n++
         }
+        if(dparts.months) {
+            dparts.weeks = dparts.days = dparts.hours = dparts.minutes = dparts.seconds = dparts.milliseconds = 0
+            unit = 'month'
+            count = dparts.months
+            n++
+        }
+        if(dparts.weeks) {
+            dparts.days = dparts.hours = dparts.minutes = dparts.seconds = dparts.milliseconds = 0
+            unit = 'week'
+            count = dparts.weeks
+            n++
+        }
+        if(dparts.days) {
+            dparts.hours = dparts.minutes = dparts.seconds = dparts.milliseconds = 0
+            unit = 'day'
+            count = dparts.days
+            n++
+        }
+        if(dparts.hours) {
+            dparts.seconds = dparts.milliseconds = 0
+            unit = 'hour'
+            count = dparts.hours
+            hms = true
+            n++
+        }
+        if(dparts.minutes) {
+            dparts.seconds = dparts.milliseconds = 0
+            unit = 'minute'
+            count = dparts.minutes
+            hms = true
+            n++
+        }
+        if (relStyle === 'full' && (dparts.seconds || dparts.milliseconds) && dparts.seconds < 6) {
+            if (dparts.sign < 0) {
+                return i18n.getLocaleString("date.range.moments.ago", "a few moments ago")
+            } else {
+                return i18n.getLocaleString("date.range.moments.away", "in a few moments")
+            }
+        } else if(dparts.seconds || dparts.milliseconds) {
+            unit = 'second'
+            count = dparts.seconds || dparts.milliseconds / 1000
+            n++;
+            hms = true
+        }
+        if(n !== 1 || (relStyle && relStyle.indexOf(':') !== -1)) {
+            let tDate = new Date(0)
+            tDate.setUTCHours(dparts.hours)
+            tDate.setUTCMinutes(dparts.minutes)
+            tDate.setUTCSeconds(dparts.seconds)
+            tDate.setUTCMilliseconds(dparts.milliseconds)
+            unit = F(`date~${locale}|${relStyle}`, tDate)
+            count = ''
+        }
+        i18n.setLocale(locale)
+        if (dparts.sign > 0) inago = i18n.getLocaleString('date.range.time.ahead', 'in $count() $unit()')
+        else inago = i18n.getLocaleString('date.range.time.ago', '$count() $unit() ago')
+        let term = 'term'
+        if(relStyle !== 'full' && relStyle !== 'long') term = 'abbr'
 
-        out = out.trim()
-        if (dparts.sign < 0) out += ' '+ i18n.getLocaleString("date.range.ago","ago")
-        return out
+        // fallback pluralization if we don't have any string tables
+        let stats:any = i18n.setLocale() // default locale
+        let hasI18nStrings = (stats && stats.totalStrings)
+        if(!hasI18nStrings) {
+            if(term === 'abbr') {
+                switch(unit) {
+                    case 'hour':
+                        unit = 'hr.'
+                        break
+                    case 'minute':
+                        unit = 'min.'
+                        break;
+                    case 'second':
+                        unit = 'sec.'
+                        break;
+                }
+            } else {
+                if(count != 1) unit += 's'
+            }
+        }
+        else {
+            i18n.setLocale(locale)
+            if (i18n.hasLocaleString(`date.${term}.${unit}`)) {
+                unit = i18n.getPluralizedString(locale, `date.${term}.${unit}`, count)
+            }
+        }
+        out += formatV(inago, {count, unit})
+        return out.trim()
 
-    } else {
+    } else { // using Intl for format style
         let opts = {
             numeric: isHuman ? 'auto' : 'always',
             style: relStyle === 'full' ? 'long' : relStyle
@@ -508,6 +559,7 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
         else if(dparts.milliseconds) { value = dparts.milliseconds/1000; type = 'seconds'}
         if(relStyle === 'full') {
             if (type === 'seconds' && dparts.seconds < 6) {
+                i18n.setLocale(locale)
                 if (dparts.sign < 0) {
                     return i18n.getLocaleString('date.range.moments.ago','a few moments ago')
                 } else {
@@ -539,7 +591,8 @@ function roundUpDParts(dparts) {
     return dparts
 }
 
-function fitRelativeDate(dt) {
+function fitRelativeDate(dt, locale) {
+    if(!locale) locale = getSystemLocale()
     let out = ''
     let isToday = false
     let today = new Date(getNow())
@@ -557,11 +610,12 @@ function fitRelativeDate(dt) {
     let weeks = Math.floor(Math.abs(days/7))
     if(weeks) weeks *=sign
     if((years || months) && Math.abs(weeks) > 2) {
-        let dateStyle = 'WWWW, MMMM D YYY'
-        out = F('date|' + dateStyle, dt).trim()
+        let dateStyle = i18n.getLocaleString('date.format.full', 'WWWW, MMMM D YYY')
+        out = F(`date~${locale}|` + dateStyle, dt).trim()
     } else if (weeks) {
         // express as weeks
-        let weekday = F('date|WWWW', dt)
+        let weekday = F(`date~${locale}|WWWW`, dt)
+        i18n.setLocale(locale)
         if(weeks < 0) {
             if(weeks === -1) {
                 out = formatV('@date.range.weekday.previous:$weekday(), last week', {weekday})
@@ -581,6 +635,7 @@ function fitRelativeDate(dt) {
             }
         }
     } else {
+        i18n.setLocale(locale)
         // express as days
         if(days === 0) {
             out = i18n.getLocaleString('date.range.today','today')
@@ -591,10 +646,12 @@ function fitRelativeDate(dt) {
             out = i18n.getLocaleString('date.range.yesterday','yesterday')
         }
         if(Math.abs(days) < 7 && Math.abs(days) > 2) {
-            let weekday = F('date|WWWW', dt)
-            out += (days < 0)? 'last ' : 'next '
-            out += weekday
+            let weekday = F(`date~${locale}|WWWW`, dt)
+            let last = i18n.getLocaleString('date.range.weekday.previous', '$weekday(), last week')
+            let next = i18n.getLocaleString('date.range.weekday.next', 'next $weekday()')
+            out += formatV((days < 0)? last  : next, {weekday})
         } else if(!out) {
+            i18n.setLocale(locale)
             if (days < 0) {
                 out = formatV('@date.range.days.ago:$days(-1.0) days ago', {days: -days})
             } else {

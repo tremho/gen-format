@@ -558,49 +558,49 @@ For example: MMMM means "Spell out the name of the month in full" (e.g. "January
 
 The full list of this type of format option is here:
 
--        YYYY = 4 digit year (e.g. 2020)
--        YYY =  4 digit year, but only show if not the current year
--        YY = 2 digit year (e.g. 20)
--        Y =  2 digit year only shown if not the current year
--        (if a year is not shown, characters in format beyond are skipped until the next parse token)
+-          YYYY = 4 digit year (e.g. 2020)
+-          YYY =  4 digit year, but only show if not the current year
+-          YY = 2 digit year (e.g. 20)
+-          Y =  2 digit year only shown if not the current year
+-          (if a year is not shown, characters in format beyond are skipped until the next parse token)
 -   
--        MMMM = full name of month (e.g. 'February')
--        MMM = abbreviated name of month (3 letters, e.g. 'Feb')
--        MM = 2 digit month (leading 0) (e.g. 02)
--        M = 1-2 digit month (no leading 0) (e.g. 2)
+-          MMMM = full name of month (e.g. 'February')
+-          MMM = abbreviated name of month (3 letters, e.g. 'Feb')
+-          MM = 2 digit month (leading 0) (e.g. 02)
+-          M = 1-2 digit month (no leading 0) (e.g. 2)
 -   
--        WWWW = Full weekday name (e.g. 'Saturday')
--        WWW = three letter weekday abbreviation (e.g. 'Sat')
--        WW = two letter weekday abbreviation (uncommon) (e.g. 'Mo', 'Sa')
--        W = 1 - 2 letter weekday abbreviation (e.g. 'M', 'Th')
+-          WWWW = Full weekday name (e.g. 'Saturday')
+-          WWW = three letter weekday abbreviation (e.g. 'Sat')
+-          WW = two letter weekday abbreviation (uncommon) (e.g. 'Mo', 'Sa')
+-          W = 1 - 2 letter weekday abbreviation (e.g. 'M', 'Th')
 -   
--        DD = 2 digit day, with leading 0
--        D = 1 - 2 digit day, no leading 0
+-          DD = 2 digit day, with leading 0
+-          D = 1 - 2 digit day, no leading 0
 -   
--        hhhh = 24 hour time, leading 0
--        hhh = 24 hour time, no leading 0
--        hh = 12 hour time, leading 0
--        h  = 12 hour time, no leading 0
+-          hhhh = 24 hour time, leading 0
+-          hhh = 24 hour time, no leading 0
+-          hh = 12 hour time, leading 0
+-          h  = 12 hour time, no leading 0
 -   
--        m = minutes with leading 0
--        m = minutes without leading 0
+-          m = minutes with leading 0
+-          m = minutes without leading 0
 -   
--        ss = seconds with leading 0
--        s  = seconds witout leading 0
+-          ss = seconds with leading 0
+-          s  = seconds witout leading 0
 -   
--        .sss = milliseconds (includes the .)
--        .ss` = 1/100th seconds (includes the .)
--        .s   = 1/10th seconds (includes the .)
+-          .sss = milliseconds (includes the .)
+-          .ss` = 1/100th seconds (includes the .)
+-          .s   = 1/10th seconds (includes the .)
 -   
--        ++ = AM/PM notation (upper case)
--        -- = am/pm (lower case)
--        -+ - PM only (upper case)
--        +- = PM only (lower case)
+-          ++ = AM/PM notation (upper case)
+-          -- = am/pm (lower case)
+-          -+ - PM only (upper case)
+-          +- = PM only (lower case)
 -   
--        x = milliseconds (as an integer without a period)
+-          x = milliseconds (as an integer without a period)
 -   
--        j = javascript standard millisecond timestamp
--        u = unix standard second timestamp
+-          j = javascript standard millisecond timestamp
+-          u = unix standard second timestamp
 -   
 
  Please note that some options, like YYY or Y _will display nothing_

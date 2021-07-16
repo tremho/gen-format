@@ -46,6 +46,7 @@ import {formatV} from '../src/Formatter'
 import fileOps from '../src/NodeFileOps'
 import {setFileOps} from "../src/Formatter";
 import i18n from "../src/i18n";
+import {getUseIntlChoice} from "../index";
 
 setFileOps(fileOps)
 
@@ -56,6 +57,9 @@ function extLocaleTest() {
     if(intlAvailable) {
         useIntl(true)
     }
+    let stats:any = i18n.setLocale() // default locale
+    let hasI18nStrings = (stats && stats.totalStrings)
+
     Tap.test('diffs and more', t => {
 
         t.skip(`COMMENT: Intl Availability is ${checkIntlSupport()}. These tests were made with ${intlAvailable? 'full' : 'no'} Intl support`)
@@ -78,9 +82,18 @@ function extLocaleTest() {
         x = fbx  // fallback to system (en-US)
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 
+        let fbx2 = fbx
+        if(!getUseIntlChoice()) {
+            // separator changes on the reset... (minor weirdness)
+            if(hasI18nStrings) {
+                fbx2 = "Thursday, July 1, 2021, 16:03:00 PM Coordinated Universal Time"
+            } else {
+                fbx2 = 'Thursday, July 1, 2021 at 16:03:00 PM Coordinated Universal Time'
+            }
+        }
         desc = 'Check use with invalid locale, fu-BR'
         r = F(`date?utc~fu-BR|full`, dts)
-        x = fbx  // fallback to system (en-US)
+        x = fbx2  // default full
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 
         desc = 'Check use with undefined locale and no tz cast'
@@ -100,7 +113,7 @@ function extLocaleTest() {
 
         desc = 'Check use with valid but unsupported locale'
         r = F(`date?utc~ban-UD|full`, dts)
-        x = fbx  // default full
+        x = fbx2  // default full
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 
         desc = 'Check attempt to include a fallback locale'
@@ -174,7 +187,8 @@ function extLocaleTest() {
             x = 'Thursday, July 一, 二千零二十一 at 四:三:零 PM Coordinated Universal Time'
         } else {
             // extension ignored if no intl
-            x = 'Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time'
+            x = hasI18nStrings ? "Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time"
+                : 'Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time'
         }
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 
@@ -186,7 +200,8 @@ function extLocaleTest() {
             x = 'Thursday, Fifth Month 二十二, 二千零二十一(xin-chou) at 四:三:零 PM Coordinated Universal Time'
         } else {
             // extension ignored if no intl
-            x = 'Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time'
+            x = hasI18nStrings ? 'Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time'
+                : 'Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time'
         }
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 
@@ -195,16 +210,7 @@ function extLocaleTest() {
         if(intlAvailable) {
             x = '二千零二十一辛丑年五月廿二星期四 协调世界时 下午四:三:零'
         } else {
-            let stats:any = i18n.setLocale() // default locale
-            // extension ignored if no intl, but we do get the Thursday, July part translated by i18n, or fallback if no tables
-            if(stats && stats.totalStrings) {// looks like we have i18n tables
-                // assume we have the right translations in place
-                x = '星期四, 七月 1, 2021 at 4:03:00 PM Coordinated Universal Time'
-            } else {
-                // fallback to hard coded defaults (en-US)
-                x = 'Thursday, July 1, 2021 at 4:03:00 PM Coordinated Universal Time'
-            }
-
+            x = hasI18nStrings ? '星期四, 七月 1, 2021, 16:03:00 PM Coordinated Universal Time' : fbx2
         }
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 

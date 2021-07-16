@@ -196,7 +196,7 @@ function RelativeTimeTest(label) {
         desc = "3 days ago"
         event = getNow() - (3*1000*24*3600)
         r = F('daterange|human-none', event)
-        x = "last "+wd
+        x = wd+", last week"
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
 
         dt = new Date(getNow())
@@ -398,7 +398,7 @@ function RelativeTimeTest(label) {
         desc = " [date]3 days ago"
         event = getNow() - (3*1000*24*3600)
         r = F('date|human-none', event)
-        x = "last "+wd
+        x = wd+", last week"
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
 
         dt = new Date(getNow())

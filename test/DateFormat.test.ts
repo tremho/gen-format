@@ -5,9 +5,16 @@ import {setFileOps} from "../src/Formatter";
 import F from '../src/Formatter'
 import {formatV} from '../src/Formatter'
 
+import {setArtificialNow, getNow} from "../src/format/DateRangeFormatter";
+import i18n from "../src/i18n";
+
 setFileOps(fileOps)
 
 function dateFormatTest() {
+
+    let stats:any = i18n.setLocale() // default locale
+    let hasI18nStrings = (stats && stats.totalStrings)
+
     Tap.test('date', t => {
 
         let r = F('date|YY MM DD h:mm:ss', 'now')
@@ -89,8 +96,9 @@ function dateFormatTest() {
         t.ok(r === x, `p120 expected "${x}", got "${r}"`)
 
         // today
+        let tmNow = F('date| h:mm++', 'now')
         r = F('date|MMM D, h:mm++', 'today')
-        x = td+`, 12:00AM`
+        x = td+`, ${tmNow}`
         t.ok(r === x, `today expected "${x}", got "${r}"`)
 
         // today @ hh:mm:ss
@@ -104,7 +112,7 @@ function dateFormatTest() {
         let tmrw = mo + ' '+(Number(dy)+1)
 
         r = F('date|MMM D, h:mm++', 'tomorrow')
-        x = tmrw+`, ${hr}:${mn < 10 ? '0'+mn : ''+mn}${ap}`
+        x = tmrw+`, ${tmNow}`
         t.ok(r === x, `tomorrow expected "${x}", got "${r}"`)
 
         r = F('date|MMM D, h:mm++', 'tomorrow @ 7:30')
@@ -115,7 +123,7 @@ function dateFormatTest() {
         let ystr = mo + ' '+(Number(dy)-1)
 
         r = F('date|MMM D, h:mm++', 'yesterday')
-        x = ystr+`, ${hr}:${mn < 10 ? '0'+mn : ''+mn}${ap}`
+        x = ystr+`, ${tmNow}`
         t.ok(r === x, `yesterday expected "${x}", got "${r}"`)
 
         r = F('date|MMM D, h:mm++', 'yesterday @ 19:30')
@@ -139,11 +147,11 @@ function dateFormatTest() {
 
         // next year
         r = F('date|YYYY MMM D, h:mm++', 'next year')
-        x = nyr+' '+td+`, ${hr}:${mn < 10 ? '0'+mn : ''+mn}${ap}`
+        x = nyr+' '+td+`, ${tmNow}`
         t.ok(r === x, `next year expected "${x}", got "${r}"`)
         // last year
         r = F('date|YYYY MMM D, h:mm++', 'last year')
-        x = lyr+' '+td+`, ${hr}:${mn < 10 ? '0'+mn : ''+mn}${ap}`
+        x = lyr+' '+td+`, ${tmNow}`
         t.ok(r === x, `last year expected "${x}", got "${r}"`)
 
         // next month
@@ -276,15 +284,15 @@ function dateFormatTest() {
         t.ok(r === x, `(long) expected "${x}", got "${r}"`)
 
         r = F('date|medium-medium', testDate)
-        x = 'Wed, Jan 13,  at 12:00:00 AM UTC'
+        x = 'Wed, Jan 13,  12:00:00 AM'
         t.ok(r === x, `(medium) expected "${x}", got "${r}"`)
 
         r = F('date|short-short', testDate)
-        x = '1/13/21 at 12:00:00 AM UTC'
+        x = '1/13/21 12:00 AM'
         t.ok(r === x, `(short) expected "${x}", got "${r}"`)
 
         r = F('date|short-long', testDate)
-        x = '1/13/21 at 12:00:00 AM UTC'
+        x = '1/13/21 12:00:00 AM UTC'
         t.ok(r === x, `(short-long) expected "${x}", got "${r}"`)
 
         r = F('date?pst|full', testDate)
@@ -296,36 +304,40 @@ function dateFormatTest() {
         t.ok(r === x, `(long pst) expected "${x}", got "${r}"`)
 
         r = F('date?pst|medium', testDate)
-        x = 'Tue, Jan 12,  at 4:00:00 PM'
+        x = 'Tue, Jan 12,  4:00:00 PM'
         t.ok(r === x, `(medium pst) expected "${x}", got "${r}"`)
 
         r = F('date?pst|short', testDate)
-        x = '1/12/21 at 4:00 PM'
+        x = '1/12/21 4:00 PM'
         t.ok(r === x, `(short pst) expected "${x}", got "${r}"`)
 
         r = F('date?pst|short-long', testDate)
-        x = '1/12/21 at 4:00:00 PM PST'
+        x = '1/12/21 4:00:00 PM PST'
         t.ok(r === x, `(short-long pst) expected "${x}", got "${r}"`)
 
-        r = F('date~es-ES?pst|full', testDate)
-        x = 'martes, enero 12, 2021 at 16:00:00  Hora estándar del Pacífico'
-        t.ok(r === x, `(ES) expected "${x}", got "${r}"`)
+        if(hasI18nStrings) {
+            r = F('date~es-ES?pst|full', testDate)
+            x = 'martes, 12 de enero de 2021, 16:00:00 Hora estándar del Pacífico'
+            t.ok(r === x, `(ES) expected "${x}", got "${r}"`)
 
-        r = F('date~es-ES?pst|long', testDate)
-        x = 'enero 12, 2021 at 16:00:00  PST'
-        t.ok(r === x, `(ES long) expected "${x}", got "${r}"`)
+            r = F('date~es-ES?pst|long', testDate)
+            x = '12 de enero de 2021, 16:00:00 PST'
+            t.ok(r === x, `(ES long) expected "${x}", got "${r}"`)
 
-        r = F('date~es-ES?pst|medium', testDate)
-        x = 'mar., ene. 12,  at 16:00:00'
-        t.ok(r === x, `(ES med) expected "${x}", got "${r}"`)
+            r = F('date~es-ES?pst|medium', testDate)
+            x = 'mar., ene. 12,  16:00:00'
+            t.ok(r === x, `(ES med) expected "${x}", got "${r}"`)
 
-        r = F('date~es-ES?pst|short', testDate)
-        x = '12/01/21 at 16:00'
-        t.ok(r === x, `(ES short) expected "${x}", got "${r}"`)
+            r = F('date~es-ES?pst|short', testDate)
+            x = '12/1/21 16:00'
+            t.ok(r === x, `(ES short) expected "${x}", got "${r}"`)
 
-        r = F('date~es-ES?pst|short-long', testDate)
-        x = '12/01/21 at 16:00:00  PST'
-        t.ok(r === x, `(ES short-long) expected "${x}", got "${r}"`)
+            r = F('date~es-ES?pst|short-long', testDate)
+            x = '12/1/21 16:00:00 PST'
+            t.ok(r === x, `(ES short-long) expected "${x}", got "${r}"`)
+        } else {
+            t.skip('No string tables: skipped ES locale tests')
+        }
 
 
         // am-pm
@@ -390,6 +402,7 @@ function dateFormatTest() {
         t.end()
     })
 }
+
 
 
 

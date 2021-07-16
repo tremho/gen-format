@@ -25,15 +25,27 @@ export function i18nFormatByStyle(locale, dateStyle, timeStyle, isUtc, fallbackS
                 dateFmt = 'D/MM/YY'
             }
         }
+        else if(dateStyle === 'none') {
+            dateFmt = ''
+        }
     }
 
 
-    let timeFmt = dateFmt ? i18n.getLocaleString('date.format.time.separator', fallbackSeparator, false) : ''
+    let useSep = !!dateFmt
+    if(useSep) {
+        if((dateFmt.indexOf('YYYY') === -1 && dateFmt.indexOf('YYY') !== -1)
+        || (dateFmt.indexOf('YY') === -1 && dateFmt.indexOf('Y') !== -1)) {
+            useSep = false
+        }
+    }
+    let sep = i18n.getLocaleString(`date.format.time.separator.${dateStyle}`, '')
+    if(!sep) sep = i18n.getLocaleString('date.format.time.separator', fallbackSeparator, false)
+    let timeFmt = useSep ? sep : ' '
 
     if(timeStyle.indexOf(':') !== -1) {
         timeFmt += timeStyle
     } else {
-        if(isUtc) {
+        if(isUtc && !timeStyle) {
             timeFmt += 'h:mm:ss ++ Z' // Intl chooses this style for UTC
         } else {
             let tmf = i18n.getLocaleString(ikeyTime, '', false)

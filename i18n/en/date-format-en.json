@@ -1,4 +1,10 @@
 {
+
+  "date.format.time.separator": " at ",
+  "date.format.time.separator.full": " at ",
+  "date.format.time.separator.long": " at ",
+  "date.format.time.separator.medium": " at ",
+
   "date.format.timezone.GMT.long" : "Greenwich Mean Time",
   "date.format.timezone.GMT+1.long" : "British Summer Time",
   "date.format.timezone.GMT.short" : "GMT",

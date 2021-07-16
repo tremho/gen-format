@@ -66,6 +66,34 @@ This support comes from the `i18n` localization files
 which are downloaded separately.  See the setup instructions
 in this document for more information.
 
+-------
+### Revision History
+
+##### v 1.1.0 (prerelease)
+- __new API:__
+    - i18n API includes bridge to locale-string-tables `getInstalledLocales` and `enumerateAvailableLocales()` 
+- __changed API (breaking)__
+  _These changes only affect apps needing to declare a `FileOps` object_
+    - Updated @tremho/locale-string-tables dependency to version 1.1.0
+    - `FileOps` interface spec changes to align to this dependency  
+    - `FileOps` no longer support property `rootPath`.
+    - `FileOps` now requires property `i18nPath`, to indicate the i18n folder directly.
+- __non-API changes__
+    - default fileOps now emits i18nPath to console for verification
+    - Fix some issues surrounding relative date keyword input
+    - removed unnecessary dependencies
+    - documentation updates
+
+- __i18n string table data update__    
+    - String table region incorrect path placement fixed.  
+__Please retrieve the [__latest__ ___i18n.zip___](https://github.com/tremho/gen-format/releases)
+from the download site (see docs).__
+
+
+##### v 1.0.0 - 1.0.4
+- Initial release and subsequent doc updates
+
+--------
 
 
 

@@ -107,7 +107,7 @@ export class SpecParts {
 export interface FileOps {
     read(path:string):string
     enumerate(relDir:string, callback:any):void
-    rootPath:string
+    i18nPath:string
 }
 
 /**

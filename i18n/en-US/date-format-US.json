@@ -1,6 +1,6 @@
 
 {
-  "date.format.short" : "M/DD/YY",
+  "date.format.short" : "M/D/YY",
 
   "time.format.full": "h:mm:ss ++ Z",
   "time.format.long": "h:mm:ss ++ z",

@@ -6,6 +6,10 @@
   "date.format.timezone.UTC.long": "(tiempo universal coordinado)",
   "date.format.timezone.UTC.short": "UTC",
 
+  "date.format.full": "WWWW, D de MMMM de YYYY",
+  "date.format.long": "D de MMMM de YYYY",
+
+
 
   "date.format.timezone.EST.long": "Hora estándar del este",
   "date.format.timezone.EST.short": "EST",

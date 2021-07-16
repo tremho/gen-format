@@ -3,7 +3,7 @@ import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 import {findTimezones, findTimezoneBlocks, findTimezoneBlocksForDate} from './Timezone'
 import {i18nFormatByStyle} from "./Shared";
 import * as LocaleStringTables from "@tremho/locale-string-tables"
-import {LoadStats} from "@tremho/locale-string-tables"
+import {getSystemLocale, LoadStats} from "@tremho/locale-string-tables"
 import DateRangeFormatter from "./DateRangeFormatter";
 
 const sysloc = LocaleStringTables.getSystemLocale()
@@ -121,63 +121,62 @@ export default class DateFormatter implements IFormatHandler {
             if (keyword === 'now') {            // current date/time to millisecond
                 timestamp = Date.now()
             }
-            let at = keyword.indexOf('@') !== -1; // at is true if we have a time offset to apply
             if(keyword.indexOf('today') !== -1) {
-                timestamp = dayMark(0 , true) // midnight on this day
+                timestamp = dayMark(0 ) // midnight on this day
                 timestamp += parseTimeArg(keyword) // or set the time within the day (default current time)
             }
             if(keyword.indexOf('tomorrow') !== -1) {
-                timestamp = dayMark(1, at)              // midnight tomorrow
-                if(at) timestamp += parseTimeArg(keyword)  // set the time (default current time) (0) for midnight
+                timestamp = dayMark(1)              // midnight tomorrow
+                timestamp += parseTimeArg(keyword)  // set the time (default current time) (0) for midnight
 
             }
             if(keyword.indexOf('yesterday') !== -1) {
-                timestamp = dayMark(-1, at)             // midnight yesterday
-                if(at) timestamp += parseTimeArg(keyword)  // set the time
+                timestamp = dayMark(-1)             // midnight yesterday
+                timestamp += parseTimeArg(keyword)  // set the time
             }
             if(keyword.indexOf('next') !== -1) {
                 if(keyword.indexOf('week') !== -1) {
-                    timestamp = weekMark(1, at)              // midnight next week at this time
-                    if(at) timestamp += parseTimeArg(keyword)  // set the time
+                    timestamp = weekMark(1)
+                    timestamp += parseTimeArg(keyword)  // set the time
                 }
                 if(keyword.indexOf('month') !== -1) {
-                    timestamp = monthMark(1, at)            // this date next month, or else 4 weeks at midnight
-                    if(at) timestamp += parseTimeArg(keyword)  // set the time
+                    timestamp = monthMark(1)
+                    timestamp += parseTimeArg(keyword)  // set the time
                 }
                 if(keyword.indexOf('year') !== -1) {
-                    timestamp = yearMark(1, at)             // this date next year at midnight
-                    if(at) timestamp += parseTimeArg(keyword)  // set the time
+                    timestamp = yearMark(1)
+                    timestamp += parseTimeArg(keyword)  // set the time
                 }
                 // weekday names
                 let wkd = findWeekdayName(keyword)
                 if(wkd !== undefined) {
-                    timestamp = nextWeekday(wkd, at)
-                    if(at) timestamp += parseTimeArg(keyword)  // set the time
+                    timestamp = nextWeekday(wkd)
+                    timestamp += parseTimeArg(keyword)  // set the time
                 }
             }
             if(keyword.indexOf('last') !== -1) {
                 if(keyword.indexOf('week') !== -1) {
-                    timestamp = weekMark(-1, at)             // last week at midnight
-                    if(at) timestamp += parseTimeArg(keyword) // set the time
+                    timestamp = weekMark(-1)             // last week at midnight
+                    timestamp += parseTimeArg(keyword) // set the time
                 }
                 if(keyword.indexOf('month') !== -1) {
-                    timestamp = monthMark(-1, at)          // this date last month, or else 4 weeks ago at midnight
-                    if(at) timestamp += parseTimeArg(keyword) // set the time
+                    timestamp = monthMark(-1)
+                    timestamp += parseTimeArg(keyword) // set the time
                 }
                 if(keyword.indexOf('year') !== -1) {
-                    timestamp = yearMark(-1, at)          // this date last year, at midnight
-                    if(at) timestamp += parseTimeArg(keyword) // set the time
+                    timestamp = yearMark(-1)
+                    timestamp += parseTimeArg(keyword) // set the time
                 }
                 // weekday names
                 let wkd = findWeekdayName(keyword)
                 if(wkd !== undefined) {
-                    timestamp = lastWeekday(wkd, at)
-                    if(at) timestamp += parseTimeArg(keyword)  // set the time
+                    timestamp = lastWeekday(wkd, true)
+                    timestamp += parseTimeArg(keyword)  // set the time
                 }
             }
             if(keyword.indexOf('this') !== -1) {
                 if(keyword.indexOf('day') !== -1) { // same as today
-                    timestamp = dayMark(0, true)
+                    timestamp = dayMark(0)
                 }
                 if(keyword.indexOf('hour') !== -1) { // top of current hour
                     timestamp = hourMark(0)
@@ -189,21 +188,29 @@ export default class DateFormatter implements IFormatHandler {
                     timestamp = secondMark(0)
                 }
                 if(keyword.indexOf('week') !== -1) { // Midnight Sunday of current week, looking backward
-                    timestamp = weekMark(0, true, true)
-                    if(at) timestamp += parseTimeArg(keyword)
+                    timestamp = weekMark(0, true)
+                    if(keyword.indexOf('@') !== -1) { // default to midnight if no explicit time set
+                        timestamp += parseTimeArg(keyword)
+                    }
                 }
                 if(keyword.indexOf('month') !== -1) { // Midnight on first of current month
-                    timestamp = monthMark(0, true, true)
-                    if(at) timestamp += parseTimeArg(keyword)
+                    timestamp = monthMark(0,  true)
+                    if(keyword.indexOf('@') !== -1) { // default to midnight if no explicit time set
+                        timestamp += parseTimeArg(keyword)
+                    }
                 }
                 if(keyword.indexOf('year') !== -1) { // Midnight 01/01 of current year
-                    timestamp = yearMark(0, true, true)
-                    if(at) timestamp += parseTimeArg(keyword)
+                    timestamp = yearMark(0,  true)
+                    if(keyword.indexOf('@') !== -1) { // default to midnight if no explicit time set
+                        timestamp += parseTimeArg(keyword)
+                    }
                 }
                 let wkd = findWeekdayName(keyword)
                 if(wkd !== undefined) {
-                    timestamp = thisWeekday(wkd, at)
-                    if(at) timestamp += parseTimeArg(keyword)  // set the time
+                    timestamp = thisWeekday(wkd)
+                    if(keyword.indexOf('@') !== -1) { // default to midnight if no explicit time set
+                        timestamp += parseTimeArg(keyword)  // set the time
+                    }
                 }
             }
             if(timestamp === undefined) {
@@ -271,6 +278,7 @@ export default class DateFormatter implements IFormatHandler {
         } catch(e) {
             console.error(e.message)
             i18n.setLocale() // revert to system locale on error
+            specParts.locale = getSystemLocale()
         }
 
         try {
@@ -328,7 +336,7 @@ const weekdayAbbr3 = ['S', 'M', 'T', 'W', 'Th', 'F', 'Sa']  // deprecated
  *      hh = 12 hour time, leading 0
  *      h  = 12 hour time, no leading 0
  *
- *      m = minutes with leading 0
+ *      mm = minutes with leading 0
  *      m = minutes without leading 0
  *
  *      ss = seconds with leading 0
@@ -528,7 +536,7 @@ export class SimpleDateFormat {
             let [dateStyle, timeStyle] = fmt.split('-')
             if (!timeStyle) timeStyle = dateStyle
             const isUtc = this.tzCast && this.tzCast.toLowerCase() === 'utc'
-            fmt = i18nFormatByStyle(this.locale, dateStyle, timeStyle,isUtc, ' at ')
+            fmt = i18nFormatByStyle(this.locale, dateStyle, timeStyle,isUtc, dateStyle === 'short' ? ' ' : ' at ')
         }
         let out = fmt
 
@@ -788,8 +796,10 @@ export class SimpleDateFormat {
         if(tzDisp) {
             let n = 0;
             while ((n = out.indexOf(z, n)) !== -1) {
-                out = out.replace(z, tzDisp)
-                n += tzDisp.length;
+                if(!out.charAt(n+1) || out.charAt(n+1).toLowerCase() === out.charAt(n+1).toUpperCase()) {
+                    out = out.replace(z, tzDisp)
+                    n += tzDisp.length;
+                } else n++
             }
         }
 
@@ -801,26 +811,45 @@ export class SimpleDateFormat {
         let AMPM = this.hr >= 12 ? i18n.getLocaleString('time.pm', 'PM') : i18n.getLocaleString('time.am', 'AM');
         let PM = this.hr >= 12 ? i18n.getLocaleString('time.pm', 'PM') : '';
 
+
+        if(!ampm && out.indexOf(' --') !== -1) {
+            out = out.replace(' --', '--')
+        }
         while ((n = out.indexOf('--')) !== -1) {
             out = out.replace('--', ampm)
             n += ampm.length;
+        }
+        if(!AMPM && out.indexOf(' ++') !== -1) {
+            out = out.replace(' ++', '++')
         }
         while ((n = out.indexOf('++')) !== -1) {
             out = out.replace('++', AMPM)
             n += ampm.length;
         }
+        if(!pm && out.indexOf(' +-') !== -1) {
+            out = out.replace(' +-', '+-')
+        }
         while ((n = out.indexOf('+-')) !== -1) {
             out = out.replace('+-', pm)
             n += ampm.length;
+        }
+        if(!pm && out.indexOf(' -+') !== -1) {
+            out = out.replace(' -+', '-+')
         }
         while ((n = out.indexOf('-+')) !== -1) {
             out = out.replace('-+', PM)
             n += ampm.length;
         }
+        // if(!pm && out.indexOf(' -?') !== -1) {
+        //     out = out.replace(' -?', '-?')
+        // }
         while ((n = out.indexOf('-?')) !== -1) {
             out = out.replace('-?', ampm.charAt(0))
             n += ampm.length;
         }
+        // if(!pm && out.indexOf(' +?') !== -1) {
+        //     out = out.replace(' +?', '+?')
+        // }
         if ((n = out.indexOf('+?')) !== -1) {
             out = out.replace('+?', AMPM.charAt(0))
             n += ampm.length;
@@ -899,14 +928,14 @@ function pickTimezoneBlock(tz, blocks) {
  *
  * @private
  */
-function yearMark(v, midnight, top=false) {
+function yearMark(v, top=false) {
     const dt = new Date()
     dt.setUTCFullYear(dt.getUTCFullYear()+v)
     if(top) {
         dt.setUTCMonth(0)
         dt.setUTCDate(1)
     }
-    if(midnight) dt.setUTCHours(0,0,0,0)
+    dt.setUTCHours(0,0,0,0)
     return dt.getTime()
 }
 
@@ -922,7 +951,7 @@ const daysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31]
  *
  * @private
  */
-function monthMark(v, midnight, top=false) {
+function monthMark(v, top=false) {
     let dt = new Date()
     let curMo = dt.getUTCMonth()
     let newMo = curMo + v
@@ -933,13 +962,13 @@ function monthMark(v, midnight, top=false) {
     }
     if(newMo < 0 || newMo > 11) {
         let yo = /*newMo < 0 ? Math.ceil(newMo/12) :*/ Math.floor(newMo/12)
-        dt = new Date(yearMark(yo, midnight))
+        dt = new Date(yearMark(yo))
         if(newMo < 0) newMo += 12
         newMo = newMo % 12
     }
     dt.setUTCMonth(newMo)
     dt.setUTCDate(top?1:date)
-    if(midnight) dt.setUTCHours(0,0,0,0)
+     dt.setUTCHours(0,0,0,0)
 
     return dt.getTime()
 }
@@ -950,15 +979,15 @@ function monthMark(v, midnight, top=false) {
  *
  * @private
  */
-function weekMark(v, midnight, top=false) {
+function weekMark(v, top=false) {
     const dt = new Date()
-    let date = dt.getDate()
+    let date = dt.getUTCDate()
     if(top) {
         let wd = dt.getUTCDay()
         date -= wd
     }
     dt.setUTCDate(date + v * 7) // see spec for setDate.  this should do what we want to reconcile dates
-    if(midnight) dt.setUTCHours(0,0,0,0)
+    dt.setUTCHours(0,0,0,0)
     return dt.getTime()
 }
 /**
@@ -967,11 +996,12 @@ function weekMark(v, midnight, top=false) {
  *
  * @private
  */
-function dayMark(v, midnight) {
+function dayMark(v) {
     const dt = new Date()
     let date = dt.getUTCDate()
     dt.setUTCDate(date + v) // see spec for setDate.  this should do what we want to reconcile dates
-    if(midnight) dt.setUTCHours(0,0,0,0)
+    let off = dt.getTimezoneOffset()
+    dt.setUTCHours(0,0,0,0)
     return dt.getTime()
 }
 /**
@@ -983,7 +1013,7 @@ function dayMark(v, midnight) {
 function hourMark(v) {
     const dt = new Date()
     let hr = dt.getUTCHours()
-    dt.setUTCHours(hr, 0,0,0)
+    dt.setUTCHours(hr,0,0,0)
     return dt.getTime()
 }
 /**
@@ -1010,7 +1040,7 @@ function secondMark(v) {
     let hr = dt.getUTCHours()
     let mn = dt.getUTCMinutes()
     let sc = dt.getUTCSeconds()
-    dt.setUTCHours(hr, mn,sc,0)
+    dt.setUTCHours(hr, mn, sc,0)
     return dt.getTime()
 }
 
@@ -1062,6 +1092,11 @@ function parseTimeArg(str) {
         }
         if(isPm && hr < 12) hr += 12
         if(isAm && hr == 12) hr = 0
+    } else {
+        let now = new Date()
+        hr = now.getUTCHours()
+        mn = now.getUTCMinutes()
+        sn = now.getUTCSeconds() + now.getUTCMilliseconds() / 1000
     }
 
     return hr * 3600000 + mn * 60000 + sn * 1000
@@ -1106,7 +1141,7 @@ function lastWeekday(wd, midnight) {
     if(wd >= nwd) {
         wm = -1
     }
-    let dt = new Date(weekMark(wm, midnight, true)) // reset to sunday of this week or last week
+    let dt = new Date(weekMark(wm, true)) // reset to sunday of this week or last week
     dt.setUTCDate(dt.getUTCDate()+wd) // move forward to selected day
     return dt.getTime()
 }
@@ -1118,14 +1153,14 @@ function lastWeekday(wd, midnight) {
  *
  * @private
  */
-function nextWeekday(wd, midnight) {
+function nextWeekday(wd) {
     let ndt = new Date()
     let nwd = ndt.getUTCDay()
     let wm = 0
     if(wd <= nwd) {
         wm = 1
     }
-    let dt = new Date(weekMark(wm, midnight, true)) // reset to sunday of this week or next week
+    let dt = new Date(weekMark(wm, true)) // reset to sunday of this week or next week
     dt.setUTCDate(dt.getUTCDate()+wd) // move forward to selected day
     return dt.getTime()
 }
@@ -1137,8 +1172,8 @@ function nextWeekday(wd, midnight) {
  *
  * @private
  */
-function thisWeekday(wd, midnight) {
-    let dt = new Date(weekMark(0, midnight, true)) // reset to sunday of this week or next week
+function thisWeekday(wd) {
+    let dt = new Date(weekMark(0, true)) // reset to sunday of this week or next week
     dt.setUTCDate(dt.getUTCDate()+wd) // move forward to selected day
     return dt.getTime()
 }

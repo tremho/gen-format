@@ -86,6 +86,15 @@ const wrapper = {
     pluralize(locale, word, count, type = 'cardinal') {
         if(!i18n) wrapper.init()
         return i18n.pluralize(locale, word, count, type)
+    },
+    getInstalledLocales() {
+        if(!i18n) wrapper.init()
+        return i18n.getInstalledLocales()
+
+    },
+    enumerateAvailableLocales(callback) {
+        if(!i18n) wrapper.init()
+        return i18n.enumerateAvailableLocales(callback)
     }
 }
 export default wrapper

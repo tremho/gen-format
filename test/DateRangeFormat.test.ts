@@ -2,9 +2,15 @@ import Tap from 'tap'
 
 import F from '../src/Formatter'
 import {formatV} from '../src/Formatter'
+import i18n from "../src/i18n";
 
 function dateRangeFormatTest() {
     let desc, r, x;
+
+    let stats:any = i18n.setLocale() // default locale
+    let hasI18nStrings = (stats && stats.totalStrings)
+
+
     Tap.test('date range', t => {
         // date range tests
         let label
@@ -144,22 +150,25 @@ function dateRangeFormatTest() {
 
         desc = "style = full"
         r = (F('daterange|full', [tn, tn2]))
-        x = 'Monday, April 3, 1961, 10:12:00 AM - 12:50:00 PM Coordinated Universal Time'
+        x = hasI18nStrings ? 'Monday, April 3, 1961 at 10:12:00 AM - 12:50:00 PM Coordinated Universal Time'
+            : 'Monday, April 3, 1961, 10:12:00 AM - 12:50:00 PM Coordinated Universal Time'
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
 
         desc = "style = long"
         r = (F('daterange|long', [tn, tn2]))
-        x = 'April 3, 1961, 10:12:00 AM - 12:50:00 PM UTC'
+        x = hasI18nStrings ? 'April 3, 1961 at 10:12:00 AM - 12:50:00 PM UTC'
+            : 'April 3, 1961, 10:12:00 AM - 12:50:00 PM UTC'
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
 
         desc = "style = medium"
         r = (F('daterange|medium', [tn, tn2]))
-        x = 'Mon, Apr 3, 1961, 10:12:00 AM - 12:50:00 PM'
+        x = hasI18nStrings ? 'Mon, Apr 3, 1961 10:12:00 AM - 12:50:00 PM'
+            : 'Mon, Apr 3, 1961 10:12:00 AM - 12:50:00 PM'
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
 
         desc = "style = short"
         r = (F('daterange|short', [tn, tn2]))
-        x = '4/03/61, 10:12 AM - 12:50 PM'
+        x = hasI18nStrings ? '4/3/61 10:12 AM - 12:50 PM' : '4/03/61, 10:12 AM - 12:50 PM'
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
 
         t.end()
