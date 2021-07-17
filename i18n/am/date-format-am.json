@@ -1,0 +1,41 @@
+{
+  "date.format.time.separator": ", እሑድ ",
+  "date.format.time.separator.full": ", እሑድ ",
+  "date.format.time.separator.long": ", እሑድ ",
+  "date.format.time.separator.medium": ", እሑድ ",
+  "date.format.time.separator.short": ", ",
+
+  "date.format.timezone.GMT.long" : "ግሪንዊች አማካይ ጊዜ",
+  "date.format.timezone.GMT+1.long" : "የእንግሊዝ የበጋ ሰዓት",
+  "date.format.timezone.GMT.short" : "ጂኤምቲ",
+
+  "date.format.timezone.UTC.long" : "የተቀናጀ ሁለንተናዊ ሰዓት",
+  "date.format.timezone.UTC.short" : "UTC",
+
+  "date.format.full": "YYYY MMMM D",
+  "date.format.long": "MMMM D, YYYY",
+
+  "time.pm" : "ከሰዓት",
+  "time.am" : "በጠዋት",
+  "time.pm.lowercase" : "ከሰዓት",
+  "time.am.lowercase" : "በጠዋት",
+
+
+  "date.format.timezone.EST.long" : "የምስራቅ መደበኛ ሰዓት",
+  "date.format.timezone.EST.short" : "ኢ.ኤስ.",
+  "date.format.timezone.CST.long" : "ማዕከላዊ መደበኛ ሰዓት",
+  "date.format.timezone.CST.short" : "ሲ.ኤስ.ቲ.",
+  "date.format.timezone.MST.long" : "የተራራ መደበኛ ሰዓት",
+  "date.format.timezone.MST.short" : "ኤም.ቲ.ኤስ.",
+  "date.format.timezone.PST.long" : "የፓስፊክ መደበኛ ሰዓት",
+  "date.format.timezone.PST.short" : "ፒ.ኤስ.ቲ.",
+  "date.format.timezone.EDT.long" : "የምስራቅ የቀን ብርሃን ሰዓት",
+  "date.format.timezone.EDT.short" : "ኢዲቲ",
+  "date.format.timezone.CDT.long" : "ማዕከላዊ የቀን ብርሃን ሰዓት",
+  "date.format.timezone.CDT.short" : "ሲዲቲ",
+  "date.format.timezone.MDT.long" : "የተራራ የቀን ብርሃን ሰዓት",
+  "date.format.timezone.MDT.short" : "ኤምዲቲ",
+  "date.format.timezone.PDT.long" : "የፓስፊክ የቀን ብርሃን ሰዓት",
+  "date.format.timezone.PDT.short" : "ፒ.ዲ.ቲ."
+
+}

@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "$weekday() günündən bir həftə",
     "date.range.weekday.weeks.ahead" : "$weeks(-1.0) həftədə, $weekday() günü",
     "date.range.days.ago" : "$days(-1.0) gün əvvəl",
-    "date.range.days.ahead" : "$days(-1.0) günə"
+    "date.range.days.ahead" : "$days(-1.0) günə",
+    "date.range.time.ago" : "$count() dəqiqədə",
+    "date.range.time.ahead": "$count() dəqiqə əvvəl"
 }

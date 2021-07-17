@@ -1,0 +1,43 @@
+{
+
+  "date.format.time.separator": ", saat ",
+  "date.format.time.separator.full": ", saat ",
+  "date.format.time.separator.long": ", saat ",
+  "date.format.time.separator.medium": ", saat ",
+  "date.format.time.separator.short": ", ",
+
+  "date.format.timezone.GMT.long" : "Qrinviç vaxtı",
+  "date.format.timezone.GMT+1.long" : "İngilis yay vaxtı",
+  "date.format.timezone.GMT.short" : "GMT",
+
+  "date.format.timezone.UTC.long" : "Razılaşdırılmış Universal Saat",
+  "date.format.timezone.UTC.short" : "UTC",
+
+  "date.format.full": "MMMM D YYYY WWWW",
+  "date.format.long": "MMMM D YYYY",
+
+  "time.pm" : "günorta",
+  "time.am" : "səhər",
+  "time.pm.lowercase" : "günorta",
+  "time.am.lowercase" : "səhər",
+
+
+
+  "date.format.timezone.EST.long" : "Şərq Standart Saatı",
+  "date.format.timezone.EST.short" : "EST",
+  "date.format.timezone.CST.long" : "Mərkəzi Standart Saat",
+  "date.format.timezone.CST.short" : "CST",
+  "date.format.timezone.MST.long" : "Dağ Standart Saatı",
+  "date.format.timezone.MST.short" : "MST",
+  "date.format.timezone.PST.long" : "Sakit okean standart vaxtı",
+  "date.format.timezone.PST.short" : "PST",
+  "date.format.timezone.EDT.long" : "Şərq yay vaxtı",
+  "date.format.timezone.EDT.short" : "EDT",
+  "date.format.timezone.CDT.long" : "Mərkəzi yay vaxtı",
+  "date.format.timezone.CDT.short" : "CDT",
+  "date.format.timezone.MDT.long" : "Dağın Yaz vaxtı",
+  "date.format.timezone.MDT.short" : "MDT",
+  "date.format.timezone.PDT.long" : "Pasifik Yay vaxtı",
+  "date.format.timezone.PDT.short" : "PDT"
+
+}

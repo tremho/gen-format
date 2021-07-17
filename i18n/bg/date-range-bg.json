@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "седмица от $weekday()",
     "date.range.weekday.weeks.ahead" : "след $weeks(-1.0) седмици, в $weekday",
     "date.range.days.ago" : "преди $days(-1.0) дни",
-    "date.range.days.ahead" : "за $days(-1.0) дни"
+    "date.range.days.ahead" : "за $days(-1.0) дни",
+    "date.range.time.ahead" : "за $count() $unit()",
+    "date.range.time.ago": "преди $count() $unit()"
 }

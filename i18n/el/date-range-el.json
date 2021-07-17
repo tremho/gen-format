@@ -41,6 +41,8 @@
     "date.range.weekday.weeks.ago" : "$weekday(), $weeks(-1.0) εβδομάδες πριν",
     "date.range.weekday.week.ahead" : "μια εβδομάδα από $weekday()",
     "date.range.weekday.weeks.ahead" : "σε $weeks(-1.0) εβδομάδες, την $weekday()",
-    "date.range.days.ago" : " πριν από $days(-1.0) ημέρες",
-    "date.range.days.ahead" : "σε $days(-1.0) ημέρες"
+    "date.range.days.ago" : "πριν από $days(-1.0) ημέρες",
+    "date.range.days.ahead" : "σε $days(-1.0) ημέρες",
+    "date.range.time.ahead": "σε $count() $unit()",
+    "date.range.time.ago": "πριν από $count() $unit()"
 }

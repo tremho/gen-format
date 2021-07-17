@@ -1,0 +1,43 @@
+{
+
+  "date.format.time.separator": " στις ",
+  "date.format.time.separator.full": " στις ",
+  "date.format.time.separator.long": " στις ",
+  "date.format.time.separator.medium": " στις ",
+  "date.format.time.separator.short": ", ",
+
+  "date.format.timezone.GMT.long" : "Μέση ώρα Γκρίνουιτς",
+  "date.format.timezone.GMT+1.long" : "Βρετανική θερινή ώρα",
+  "date.format.timezone.GMT.short" : "GMT",
+
+  "date.format.timezone.UTC.long" : "Συντονισμένη καθολική ώρα",
+  "date.format.timezone.UTC.short" : "UTC",
+
+  "date.format.full": "WWWW D MMMM YYYY",
+  "date.format.long": "D MMMM YYYY",
+
+  "time.pm" : "το απόγευμα",
+  "time.am" : "το πρωί",
+  "time.pm.lowercase" : "το απόγευμα",
+  "time.am.lowercase" : "το πρωί",
+
+
+
+  "date.format.timezone.EST.long" : "Τυπική ώρα Ανατολής",
+  "date.format.timezone.EST.short" : "EST",
+  "date.format.timezone.CST.long" : "Κεντρική τυπική ώρα",
+  "date.format.timezone.CST.short" : "CST",
+  "date.format.timezone.MST.long" : "Τυπική ώρα στο βουνό",
+  "date.format.timezone.MST.short" : "MST",
+  "date.format.timezone.PST.long" : "Τυπική ώρα Ειρηνικού",
+  "date.format.timezone.PST.short" : "PST",
+  "date.format.timezone.EDT.long" : "Ανατολική θερινή ώρα",
+  "date.format.timezone.EDT.short" : "EDT",
+  "date.format.timezone.CDT.long" : "Κεντρική ώρα της ημέρας",
+  "date.format.timezone.CDT.short" : "CDT",
+  "date.format.timezone.MDT.long" : "Ώρα ημέρας στο βουνό",
+  "date.format.timezone.MDT.short" : "MDT",
+  "date.format.timezone.PDT.long" : "Θερινή ώρα Ειρηνικού",
+  "date.format.timezone.PDT.short" : "PDT"
+
+}

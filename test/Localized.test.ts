@@ -13,7 +13,10 @@ import i18n from '../src/i18n'
 import {setArtificialNow, getNow} from "../src/format/DateRangeFormatter";
 import dateRangeExpectations from "./dateRangeExpectations"
 import locExpectations from "./localizedExpectations"
+import localizedExpectations from "./localizedExpectations";
 const testLocales = Object.getOwnPropertyNames(locExpectations)
+
+let updatedExpectations = false
 
 const stringIds = [
     "date.range.time.separator",
@@ -410,11 +413,16 @@ if(stats && stats.totalStrings) {// looks like we have i18n tables
     //     }
     // })
 
-    localizationTests('en')
-    localizationTests('es')
-    localizationTests('fr')
+    // localizationTests('en')
+    // localizationTests('es')
+    // localizationTests('fr')
+    //
+    localizationTests('et')
 
 
+    if(updatedExpectations) {
+        writeNewExpectations()
+    }
 }
 
 function writeOrDie(loc, ti, desc, r, x, t) {
@@ -424,6 +432,7 @@ function writeOrDie(loc, ti, desc, r, x, t) {
             console.log('Untranslated '+ r)
             t.ok(false, `no translation: (${loc}): ${desc} ==> "${r}"`)
         } else {
+            if(intlAvailable) writeNew(loc, ti-1, r)
             t.ok(false, `data incorrect: (${loc} #${ti - 1}) ${desc} ==> "${r}" instead of "${x}"`)
         }
     } else {
@@ -459,3 +468,18 @@ function buildDateStringsFromExpectations(loc) {
     fs.writeFileSync(dsf, out)
 }
 
+function writeNew(lang, index, value) {
+    let old = localizedExpectations[lang][index]
+    localizedExpectations[lang][index] = value
+    updatedExpectations = true
+}
+
+function writeNewExpectations() {
+    let lxf = path.resolve(path.join('test','localizedExpectations.ts'))
+    let out = 'export default ' + JSON.stringify(localizedExpectations, null, 4)
+    fs.writeFileSync(lxf, out)
+
+}
+
+// "2021 ፌብሩወሪ 14, እሑድ 12:34:56 የተቀናጀ ሁለንተናዊ ሰዓት ከሰዓት" instead of
+// "2021 ፌብሩወሪ 14, እሑድ 12:34:56 ከሰዓት የተቀነባበረ ሁለገብ ሰዓት"

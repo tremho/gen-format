@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "a la setmana del $weekday()",
     "date.range.weekday.weeks.ahead" : "en $weeks(-1.0) setmanes, el $weekday()",
     "date.range.days.ago" : "fa $days(-1.0) dies",
-    "date.range.days.ahead" : "en $days(-1.0) dies"
+    "date.range.days.ahead" : "en $days(-1.0) dies",
+    "date.range.time.ahead" : "en $count() $unit()",
+    "date.range.time.ago": "fa $count() $unit()"
 }

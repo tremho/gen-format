@@ -1,31 +1,25 @@
 {
 
-  "date.format.time.separator": " at ",
-  "date.format.time.separator.full": " at ",
-  "date.format.time.separator.long": " at ",
-  "date.format.time.separator.medium": " at ",
+  "date.format.time.separator": " um ",
+  "date.format.time.separator.full": " um ",
+  "date.format.time.separator.long": " um ",
+  "date.format.time.separator.medium": " um ",
   "date.format.time.separator.short": ", ",
 
-  "date.format.timezone.GMT.long" : "Greenwich Mean Time",
-  "date.format.timezone.GMT+1.long" : "British Summer Time",
-  "date.format.timezone.GMT.short" : "GMT",
+  "date.format.timezone.GMT.long" : "mittlere Greenwich-Zeit",
+  "date.format.timezone.GMT+1.long" : "Britische Sommerzeit",
+  "date.format.timezone.GMT.short" : "mittlere Greenwich-Zeit",
 
-  "date.format.timezone.UTC.long" : "Coordinated Universal Time",
-  "date.format.timezone.UTC.short" : "UTC",
+  "date.format.timezone.UTC.long" : "koordinierte Weltzeit",
+  "date.format.timezone.UTC.short" : "koordinierte Weltzeit",
 
-  "date.format.full": "WWWW, MMMM D, YYYY",
-  "date.format.long": "MMMM D, YYYY",
+  "date.format.full": "WWWW D. MMMM YYYY",
+  "date.format.long": "D. MMMM YYYY",
 
-  "time.format.full": "hhh:mm:ss ++ Z",
-  "time.format.long": "hhh:mm:ss ++ z",
-  "time.format.medium": "hhh:mm:ss ++ ",
-  "time.format.short": "hhh:mm",
-  "time.format.narrow": "hhh:mm",
-
-  "time.pm" : "PM",
-  "time.am" : "AM",
-  "time.pm.lowercase" : "pm",
-  "time.am.lowercase" : "am",
+  "time.pm" : "Am Abend",
+  "time.am" : "morgens",
+  "time.pm.lowercase" : "am abend",
+  "time.am.lowercase" : "morgens",
 
 
 

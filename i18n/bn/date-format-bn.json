@@ -1,0 +1,43 @@
+{
+
+  "date.format.time.separator": " এ ",
+  "date.format.time.separator.full": " এ ",
+  "date.format.time.separator.long": " এ ",
+  "date.format.time.separator.medium": " এ ",
+  "date.format.time.separator.short": " ",
+
+  "date.format.timezone.GMT.long" : "মক্কার সময়",
+  "date.format.timezone.GMT+1.long" : "ব্রিটিশ গ্রীষ্মকালীন সময়",
+  "date.format.timezone.GMT.short" : "জিএমটি",
+
+  "date.format.timezone.UTC.long" : "সমন্বয়িত ইউনিভার্সাল টাইম",
+  "date.format.timezone.UTC.short" : "ইউটিসি",
+
+  "date.format.full": "WWWW, D MMMM YYYY",
+  "date.format.long": "D MMMM YYYY",
+
+  "time.pm" : "বিকালে",
+  "time.am" : "সকালে",
+  "time.pm.lowercase" : "বিকালে",
+  "time.am.lowercase" : "সকালে",
+
+
+
+  "date.format.timezone.EST.long" : "যথোপযুক্ত সৃষ্টিকর্তা",
+  "date.format.timezone.EST.short" : "ইএসটি",
+  "date.format.timezone.CST.long" : "কেন্দ্রীয় মান সময়",
+  "date.format.timezone.CST.short" : "সিএসটি",
+  "date.format.timezone.MST.long" : "মাউন্টেন স্ট্যান্ডার্ড সময়",
+  "date.format.timezone.MST.short" : "এমএসটি",
+  "date.format.timezone.PST.long" : "প্যাসিফিক স্ট্যান্ডার্ড সময়",
+  "date.format.timezone.PST.short" : "পি এস টি",
+  "date.format.timezone.EDT.long" : "পূর্ব দিবালোক সময়",
+  "date.format.timezone.EDT.short" : "ইডিটি",
+  "date.format.timezone.CDT.long" : "কেন্দ্রীয় দিবালোক সময়",
+  "date.format.timezone.CDT.short" : "সিডিটি",
+  "date.format.timezone.MDT.long" : "মাউন্টেন দিবালোক সময়",
+  "date.format.timezone.MDT.short" : "এমডিটি",
+  "date.format.timezone.PDT.long" : "প্যাসিফিক দিবালোক সময়",
+  "date.format.timezone.PDT.short" : "পিডিটি"
+
+}

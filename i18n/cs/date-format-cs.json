@@ -1,0 +1,43 @@
+{
+
+  "date.format.time.separator": " v ",
+  "date.format.time.separator.full": " v ",
+  "date.format.time.separator.long": " v ",
+  "date.format.time.separator.medium": " v ",
+  "date.format.time.separator.short": ", ",
+
+  "date.format.timezone.GMT.long" : "Greenwichský čas",
+  "date.format.timezone.GMT+1.long" : "Britský letní čas",
+  "date.format.timezone.GMT.short" : "GMT",
+
+  "date.format.timezone.UTC.long" : "Koordinovaný světový čas",
+  "date.format.timezone.UTC.short" : "UTC",
+
+  "date.format.full": "WWWW D. MMMM YYYY",
+  "date.format.long": "D. MMMM YYYY",
+
+  "time.pm" : "odpoledne",
+  "time.am" : "ráno",
+  "time.pm.lowercase" : "odpoledne",
+  "time.am.lowercase" : "ráno",
+
+
+
+  "date.format.timezone.EST.long" : "východní standardní čas",
+  "date.format.timezone.EST.short" : "EST",
+  "date.format.timezone.CST.long" : "Centrální standardní čas",
+  "date.format.timezone.CST.short" : "CST",
+  "date.format.timezone.MST.long" : "Horský standardní čas",
+  "date.format.timezone.MST.short" : "MST",
+  "date.format.timezone.PST.long" : "Tichomořský standardní čas",
+  "date.format.timezone.PST.short" : "PST",
+  "date.format.timezone.EDT.long" : "Východní letní čas",
+  "date.format.timezone.EDT.short" : "EDT",
+  "date.format.timezone.CDT.long" : "Centrální letní čas",
+  "date.format.timezone.CDT.short" : "CDT",
+  "date.format.timezone.MDT.long" : "Horský letní čas",
+  "date.format.timezone.MDT.short" : "MDT",
+  "date.format.timezone.PDT.long" : "Pacifický letní čas",
+  "date.format.timezone.PDT.short" : "PDT"
+
+}

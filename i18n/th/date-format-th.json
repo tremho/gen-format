@@ -13,14 +13,8 @@
   "date.format.timezone.UTC.long" : "Coordinated Universal Time",
   "date.format.timezone.UTC.short" : "UTC",
 
-  "date.format.full": "WWWW, MMMM D, YYYY",
-  "date.format.long": "MMMM D, YYYY",
-
-  "time.format.full": "hhh:mm:ss ++ Z",
-  "time.format.long": "hhh:mm:ss ++ z",
-  "time.format.medium": "hhh:mm:ss ++ ",
-  "time.format.short": "hhh:mm",
-  "time.format.narrow": "hhh:mm",
+  "date.format.full": "WWWW D MMMM YYYY",
+  "date.format.long": "D MMMM YYYY",
 
   "time.pm" : "PM",
   "time.am" : "AM",

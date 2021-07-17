@@ -1,0 +1,43 @@
+{
+
+  "date.format.time.separator": " a les ",
+  "date.format.time.separator.full": " a les ",
+  "date.format.time.separator.long": " a les ",
+  "date.format.time.separator.medium": " a les ",
+  "date.format.time.separator.short": ", ",
+
+  "date.format.timezone.GMT.long" : "Hora mitjana de Greenwich",
+  "date.format.timezone.GMT+1.long" : "Hora d'estiu britànica",
+  "date.format.timezone.GMT.short" : "GMT",
+
+  "date.format.timezone.UTC.long" : "Temps Universal Coordinat",
+  "date.format.timezone.UTC.short" : "UTC",
+
+  "date.format.full": "WWWW D de MMMM de YYYY",
+  "date.format.long": "D de MMMM de YYYY",
+
+  "time.pm" : "a la tarda",
+  "time.am" : "pel matí",
+  "time.pm.lowercase" : "a la tarda",
+  "time.am.lowercase" : "pel matí",
+
+
+
+  "date.format.timezone.EST.long" : "Hora estàndard oriental",
+  "date.format.timezone.EST.short" : "EST",
+  "date.format.timezone.CST.long" : "Hora estàndard central",
+  "date.format.timezone.CST.short" : "CST",
+  "date.format.timezone.MST.long" : "Hora estàndard de muntanya",
+  "date.format.timezone.MST.short" : "MST",
+  "date.format.timezone.PST.long" : "Hora estàndard del Pacífic",
+  "date.format.timezone.PST.short" : "PST",
+  "date.format.timezone.EDT.long" : "Hora d'estiu",
+  "date.format.timezone.EDT.short" : "EDT",
+  "date.format.timezone.CDT.long" : "Hora central del dia",
+  "date.format.timezone.CDT.short" : "CDT",
+  "date.format.timezone.MDT.long" : "Hora de muntanya",
+  "date.format.timezone.MDT.short" : "MDT",
+  "date.format.timezone.PDT.long" : "Hora d'estiu del Pacífic",
+  "date.format.timezone.PDT.short" : "PDT"
+
+}

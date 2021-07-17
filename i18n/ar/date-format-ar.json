@@ -1,0 +1,40 @@
+{
+
+  "date.format.time.separator": " الساعة ",
+  "date.format.time.separator.full": " الساعة ",
+  "date.format.time.separator.long": " الساعة ",
+  "date.format.time.separator.medium": " الساعة ",
+  "date.format.time.separator.short": ", ",
+
+  "date.format.timezone.GMT.long" : "توقيت غرينيتش",
+  "date.format.timezone.GMT+1.long" : "التوقيت الصيفي البريطاني",
+  "date.format.timezone.GMT.short" : "بتوقيت غرينيتش",
+
+  "date.format.timezone.UTC.long" : "توقيت عالمي متناسق",
+  "date.format.timezone.UTC.short" : "التوقيت العالمي",
+
+  "time.pm" : "في الظهيرة",
+  "time.am" : "في الصباح",
+  "time.pm.lowercase" : "في الظهيرة",
+  "time.am.lowercase" : "في الصباح",
+
+
+
+  "date.format.timezone.EST.long" : "التوقيت الشرقي",
+  "date.format.timezone.EST.short" : "EST",
+  "date.format.timezone.CST.long" : "الوقت القياسي المركزي",
+  "date.format.timezone.CST.short" : "CST",
+  "date.format.timezone.MST.long" : "التوقيت الجبلي الرسمي",
+  "date.format.timezone.MST.short" : "MST",
+  "date.format.timezone.PST.long" : "الوقت الباسيفيكي القياسي",
+  "date.format.timezone.PST.short" : "PST",
+  "date.format.timezone.EDT.long" : "التوقيت الصيفي الشرقي",
+  "date.format.timezone.EDT.short" : "EDT",
+  "date.format.timezone.CDT.long" : "التوقيت الصيفي المركزي",
+  "date.format.timezone.CDT.short" : "CDT",
+  "date.format.timezone.MDT.long" : "التوقيت الجبلي الصيفي",
+  "date.format.timezone.MDT.short" : "MDT",
+  "date.format.timezone.PDT.long" : "توقيت المحيط الهادئ الصيفي",
+  "date.format.timezone.PDT.short" : "PDT"
+
+}

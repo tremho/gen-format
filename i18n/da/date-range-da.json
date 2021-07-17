@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "en uge fra $weekday()",
     "date.range.weekday.weeks.ahead" : "om $weeks(-1.0) uger, $weekday()",
     "date.range.days.ago" : "$days(-1.0) dage siden",
-    "date.range.days.ahead" : "om $days(-1.0) dage"
+    "date.range.days.ahead" : "om $days(-1.0) dage",
+    "date.range.time.ahead" : "om $count() $unit()",
+    "date.range.time.ago" : "for $count() $unit() siden"
 }

@@ -42,5 +42,8 @@
     "date.range.weekday.week.ahead" : "$weekday() থেকে এক সপ্তাহ",
     "date.range.weekday.weeks.ahead" : "$weeks(-1.0) সপ্তাহে, $weekday()",
     "date.range.days.ago" : "$days(-1.0) দিন আগে",
-    "date.range.days.ahead" : "$days(-1.0) দিনের মধ্যে"
+    "date.range.days.ahead" : "$days(-1.0) দিনের মধ্যে",
+    "date.range.time.ahead" : "$count() $unit()",
+    "date.range.time.ago": "$count() $unit() আগে"
+
 }
