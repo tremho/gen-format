@@ -341,7 +341,7 @@ function dateFormatTest() {
             x = '12/1/21 16:00:00 PST'
             t.ok(r === x, `(ES short-long) expected "${x}", got "${r}"` as any)
         } else {
-            t.skip('No string tables: skipped ES locale tests', null, null)
+            t.skip({name: 'No string tables: skipped ES locale tests'} as any)
         }
 
 

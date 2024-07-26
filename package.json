@@ -1,10 +1,10 @@
 {
   "name": "@tremho/gen-format",
-  "version": "1.1.0",
+  "version": "1.1.1-prerelease.7",
   "description": "General formatting system; string, number, date, currency, (expandable)",
   "main": "build/src/Formatter.js",
   "scripts": {
-    "prepublish": "npm run clean && npm run build",
+    "prepublish": "npm run clean && npm test",
     "test": "npm run clean && npm run build && tap --reporter=base --color --passes --disable-coverage ./build/test/*.test.js",
     "test-direct": "npm run clean && npm run build && node build/test/Localized.test.js",
     "clean": "rimraf build css",
@@ -26,7 +26,7 @@
     "ts-clear-classdoc": "^1.0.1"
   },
   "dependencies": {
-    "@tremho/locale-string-tables": "^1.1.0",
+    "@tremho/locale-string-tables": "^1.1.1-prerelease.4",
     "typescript": "^5.5.4"
   }
 }

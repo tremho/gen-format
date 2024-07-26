@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import {FileOps} from "./Formatter";
 
-const i18nPath = './i18n/'
+const i18nPath = path.join(__dirname, '..', '..', './i18n/')
 let displayed = false
 class NodeFileOps implements FileOps {
     read(realPath:string): string {
