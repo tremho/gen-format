@@ -83,12 +83,12 @@ function localizationTests(loc) {
         let dt2 = '2021-07-06T12:34:56Z'
         let ti = 0;
 
-        t.skip('COMMENT: tested locale '+ loc)
+        t.skip({name: 'COMMENT: tested locale '+ loc} as any)
 
         desc="full date is localized"
         r = F(`date~${loc}|full`, dt1)
         if(!locExpectations[loc]) {
-            t.ok(false, `${loc} does not exist in localizedExpectations data`)
+            t.ok(false, (`${loc} does not exist in localizedExpectations data` as any) )
             t.end()
             return
         }
@@ -382,13 +382,13 @@ function dateStringTests(loc) {
                     x = dateRangeExpectations[loc][ti++] || ""
                     if(!x) {
                         noexpect++
-                        t.skip(`missing expect for locale ${loc} at ${id}`)
+                        t.skip(`missing expect for locale ${loc} at ${id}`, null, null)
                     }
                     else if (str === x) {
                         ok++
                     } else {
                         missing++
-                        t.skip(`for locale ${loc} at ${id}: expected "${x}", got "${str}"`)
+                        t.skip(`for locale ${loc} at ${id}: expected "${x}", got "${str}"`, null, null)
                     }
                 }
             }
@@ -396,7 +396,7 @@ function dateStringTests(loc) {
             noexpect = stringIds.length
         }
         let desc = "stats for "+loc
-        t.ok(!missing && !noexpect, `${desc}: ok ${ok}, missing ${missing} no expects ${noexpect}`)
+        t.ok(!missing && !noexpect, (`${desc}: ok ${ok}, missing ${missing} no expects ${noexpect}` as any))
 
         t.end()
     })

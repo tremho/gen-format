@@ -19,126 +19,126 @@ function numbeFormatTest() {
 
     Tap.test('numbers', t => {
 
-        t.skip(`COMMENT: Intl Availability is ${checkIntlSupport()}. These tests were made with ${intlAvailable? 'full' : 'no'} Intl support`)
+        t.skip({name: `COMMENT: Intl Availability is ${checkIntlSupport()}. These tests were made with ${intlAvailable? 'full' : 'no'} Intl support`} as any)
 
         let v = Math.PI
 
         let desc = "normal. Has space padded alignment"
         let r = F('2.3', v)
         let x = ' 3.142'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "zero padded alignment"
         r = F('02.3', v)
         x = '03.142'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "no problem with space"
         r = F(' 2.3', v)
         x = ' 3.142'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "no alignment"
         r = F('-2.3', v)
         x = '3.142'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "no rounding"
         r = F('!2.3', v)
         x = ' 3.141'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "no rounding, no alignment"
         r = F('-!2.3', v)
         x = '3.141'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "plus"
         r = F('+2.3', v)
         x = '+3.142'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "no round plus"
         r = F('!+2.3', v)
         x = '+3.141'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "integerize"
         v = 1.5
         r = F('1.0', v)
         x = '2'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
         r = F('!1.0', v)
         x = '1'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = 'negative'
         r = F('2.3', -6.283123456)
         x = '-6.283'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "not negative, same rounding"
         r = F('2.3', 6.283123456)
         x = ' 6.283'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "negative, round, no round"
         r = F('2.0', -1.6)
         x = '-2'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
         r = F('!2.0', -1.6)
         x = '-1'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "thousands"
         v = 123456.789
         r = F('k6.3', v)
         x = '123,456.789'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "overflow"
         r = F('3.0', v)
         x = '###'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "trailing zeroes"
         v = 12.34
         r = F('2.04',v)
         x = '12.3400'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"`as any))
 
         desc = "space padding"
         v = 12.34
         r = F('2.4+',v)
         x = '12.34  '
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = "no alignment"
         v = 12.34
         r = F('2.4-',v)
         x = '12.34'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         desc = 'can be accessed by name'
         r = F('number|2.4-',v)
         x = '12.34'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
 
         // en-US should be ok; this just tests passing of locale (which should certainly work)
         desc = 'can pass locale'
         r = F('number~en-US|2.4-', v)
         x = '12.34'
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+        t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
         if(hasI18n || intlAvailable) {
             desc = 'can pass locale and get different separators'
             v = 123456.789
             r = F('number~es-ES|k6.3', v)
             x = '123.456,789'
-            t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+            t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
         } else {
-            t.skip('(no i18n or Intl) no translation source for locale separators')
+            t.skip('(no i18n or Intl) no translation source for locale separators', null, null)
         }
 
         if (intlAvailable) {
@@ -147,15 +147,15 @@ function numbeFormatTest() {
             v = 123456.789
             r = F('number~ar|k6.3', v)
             x = '١٢٣٬٤٥٦٫٧٨٩'
-            t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+            t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
 
             desc = 'can pass locale w/specified numbering'
             v = 123456.789
             r = F('number~ar-u-nu-latn|k6.3', v)
             x = '123,456.789'
-            t.ok(r === x, `${desc}: expected "${x}", got "${r}"`)
+            t.ok(r === x, (`${desc}: expected "${x}", got "${r}"` as any))
         } else {
-            t.skip('(no Intl) Intl required for alternate numbering schemes')
+            t.skip('(no Intl) Intl required for alternate numbering schemes', null, null)
         }
         if(intlAvailable || hasI18n) {
             const locs = ['am','ar','az','bg','bn', 'bs', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'et',
@@ -225,11 +225,11 @@ function numbeFormatTest() {
                 r = F(`number~${loc}|k6.3`, v)
                 if(intlAvailable) {
                     let ri = new Intl.NumberFormat(loc).format(v)
-                    t.skip(`${loc}   ${ri}`)
+                    t.skip({name:`${loc}   ${ri}`} as any)
                 } else {
                     let ri = sepexp[cnt++]
                     if(ri.charAt(1) != '2') {
-                        t.skip(`skipping alternate numbering ${loc} ${ri}`)
+                        t.skip({name:`skipping alternate numbering ${loc} ${ri}`} as any)
                     } else {
                         if( r !== ri ) {
                             let i = -1;
@@ -237,12 +237,12 @@ function numbeFormatTest() {
                                 let ccr = r.charCodeAt(i).toString(16)
                                 let ccx = ri.charCodeAt(i).toString(16)
                                 if(ccr !== ccx) {
-                                    t.skip(`${loc} codes at ${i} \\u00${ccr} vs. \\u00${ccx}`)
+                                    t.skip({name:`${loc} codes at ${i} \\u00${ccr} vs. \\u00${ccx}`} as any)
                                 }
 
                             }
                         }
-                        t.ok(r === ri, `${desc} expected "${ri}" got "${r}"`)
+                        t.ok(r === ri, (`${desc} expected "${ri}" got "${r}"` as any))
                     }
 
                 }

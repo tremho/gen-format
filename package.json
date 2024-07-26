@@ -5,7 +5,7 @@
   "main": "build/src/Formatter.js",
   "scripts": {
     "prepublish": "npm run clean && npm run build",
-    "test": "npm run clean && npm run build && tap --no-coverage ./build/test/*.test.js",
+    "test": "npm run clean && npm run build && tap --reporter=base --color --passes --disable-coverage ./build/test/*.test.js",
     "test-direct": "npm run clean && npm run build && node build/test/Localized.test.js",
     "clean": "rimraf build css",
     "build": "tsc",
@@ -22,7 +22,7 @@
     "@types/node": "^15.14.9",
     "inchjs": "^0.4.1",
     "rimraf": "^6.0.1",
-    "tap": "^14.11.0",
+    "tap": "^21.0.0",
     "ts-clear-classdoc": "^1.0.1"
   },
   "dependencies": {
