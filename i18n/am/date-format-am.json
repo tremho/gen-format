@@ -1,9 +1,8 @@
 {
   "date.format.time.separator": ", እሑድ ",
   "date.format.time.separator.full": ", እሑድ ",
-  "date.format.time.separator.long": ", እሑድ ",
-  "date.format.time.separator.medium": ", እሑድ ",
-  "date.format.time.separator.short": ", ",
+  "date.format.time.separator.long": " ",
+  "date.format.time.separator.medium": " ",
 
   "date.format.timezone.GMT.long" : "ግሪንዊች አማካይ ጊዜ",
   "date.format.timezone.GMT+1.long" : "የእንግሊዝ የበጋ ሰዓት",
@@ -13,7 +12,14 @@
   "date.format.timezone.UTC.short" : "UTC",
 
   "date.format.full": "YYYY MMMM D",
-  "date.format.long": "MMMM D, YYYY",
+  "date.format.long": "D MMMM YYYY",
+  "date.format.short": "D/MM/YYYY",
+
+  "time.format.full": "hhh:mm:ss ++ Z",
+  "time.format.long": "hhh:mm:ss ++ z",
+  "time.format.medium": "hhh:mm:ss ++ ",
+  "time.format.short": "hhh:mm ++",
+  "time.format.narrow": "hhh:mm ++",
 
   "time.pm" : "ከሰዓት",
   "time.am" : "በጠዋት",

@@ -2,11 +2,11 @@ import {getFileOps, IFormatHandler, SpecParts, getUseIntlChoice} from "../Format
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 import {findTimezones, findTimezoneBlocks, findTimezoneBlocksForDate} from './Timezone'
 import {i18nFormatByStyle} from "./Shared";
-import * as LocaleStringTables from "@tremho/locale-string-tables"
+// import * as LocaleStringTables from "@tremho/locale-string-tables"
 import {getSystemLocale, LoadStats} from "@tremho/locale-string-tables"
 import DateRangeFormatter from "./DateRangeFormatter";
 
-const sysloc = LocaleStringTables.getSystemLocale()
+const sysloc = getSystemLocale()
 let localTimeZone;
 
 import i18n from '../i18n'
@@ -497,7 +497,7 @@ export class SimpleDateFormat {
         }
 
         // use IDTF for format parts
-        const opts = {
+        const opts:DateTimeFormatOptions = {
             timeZone: tzName && tzName.replace(/ /g, '_'),
             dateStyle: 'full',
             timeStyle: 'long'

@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "savaitę nuo $weekday()",
     "date.range.weekday.weeks.ahead" : "po $weeks(-1.0) savaičių, $weekday()",
     "date.range.days.ago" : "prieš $days(-1.0) dienas",
-    "date.range.days.ahead" : "per $days(-1.0) dienas"
+    "date.range.days.ahead" : "per $days(-1.0) dienas",
+    "date.range.time.ago": "prieš $count() $unit()",
+    "date.range.time.ahead" : "per $count() $unit()"
 }

@@ -42,5 +42,8 @@
     "date.range.weekday.week.ahead" : "$weekday() முதல் ஒரு வாரம்",
     "date.range.weekday.weeks.ahead" : "$weeks(-1.0) வாரங்களில், $weekday()",
     "date.range.days.ago" : "$days(-1.0) நாட்களுக்கு முன்பு",
-    "date.range.days.ahead" : "$days(-1.0) நாட்களில்"
+    "date.range.days.ahead" : "$days(-1.0) நாட்களில்",
+    "date.range.time.ago" : "$count() $unit() முன்பு",
+    "date.range.time.ahead" : "$count() $unit()ளில்"
+
 }

@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "یک هفته از $weekday()",
     "date.range.weekday.weeks.ahead" : "در $weeks(-1.0) هفته ، $weekday()",
     "date.range.days.ago" : "$days(-1.0) روز پیش",
-    "date.range.days.ahead" : "در $days(-1.0) روز"
+    "date.range.days.ahead" : "در $days(-1.0) روز",
+    "date.range.time.ahead": "$units() $count() در",
+    "date.range.time.ago" : "قبل $units() $count()"
 }

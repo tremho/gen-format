@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "isang linggo mula $weekday()",
     "date.range.weekday.weeks.ahead" : "sa $weeks(-1.0) linggo, sa $weekday()",
     "date.range.days.ago" : "$days(-1.0) araw na ang nakakalipas",
-    "date.range.days.ahead" : "sa $days(-1.0) araw"
+    "date.range.days.ahead" : "sa $days(-1.0) araw",
+    "date.range.time.ahead": "sa $count() $unit()",
+    "date.range.time.ago" : "$count() $unit() ang nakalipas"
 }

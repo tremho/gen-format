@@ -42,5 +42,8 @@
     "date.range.weekday.week.ahead" : "неделя с $weekday()",
     "date.range.weekday.weeks.ahead" : "через $weeks(-1.0) недели, в $weekday()",
     "date.range.days.ago" : "$days(-1.0) дня назад",
-    "date.range.days.ahead" : "через $days(-1.0) дня"
+    "date.range.days.ahead" : "через $days(-1.0) дня",
+    "date.range.time.ago" : "$count() $unit() назад",
+    "date.range.time.ahead" : "через $count() $unit()"
+
 }

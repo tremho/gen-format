@@ -42,5 +42,8 @@
     "date.range.weekday.week.ahead" : "o săptămână de $weekday()",
     "date.range.weekday.weeks.ahead" : "în $weeks(-1.0) săptămâni, $weekday()",
     "date.range.days.ago" : "acum $days(-1.0) zile",
-    "date.range.days.ahead" : "în $days(-1.0) zile"
+    "date.range.days.ahead" : "în $days(-1.0) zile",
+    "date.range.time.ago" : "acum $count() $unit()",
+    "date.range.time.ahead" : "în $count() $unit()"
+
 }

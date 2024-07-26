@@ -1,25 +1,24 @@
 {
 
-  "date.format.time.separator": " at ",
-  "date.format.time.separator.full": " at ",
-  "date.format.time.separator.long": " at ",
-  "date.format.time.separator.medium": " at ",
-  "date.format.time.separator.short": ", ",
+  "date.format.time.separator": " ",
+  "date.format.time.separator.full": " ",
+  "date.format.time.separator.long": " ",
+  "date.format.time.separator.medium": " ",
 
-  "date.format.timezone.GMT.long" : "Greenwich Mean Time",
-  "date.format.timezone.GMT+1.long" : "British Summer Time",
+  "date.format.timezone.GMT.long" : "グリニッジ標準時",
+  "date.format.timezone.GMT+1.long" : "英国夏時間",
   "date.format.timezone.GMT.short" : "GMT",
 
-  "date.format.timezone.UTC.long" : "Coordinated Universal Time",
+  "date.format.timezone.UTC.long" : "協定世界時",
   "date.format.timezone.UTC.short" : "UTC",
 
   "date.format.full": "WWWW D MMMM YYYY",
   "date.format.long": "D MMMM YYYY",
 
-  "time.pm" : "PM",
-  "time.am" : "AM",
-  "time.pm.lowercase" : "pm",
-  "time.am.lowercase" : "am",
+  "time.pm" : "午後に",
+  "time.am" : "午前中に",
+  "time.pm.lowercase" : "午後に",
+  "time.am.lowercase" : "午前中に",
 
 
 

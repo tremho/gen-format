@@ -41,6 +41,8 @@
     "date.range.weekday.weeks.ago" : "$weekday(), пре $weeks(-1.0) недеље",
     "date.range.weekday.week.ahead" : "недељу дана од $weekday()",
     "date.range.weekday.weeks.ahead" : "за $weeks(-1.0) недеље, у $weekday()",
-    "date.range.days.ago" : "$days(-1.0) дана пре",
-    "date.range.days.ahead" : "за $days(-1.0) дана"
+    "date.range.days.ago" : "пре $days(-1.0) дана",
+    "date.range.days.ahead" : "за $days(-1.0) дана",
+    "date.range.time.ago" : "пре $count() $unit()",
+    "date.range.time.ahead" : "за $count() $unit()"
 }

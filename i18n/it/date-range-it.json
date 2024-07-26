@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "una settimana da $weekday()",
     "date.range.weekday.weeks.ahead" : "tra $weeks(-1.0) settimane, $weekday()",
     "date.range.days.ago" : "$days(-1.0) giorni fa",
-    "date.range.days.ahead" : "tra $days(-1.0) giorni"
+    "date.range.days.ahead" : "tra $days(-1.0) giorni",
+    "date.range.time.ago" : "$count() $unit() fa",
+    "date.range.time.ahead": "tra $count() $unit()"
 }

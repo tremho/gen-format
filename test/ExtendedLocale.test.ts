@@ -206,7 +206,7 @@ function extLocaleTest() {
         if(intlAvailable) {
             x = '二千零二十一辛丑年五月廿二星期四 协调世界时 下午四:三:零'
         } else {
-            x = hasI18nStrings ? '星期四, 七月 1, 2021, 16:03:00 Coordinated Universal Time' : fbx2
+            x = hasI18nStrings ? '星期四 1 七月 2021 at 16:03:00 Coordinated Universal Time' : fbx2
         }
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"`)
 

@@ -42,5 +42,8 @@
     "date.range.weekday.week.ahead" : "wiki kutoka $weekday()",
     "date.range.weekday.weeks.ahead" : "katika wiki $weeks(-1.0), $weekday()",
     "date.range.days.ago" : "siku $days(-1.0) zilizopita",
-    "date.range.days.ahead" : "kwa siku $days(-1.0)"
+    "date.range.days.ahead" : "kwa siku $days(-1.0)",
+    "date.range.time.ago" : "$unit() $count() zilizopita",
+    "date.range.time.ahead" : "kwa $unit() $count()"
+
 }

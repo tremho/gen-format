@@ -42,5 +42,8 @@
     "date.range.weekday.week.ahead" : "שבוע מיום $weekday()",
     "date.range.weekday.weeks.ahead" : "בעוד $weeks(-1.0) שבועות, ביום $weekday()",
     "date.range.days.ago" : "לפני $days(-1.0) ימים",
-    "date.range.days.ahead" : "בעוד $days(-1.0) ימים"
+    "date.range.days.ahead" : "בעוד $days(-1.0) ימים",
+    "date.range.time.ago" : "$unit() $count() ב",
+    "date.range.time.ahead" : "$unit() $count() לפני"
+
 }

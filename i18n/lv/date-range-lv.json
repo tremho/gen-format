@@ -41,6 +41,8 @@
     "date.range.weekday.weeks.ago" : "Pirms $weeks(-1.0) nedēļām $weekday",
     "date.range.weekday.week.ahead" : "a week from $weekday()",
     "date.range.weekday.weeks.ahead" : "nedēļu no $weekday()",
-    "date.range.days.ago" : "pēc $weeks(-1.0) nedēļām, $weekday()",
-    "date.range.days.ahead" : "Pirms $days(-1.0) dienām"
+    "date.range.days.ago" : "pirms $days(-1.0) dienām",
+    "date.range.days.ahead" : "$days(-1.0) dienām",
+    "date.range.time.ago" : "pirms $count() $units()",
+    "date.range.time.ahead" : "$count() $units()"
 }

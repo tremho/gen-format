@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "หนึ่งสัปดาห์ตั้งแต่ $weekday()",
     "date.range.weekday.weeks.ahead" : "ใน $weeks(-1.0) สัปดาห์ใน$weekday()",
     "date.range.days.ago" : "$days(-1.0) วันที่ผ่านมา",
-    "date.range.days.ahead" : "ใน $days(-1.0) วัน"
+    "date.range.days.ahead" : "ใน $days(-1.0) วัน",
+    "date.range.time.ago" : "$count() $unit() มาแล้ว",
+    "date.range.time.ahead" : "ใน $count() $unit()"
 }

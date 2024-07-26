@@ -1,25 +1,25 @@
 {
 
-  "date.format.time.separator": " at ",
-  "date.format.time.separator.full": " at ",
-  "date.format.time.separator.long": " at ",
-  "date.format.time.separator.medium": " at ",
+  "date.format.time.separator": " ng ",
+  "date.format.time.separator.full": " ng ",
+  "date.format.time.separator.long": " ng ",
+  "date.format.time.separator.medium": " ng ",
   "date.format.time.separator.short": ", ",
 
-  "date.format.timezone.GMT.long" : "Greenwich Mean Time",
+  "date.format.timezone.GMT.long" : "Ang ibig sabihin ng Oras ng Greenwich",
   "date.format.timezone.GMT+1.long" : "British Summer Time",
   "date.format.timezone.GMT.short" : "GMT",
 
   "date.format.timezone.UTC.long" : "Coordinated Universal Time",
   "date.format.timezone.UTC.short" : "UTC",
 
-  "date.format.full": "WWWW D MMMM YYYY",
-  "date.format.long": "D MMMM YYYY",
+  "date.format.full": "WWWW, MMMM D, YYYY",
+  "date.format.long": "MMMM D, YYYY",
 
-  "time.pm" : "PM",
-  "time.am" : "AM",
-  "time.pm.lowercase" : "pm",
-  "time.am.lowercase" : "am",
+  "time.pm" : "sa hapon",
+  "time.am" : "sa umaga",
+  "time.pm.lowercase" : "sa hapon",
+  "time.am.lowercase" : "sa umaga",
 
 
 

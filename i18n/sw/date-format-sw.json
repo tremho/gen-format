@@ -1,43 +1,43 @@
 {
 
-  "date.format.time.separator": " at ",
-  "date.format.time.separator.full": " at ",
-  "date.format.time.separator.long": " at ",
-  "date.format.time.separator.medium": " at ",
+  "date.format.time.separator": " saa ",
+  "date.format.time.separator.full": " saa ",
+  "date.format.time.separator.long": " saa ",
+  "date.format.time.separator.medium": " saa ",
   "date.format.time.separator.short": ", ",
 
-  "date.format.timezone.GMT.long" : "Greenwich Mean Time",
-  "date.format.timezone.GMT+1.long" : "British Summer Time",
+  "date.format.timezone.GMT.long" : "Wakati wa Maana ya Greenwich",
+  "date.format.timezone.GMT+1.long" : "Wakati wa Majira ya Briteni",
   "date.format.timezone.GMT.short" : "GMT",
 
-  "date.format.timezone.UTC.long" : "Coordinated Universal Time",
+  "date.format.timezone.UTC.long" : "Wakati wa Ulimwengu ulioratibiwa",
   "date.format.timezone.UTC.short" : "UTC",
 
-  "date.format.full": "WWWW D MMMM YYYY",
-  "date.format.long": "D MMMM YYYY",
+  "date.format.full": "WWWW, MMMM D, YYYY",
+  "date.format.long": "MMMM D, YYYY",
 
-  "time.pm" : "PM",
-  "time.am" : "AM",
-  "time.pm.lowercase" : "pm",
-  "time.am.lowercase" : "am",
+  "time.pm" : "mchana",
+  "time.am" : "asubuhi",
+  "time.pm.lowercase" : "mchana",
+  "time.am.lowercase" : "asubuhi",
 
 
 
-  "date.format.timezone.EST.long" : "Eastern Standard Time",
+  "date.format.timezone.EST.long" : "Saa Wastani ya Mashariki",
   "date.format.timezone.EST.short" : "EST",
-  "date.format.timezone.CST.long" : "Central Standard Time",
+  "date.format.timezone.CST.long" : "Saa ya Kati ya Kati",
   "date.format.timezone.CST.short" : "CST",
-  "date.format.timezone.MST.long" : "Mountain Standard Time",
+  "date.format.timezone.MST.long" : "Saa Wastani ya Mlima",
   "date.format.timezone.MST.short" : "MST",
-  "date.format.timezone.PST.long" : "Pacific Standard Time",
+  "date.format.timezone.PST.long" : "Saa Wastani ya Pasifiki",
   "date.format.timezone.PST.short" : "PST",
-  "date.format.timezone.EDT.long" : "Eastern Daylight Time",
+  "date.format.timezone.EDT.long" : "Saa za Mchana wa Mashariki",
   "date.format.timezone.EDT.short" : "EDT",
-  "date.format.timezone.CDT.long" : "Central Daylight Time",
+  "date.format.timezone.CDT.long" : "Saa za Mchana Kati",
   "date.format.timezone.CDT.short" : "CDT",
-  "date.format.timezone.MDT.long" : "Mountain Daylight Time",
+  "date.format.timezone.MDT.long" : "Saa za Mchana wa Mlima",
   "date.format.timezone.MDT.short" : "MDT",
-  "date.format.timezone.PDT.long" : "Pacific Daylight Time",
+  "date.format.timezone.PDT.long" : "Saa za Mchana za Pasifiki",
   "date.format.timezone.PDT.short" : "PDT"
 
 }

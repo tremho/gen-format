@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "een week vanaf $weekday()",
     "date.range.weekday.weeks.ahead" : "over $weeks(-1.0) weken, op $weekday()",
     "date.range.days.ago" : "$days(-1.0) dagen geleden",
-    "date.range.days.ahead" : "binnen $days(-1.0) dagen"
+    "date.range.days.ahead" : "binnen $days(-1.0) dagen",
+    "date.range.time.ago" : "$count() $unit() geleden",
+    "date.range.time.ahead" : "over $count() $unit()"
 }

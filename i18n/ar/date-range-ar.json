@@ -43,8 +43,6 @@
     "date.range.weekday.weeks.ahead" : "في weeks$() أسابيع يوم ال$weekday()",
     "date.range.days.ago" : "منذ $days() أيام",
     "date.range.days.ahead" : "في $days() أيام",
-
-    "date.range.time.ahead": "في $count() $unit()",
-    "date.range.time.ago": "منذ $count() $unit()"
-    
+    "date.range.time.ago": "قبل $count() $unit()",
+    "date.range.time.ahead": "في $count() $unit()"
 }

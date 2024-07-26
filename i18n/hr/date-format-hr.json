@@ -1,43 +1,43 @@
 {
 
-  "date.format.time.separator": " at ",
-  "date.format.time.separator.full": " at ",
-  "date.format.time.separator.long": " at ",
-  "date.format.time.separator.medium": " at ",
+  "date.format.time.separator": " u ",
+  "date.format.time.separator.full": " u ",
+  "date.format.time.separator.long": " u ",
+  "date.format.time.separator.medium": " u ",
   "date.format.time.separator.short": ", ",
 
-  "date.format.timezone.GMT.long" : "Greenwich Mean Time",
-  "date.format.timezone.GMT+1.long" : "British Summer Time",
+  "date.format.timezone.GMT.long" : "Srednje vrijeme po Greenwichu",
+  "date.format.timezone.GMT+1.long" : "Britansko ljetno vrijeme",
   "date.format.timezone.GMT.short" : "GMT",
 
-  "date.format.timezone.UTC.long" : "Coordinated Universal Time",
+  "date.format.timezone.UTC.long" : "Koordinirano univerzalno vrijeme",
   "date.format.timezone.UTC.short" : "UTC",
 
-  "date.format.full": "WWWW D MMMM YYYY",
-  "date.format.long": "D MMMM YYYY",
+  "date.format.full": "WWWW, D. MMMM YYYY.",
+  "date.format.long": "D. MMMM YYYY.",
 
-  "time.pm" : "PM",
-  "time.am" : "AM",
-  "time.pm.lowercase" : "pm",
-  "time.am.lowercase" : "am",
+  "time.pm" : "popodne",
+  "time.am" : "ujutro",
+  "time.pm.lowercase" : "popodne",
+  "time.am.lowercase" : "ujutro",
 
 
 
-  "date.format.timezone.EST.long" : "Eastern Standard Time",
+  "date.format.timezone.EST.long" : "istočno standardno vrijeme",
   "date.format.timezone.EST.short" : "EST",
-  "date.format.timezone.CST.long" : "Central Standard Time",
+  "date.format.timezone.CST.long" : "Središnje standardno vrijeme",
   "date.format.timezone.CST.short" : "CST",
-  "date.format.timezone.MST.long" : "Mountain Standard Time",
+  "date.format.timezone.MST.long" : "Planinsko standardno vrijeme",
   "date.format.timezone.MST.short" : "MST",
-  "date.format.timezone.PST.long" : "Pacific Standard Time",
+  "date.format.timezone.PST.long" : "Pacifičko standardno vrijeme",
   "date.format.timezone.PST.short" : "PST",
-  "date.format.timezone.EDT.long" : "Eastern Daylight Time",
+  "date.format.timezone.EDT.long" : "Istočno ljetno vrijeme",
   "date.format.timezone.EDT.short" : "EDT",
-  "date.format.timezone.CDT.long" : "Central Daylight Time",
+  "date.format.timezone.CDT.long" : "Središnje ljetno vrijeme",
   "date.format.timezone.CDT.short" : "CDT",
-  "date.format.timezone.MDT.long" : "Mountain Daylight Time",
+  "date.format.timezone.MDT.long" : "Gorsko ljetno vrijeme",
   "date.format.timezone.MDT.short" : "MDT",
-  "date.format.timezone.PDT.long" : "Pacific Daylight Time",
+  "date.format.timezone.PDT.long" : "Pacifičko ljetno vrijeme",
   "date.format.timezone.PDT.short" : "PDT"
 
 }

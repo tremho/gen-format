@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "$weekday() egy hét",
     "date.range.weekday.weeks.ahead" : "$weeks(-1.0) hét múlva, $weekday()",
     "date.range.days.ago" : "$days(-1.0) napja",
-    "date.range.days.ahead" : "$days(-1.0) napon belül"
+    "date.range.days.ahead" : "$days(-1.0) napon belül",
+    "date.range.time.ahead": "$count() $unit() alatt",
+    "date.range.time.ago" : "$count() $unit() ezelőtt"
 }

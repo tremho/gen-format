@@ -42,5 +42,8 @@
     "date.range.weekday.week.ahead" : "从 $weekday() 开始的一周",
     "date.range.weekday.weeks.ahead" : "从 $weeks(-1.0) 周，在 $weekday()",
     "date.range.days.ago" : "$days(-1.0) 天前",
-    "date.range.days.ahead" : "在 $days(-1.0) 天"
+    "date.range.days.ahead" : "在 $days(-1.0) 天",
+    "date.range.time.ago" : "$count() $unit()前",
+    "date.range.time.ahead" : "在 $count() $unit()"
+
 }

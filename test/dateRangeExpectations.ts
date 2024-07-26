@@ -43,7 +43,9 @@ export default {
   "a week from $weekday()",
   "in $weeks(-1.0) weeks, on $weekday()",
   "$days(-1.0) days ago",
-  "in $days(-1.0) days"
+  "in $days(-1.0) days",
+  "$count() $unit() ago",
+  "in $count() $unit()"
 ],
   "ar" : [
   " في ",
@@ -97,7 +99,9 @@ export default {
   "أسبوع من ال$weekday()",
   "في weeks$() أسابيع يوم ال$weekday()",
   "منذ $days() أيام",
-  "في $days() أيام"
+  "في $days() أيام",
+  "قبل $count() $unit()",
+  "في $count() $unit()",
 ],
   "cs": [
   " v ",
@@ -142,8 +146,10 @@ export default {
   "$weekday(), před $weeks(-1.0) týdny",
   "týden od $weekday()",
   "za $weeks(-1.0) týdny, v $weekday()",
-  "Před $days(-1.0) dny",
-  "za $days(-1.0) dny"
+  "před $days(-1.0) dny",
+  "za $days(-1.0) dny",
+  "před $count() $unit()",
+  "za $count() $unit()"
 ],
   "de": [
   " um ",
@@ -189,7 +195,10 @@ export default {
   "eine Woche ab $weekday()",
   "in $weeks(-1.0) wochen, am $weekday()",
   "vor $days(-1.0) tagen",
-  "in $days(-1.0) tagen"
+  "in $days(-1.0) tagen",
+  "vor $count() $unit()",
+  "in $count() $unit()"
+
 ],
   "es": [
   "a las",
@@ -234,8 +243,10 @@ export default {
   "$weekday(), hace $weeks(-1.0) semanas",
   "una semana desde el $weekday()",
   "en $weeks(-1.0) semanas, el $weekday()",
-  "hace $days(-1.0) dias",
-  "en $days(-1.0) días"
+  "hace $days(-1.0) días",
+  "en $days(-1.0) días",
+  "hace $count() $unit()",
+  "dentro de $count() $unit()",
 ],
   "fr" : [
   " à ",
@@ -258,7 +269,7 @@ export default {
   "journée",
   "journées",
   "heure",
-  "les heures",
+  "heures",
   "heure",
   "heures",
   "minute",
@@ -281,7 +292,10 @@ export default {
   "une semaine à partir du $weekday()",
   "dans $weeks() semaines, le $weekday()",
   "Il ya $days(-1.0) jours",
-  "dans $days(-1.0) jours"
+  "dans $days(-1.0) jours",
+  "il y a $count() $unit()",
+  "dans $count() $unit()"
+
 ],
   "he" : [
   " בשעה ",
@@ -327,7 +341,10 @@ export default {
   "שבוע מיום $weekday()",
   "בעוד $weeks(-1.0) שבועות, ביום $weekday()",
   "לפני $days(-1.0) ימים",
-  "בעוד $days(-1.0) ימים"
+  "בעוד $days(-1.0) ימים",
+  "$unit() $count() ב",
+  "$unit() $count() לפני"
+
 ],
   "hi" : [
   " पर ",
@@ -373,7 +390,10 @@ export default {
   "से एक सप्ताह $weekday()",
   "$weeks(-1.0) सप्ताह में, $weekday() को",
   "$days(-1.0) दिन पहले",
-  "$days(-1.0) दिनों में"
+  "$days(-1.0) दिनों में",
+  "$count() $unit() पहले",
+  "$count() $unit() में"
+
 ],
   "it" : [
   " alle ",
@@ -419,7 +439,9 @@ export default {
   "una settimana da $weekday()",
   "tra $weeks(-1.0) settimane, $weekday()",
   "$days(-1.0) giorni fa",
-  "tra $days(-1.0) giorni"
+  "tra $days(-1.0) giorni",
+  "$count() $unit() fa",
+  "tra $count() $unit()"
 ],
   "ja" : [
   " の ",
@@ -465,7 +487,10 @@ export default {
   "$weekday() から一週間",
   "$weeks(-1.0) 週間後、$weekday()",
   "$days(-1.0)日前",
-  "$days(-1.0)日で"
+  "$days(-1.0)日で",
+  "$count() $unit() 前",
+  "$count() $unit() で",
+
 ],
   "nl" : [
   " om ",
@@ -511,7 +536,10 @@ export default {
   "een week vanaf $weekday()",
   "over $weeks(-1.0) weken, op $weekday()",
   "$days(-1.0) dagen geleden",
-  "binnen $days(-1.0) dagen"
+  "binnen $days(-1.0) dagen",
+  "$count() $unit() geleden",
+  "over $count() $unit()"
+
 ],
   "pt" : [
   " às ",
@@ -557,7 +585,10 @@ export default {
   "uma semana a partir de $weekday()",
   "em $weeks(-1.0) semanas, na $weekday()",
   "$days(-1.0) dias atrás",
-  "em $days(-1.0) dias"
+  "em $days(-1.0) dias",
+  "$count() $unit() atrás",
+  "em $count() $unit()"
+
 ],
   "ru" : [
   " в ",
@@ -603,7 +634,10 @@ export default {
   "неделя с $weekday()",
   "через $weeks(-1.0) недели, в $weekday()",
   "$days(-1.0) дня назад",
-  "через $days(-1.0) дня"
+  "через $days(-1.0) дня",
+  "$count() $unit() назад",
+  "через $count() $unit()"
+
 ],
   "sw" : [
   " saa ",
@@ -649,7 +683,9 @@ export default {
   "wiki kutoka $weekday()",
   "katika wiki $weeks(-1.0), $weekday()",
   "siku $days(-1.0) zilizopita",
-  "kwa siku $days(-1.0)"
+  "kwa siku $days(-1.0)",
+  "$unit() $count() zilizopita",
+  "kwa $unit() $count()"
 ],
   "vi" : [
   " lúc ",
@@ -695,7 +731,9 @@ export default {
   "một tuần từ $weekday()",
   "trong $weeks(-1.0) tuần, vào $weekday()",
   "$days(-1.0) ngày trước",
-  "trong $days(-1.0) ngày nữa"
+  "trong $days(-1.0) ngày nữa",
+  "$count() $unit() trước",
+  "trong $count() $unit() nữa"
 ],
   "zh" : [
   " ",
@@ -741,7 +779,9 @@ export default {
   "从 $weekday() 开始的一周",
   "从 $weeks(-1.0) 周，在 $weekday()",
   "$days(-1.0) 天前",
-  "在 $days(-1.0) 天"
+  "在 $days(-1.0) 天",
+  "$count() $unit()前",
+  "在 $count() $unit()"
 ],
 
   "am" : [
@@ -785,10 +825,13 @@ export default {
       "በሚቀጥለው $weekday()",
       "$weekday() ፣ ባለፈው ሳምንት",
       "$weekday(), ከ $weeks(-1.0) ሳምንታት በፊት",
-      "ከ$weekday() አንድ ሳምንት",
+      "አንድ ሳምንት ከ $weekday()",
       "$weekday በ $weeks(-1.0) ሳምንታት ውስጥ",
       "ከ $days(-1.0) ቀናት በፊት",
-      "በ $days(-1.0) ቀናት ውስጥ"
+      "በ $days(-1.0) ቀናት ውስጥ",
+      "$count() $ unit() በፊት",
+      "በ $count() $unit()"
+
   ],
   "az" : [
       ", ",
@@ -834,7 +877,10 @@ export default {
       "$weekday() günündən bir həftə",
       "$weeks(-1.0) həftədə, $weekday() günü",
       "$days(-1.0) gün əvvəl",
-      "$days(-1.0) günə"
+      "$days(-1.0) günə",
+      "$count() dəqiqədə",
+      "$count() dəqiqə əvvəl"
+
   ],
   "bg" : [
       " в ",
@@ -880,7 +926,10 @@ export default {
       "седмица от $weekday()",
       "след $weeks(-1.0) седмици, в $weekday",
       "преди $days(-1.0) дни",
-      "за $days(-1.0) дни"
+      "за $days(-1.0) дни",
+      "преди $count() $unit()",
+      "за $count() $unit()"
+
   ],
   "bn" : [
       ", ",
@@ -926,7 +975,9 @@ export default {
       "$weekday() থেকে এক সপ্তাহ",
       "$weeks(-1.0) সপ্তাহে, $weekday()",
       "$days(-1.0) দিন আগে",
-      "$days(-1.0) দিনের মধ্যে"
+      "$days(-1.0) দিনের মধ্যে",
+      "$count() $unit() আগে",
+      "$count() $unit()"
   ],
 
   "bs" : [
@@ -972,8 +1023,11 @@ export default {
       "$weekday(), prije $weeks(-1.0) sedmice",
       "tjedan dana od $weekday()",
       "za $weeks(-1.0) sedmice, u $weekday()",
-      "Pre $days(-1.0) dana",
-      "za $days(-1.0) dana"
+      "pre $days(-1.0) dana",
+      "za $days(-1.0) dana",
+      "prije $count() $unit()",
+      "za $count() $unit()",
+
   ],
   "ca" : [
       " a les ",
@@ -1019,8 +1073,9 @@ export default {
       "a la setmana del $weekday()",
       "en $weeks(-1.0) setmanes, el $weekday()",
       "fa $days(-1.0) dies",
-      "en $days(-1.0) dies"
-
+      "en $days(-1.0) dies",
+      "fa $count() $unit()",
+      "en $count() $unit()"
   ],
   "da" : [
       " kl ",
@@ -1066,7 +1121,9 @@ export default {
       "en uge fra $weekday()",
       "om $weeks(-1.0) uger, $weekday()",
       "$days(-1.0) dage siden",
-      "om $days(-1.0) dage"
+      "om $days(-1.0) dage",
+      "for $count() $unit() siden",
+      "om $count() $unit()",
   ],
   "el" : [
       " στις ",
@@ -1111,8 +1168,10 @@ export default {
       "$weekday(), $weeks(-1.0) εβδομάδες πριν",
       "μια εβδομάδα από $weekday()",
       "σε $weeks(-1.0) εβδομάδες, την $weekday()",
-      " πριν από $days(-1.0) ημέρες",
-      "σε $days(-1.0) ημέρες"
+      "πριν από $days(-1.0) ημέρες",
+      "σε $days(-1.0) ημέρες",
+      "πριν από $count() $unit()",
+      "σε $count() $unit()",
   ],
   "et" : [
       " kell ",
@@ -1158,7 +1217,9 @@ export default {
       "nädal alates $weekday()",
       "$weeks(-1.0) nädala pärast, $weekday()",
       "$days(-1.0) päeva tagasi",
-      "$days(-1.0) päeva pärast"
+      "$days(-1.0) päeva pärast",
+      "$count() $unit() tagasi",
+      "$count() $unit() pärast"
   ],
   "fa" : [
       " ساعت ",
@@ -1204,7 +1265,9 @@ export default {
       "یک هفته از $weekday()",
       "در $weeks(-1.0) هفته ، $weekday()",
       "$days(-1.0) روز پیش",
-      "در $days(-1.0) روز"
+      "در $days(-1.0) روز",
+      "قبل $units() $count()",
+      "$units() $count() در"
   ],
   "fi" : [
       " klo ",
@@ -1250,7 +1313,9 @@ export default {
       "viikko $weekday()",
       "$weeks(-1.0) viikon kuluttua $weekday()",
       "$days(-1.0) päivää sitten",
-      "$days(-1.0) päivässä"
+      "$days(-1.0) päivässä",
+      "$count() $unit() sitten",
+      "$count() $unit()"
   ],
   "fil" : [
       " ng ",
@@ -1296,7 +1361,9 @@ export default {
       "isang linggo mula $weekday()",
       "sa $weeks(-1.0) linggo, sa $weekday()",
       "$days(-1.0) araw na ang nakakalipas",
-      "sa $days(-1.0) araw"
+      "sa $days(-1.0) araw",
+      "$count() $unit() ang nakalipas",
+      "sa $count() $unit()"
   ],
   "hr" : [
       " u ",
@@ -1342,7 +1409,9 @@ export default {
       "tjedan dana od $weekday()",
       "za $weeks(-1.0) tjedna, u $weekday()",
       "prije $days(-1.0) dana",
-      "za $days(-1.0) dana"
+      "za $days(-1.0) dana",
+      "prije $count() $unit()",
+      "za $count() $unit()"
   ],
   "hu" : [
       ", ",
@@ -1388,7 +1457,9 @@ export default {
       "$weekday() egy hét",
       "$weeks(-1.0) hét múlva, $weekday()",
       "$days(-1.0) napja",
-      "$days(-1.0) napon belül"
+      "$days(-1.0) napon belül",
+      "$count() $unit() ezelőtt",
+      "$count() $unit() alatt"
   ],
   "id" : [
       " pukul ",
@@ -1434,7 +1505,9 @@ export default {
       "seminggu dari hari $weekday()",
       "dalam $weeks(-1.0) minggu, pada hari $weekday()",
       "$days(-1.0) hari yang lalu",
-      "dalam $days(-1.0) hari"
+      "dalam $days(-1.0) hari",
+      "$count() $unit() yang lalu",
+      "dalam $count() $unit()"
   ],
   "kn" : [
       ", ",
@@ -1480,7 +1553,10 @@ export default {
       "$weekday()ದಿಂದ ಒಂದು ವಾರ",
       "$weeks(-1.0) ವಾರಗಳಲ್ಲಿ, $weekday()",
       "$days(-1.0) ದಿನಗಳ ಹಿಂದೆ",
-      "$days(-1.0) ದಿನಗಳಲ್ಲಿ"
+      "$days(-1.0) ದಿನಗಳಲ್ಲಿ",
+      "$count() $unit() ಲ್ಲಿ",
+      "$count() $unit() ಹಿಂದೆ"
+
   ],
   "lt" : [
       ", ",
@@ -1526,7 +1602,9 @@ export default {
       "savaitę nuo $weekday()",
       "po $weeks(-1.0) savaičių, $weekday()",
       "prieš $days(-1.0) dienas",
-      "per $days(-1.0) dienas"
+      "per $days(-1.0) dienas",
+      "prieš $count() $unit()",
+      "per $count() $unit()"
   ],
   "lv" : [
       " pulksten ",
@@ -1571,9 +1649,11 @@ export default {
       "Pirms $weeks(-1.0) nedēļām $weekday",
       "a week from $weekday()",
       "nedēļu no $weekday()",
-      "pēc $weeks(-1.0) nedēļām, $weekday()",
-      "Pirms $days(-1.0) dienām",
-      "$days(-1.0) 3 dienu laikā"
+      "pirms $days(-1.0) dienām",
+      "$days(-1.0) dienām",
+      "pirms $count() $units()",
+      "$count() $units()"
+
   ],
   "ml" : [
     ", ",
@@ -1618,9 +1698,10 @@ export default {
     "$weeks(-1.0) ആഴ്ച മുമ്പ് $weekday()",
     "a week from $weekday()",
     "$weekday() മുതൽ ഒരാഴ്ച",
-    "$weeks(-1.0) ആഴ്ചയ്ക്കുള്ളിൽ, $weekday()",
+    "$days(-1.0) ദിവസങ്ങളിൽ മുമ്പ്",
     "$days(-1.0) ദിവസം മുൻപ്",
-    "$days(-1.0) ദിവസത്തിനുള്ളിൽ"
+    "$count() $unit() മുമ്പ്",
+    "$count() $unit() ൽ"
   ],
   "mr" : [
       ", ",
@@ -1665,9 +1746,10 @@ export default {
       "$weekday(), $weeks(-1.0) आठवड्यांपूर्वी",
       "a week from $weekday()",
       "$weekday() पासून एक आठवडा",
-      "$weeks(-1.0) आठवड्यात, $weekday()",
       "$days(-1.0) दिवसांपूर्वी",
-      "$days(-1.0) दिवसात"
+      "$days(-1.0) दिवसात",
+      "$count() $unit()पूर्वी",
+      "$count() $unit()"
   ],
   "ms" : [
     ", ",
@@ -1712,9 +1794,11 @@ export default {
     "$weekday(), $weeks(-1.0) minggu yang lalu",
     "seminggu dari hari $weekday()",
     "in $weeks(-1.0) weeks, on $weekday()",
-    "dalam $weeks(-1.0) minggu, pada hari $weekday()",
-    "$days(-1.0) hari yang lepas",
-    "dalam $days(-1.0) hari"
+    "$days(-1.0) hari lepas",
+    "dalam $days(-1.0) hari",
+    "$count() $unit() lepas",
+    "dalam $count() $unit()"
+
   ],
   "nb" : [
     " kl ",
@@ -1760,8 +1844,9 @@ export default {
     "en uke fra $weekday()",
     "om $weeks(-1.0) uker, på $weekday()",
     "$days(-1.0) dager siden",
-    "om $days(-1.0) dager"
-
+    "om $days(-1.0) dager",
+    "$count() $unit() siden",
+    "om $count() $unit()"
   ],
   "pa" : [
     ", ",
@@ -1807,8 +1892,9 @@ export default {
     "$weekday() ਤੋਂ ਇਕ ਹਫਤਾ",
     "$weeks(-1.0) ਹਫਤਿਆਂ ਵਿਚ, $weekday()",
     "$days(-1.0) ਦਿਨ ਪਹਿਲਾਂ",
-    "$days(-1.0) ਦਿਨਾਂ ਵਿਚ"
-
+    "$days(-1.0) ਦਿਨਾਂ ਵਿਚ",
+    "$count() $unit() ਪਹਿਲਾਂ",
+    "$count() $unit() ਵਿਚ"
   ],
   "pl" : [
     " o ",
@@ -1854,7 +1940,9 @@ export default {
     "tydzień od $weekday()",
     "za $weeks(-1.0) tygodnie, w $weekday()",
     "$days(-1.0) dni temu",
-    "w $days(-1.0) dni"
+    "w $days(-1.0) dni",
+    "$count() $unit() temu",
+    "za $count() $unit()"
   ],
   "ro" : [
     " la ",
@@ -1900,7 +1988,9 @@ export default {
     "o săptămână de $weekday()",
     "în $weeks(-1.0) săptămâni, $weekday()",
     "acum $days(-1.0) zile",
-    "în $days(-1.0) zile"
+    "în $days(-1.0) zile",
+    "acum $count() $unit()",
+    "în $count() $unit()"
   ],
   "sk" : [
     " o ",
@@ -1945,8 +2035,10 @@ export default {
     "$weekday(), pred $weeks(-1.0) týždňami",
     "týždeň od $weekday()",
     "o $weeks(-1.0) týždne, v $weekday()",
-    "Pred $days(-1.0) dňami",
-    "za $days(-1.0) dni"
+    "pred $days(-1.0) dňami",
+    "za $days(-1.0) dni",
+    "pred $count() $unit()",
+    "za $count() $unit()"
   ],
   "sl" : [
     " ob ",
@@ -1991,9 +2083,10 @@ export default {
     "$weekday(), pred $weeks(-1.0) tedni",
     "teden dni od $weekday()",
     "čez $weeks(-1.0) tedne, v $weekday()",
-    "Pred $days(-1.0) dnevi",
-    "v $days(-1.0) dneh"
-
+    "pred $days(-1.0) dnevi",
+    "v $days(-1.0) dneh",
+    "pred $count() $unit()",
+    "v $count() $unit()"
   ],
   "sr" : [
     " у ",
@@ -2038,9 +2131,10 @@ export default {
     "$weekday(), пре $weeks(-1.0) недеље",
     "недељу дана од $weekday()",
     "за $weeks(-1.0) недеље, у $weekday()",
-    "$days(-1.0) дана пре",
-    "за $days(-1.0) дана"
-
+    "пре $days(-1.0) дана",
+    "за $days(-1.0) дана",
+    "пре $count() $unit()",
+    "за $count() $unit()"
   ],
   "sv" : [
     " kl ",
@@ -2086,8 +2180,9 @@ export default {
     "en vecka från $weekday()",
     "om $weeks(-1.0) veckor, på $weekday()",
     "$days(-1.0) dagar sedan",
-    "om $days(-1.0) dager"
-
+    "om $days(-1.0) dager",
+    "$count() $unit() sen",
+    "om $count() $unit()"
   ],
   "ta" : [
     ",  ",
@@ -2133,7 +2228,10 @@ export default {
     "$weekday() முதல் ஒரு வாரம்",
     "$weeks(-1.0) வாரங்களில், $weekday()",
     "$days(-1.0) நாட்களுக்கு முன்பு",
-    "$days(-1.0) நாட்களில்"
+    "$days(-1.0) நாட்களில்",
+    "$count() $unit() முன்பு",
+    "$count() $unit()ளில்"
+
   ],
   "te" : [
     ", ",
@@ -2178,9 +2276,11 @@ export default {
     "$weekday() సోమవారం",
     "$weekday(), $weeks(-1.0) వారాల క్రితం",
     "$weekday() నుండి ఒక వారం",
-    "$weeks(-1.0) వారాలలో, $weekday()",
     "$days(-1.0) రోజుల క్రితం",
-    "$days(-1.0) రోజుల్లో"
+    "$days(-1.0) రోజుల్లో",
+    "$count() $unit() క్రితం",
+    "$count() $unit()ల్లో"
+
   ],
   "th" : [
     ", ",
@@ -2226,8 +2326,9 @@ export default {
     "หนึ่งสัปดาห์ตั้งแต่ $weekday()",
     "ใน $weeks(-1.0) สัปดาห์ใน$weekday()",
     "$days(-1.0) วันที่ผ่านมา",
-    "ใน $days(-1.0) วัน"
-
+    "ใน $days(-1.0) วัน",
+    "$count() $unit() มาแล้ว",
+    "ใน $count() $unit()"
   ],
   "tr" : [
     " saat ",
@@ -2273,8 +2374,9 @@ export default {
     "$weekday()dan bir hafta",
     "$weeks(-1.0) hafta sonra, $weekday()",
     "$days(-1.0) gün önce",
-    "$days(-1.0) gün içerisinde"
-
+    "$days(-1.0) gün içerisinde",
+    "$count() $unit() önce",
+    "$count() $unit() içerisinde"
   ],
   "uk" : [
     " о ",
@@ -2320,7 +2422,9 @@ export default {
     "тиждень з $weekday()",
     "через $weeks(-1.0) тижні, у $weekday()",
     "$days(-1.0) дні тому",
-    "через $days(-1.0) дні"
+    "через $days(-1.0) дні",
+    "$count() $unit() тому",
+    "через $count() $unit()"
   ],
   "uz" : [
     " soat ",
@@ -2366,7 +2470,10 @@ export default {
     "$weekday()dan bir hafta",
     "$weeks(-1.0) hafta ichida, $weekday() kuni",
     "$days(-1.0) kun oldin",
-    "$days(-1.0) kun ichida"
+    "$days(-1.0) kun ichida",
+    "$count() $unit() oldin",
+    "$count() $unit() ichida"
+
   ]
 }
 /*

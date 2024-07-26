@@ -41,6 +41,9 @@
     "date.range.weekday.weeks.ago" : "$weekday(), $weeks(-1.0) minggu yang lalu",
     "date.range.weekday.week.ahead" : "seminggu dari hari $weekday()",
     "date.range.weekday.weeks.ahead" : "in $weeks(-1.0) weeks, on $weekday()",
-    "date.range.days.ago" : "dalam $weeks(-1.0) minggu, pada hari $weekday()",
-    "date.range.days.ahead" : "$days(-1.0) hari yang lepas"
+
+    "date.range.days.ago" : "$days(-1.0) hari lepas",
+    "date.range.days.ahead" : "dalam $days(-1.0) hari",
+    "date.range.time.ago" : "$count() $unit() lepas",
+    "date.range.time.ahead" : "dalam $count() $unit()"
 }

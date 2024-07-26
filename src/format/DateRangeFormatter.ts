@@ -542,12 +542,12 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
         return out.trim()
 
     } else { // using Intl for format style
-        let opts = {
+        let opts:any = {
             numeric: isHuman ? 'auto' : 'always',
             style: relStyle === 'full' ? 'long' : relStyle
         }
         const rtf = new IRTF(locale, opts)
-        let type = ''
+        let type:any = ''
         let value = 0
         if(dparts.years) { value = dparts.years; type = 'years'}
         else if(dparts.months) { value = dparts.months; type = 'months'}

@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "seminggu dari hari $weekday()",
     "date.range.weekday.weeks.ahead" : "dalam $weeks(-1.0) minggu, pada hari $weekday()",
     "date.range.days.ago" : "$days(-1.0) hari yang lalu",
-    "date.range.days.ahead" : "dalam $days(-1.0) hari"
+    "date.range.days.ahead" : "dalam $days(-1.0) hari",
+    "date.range.time.ahead" : "dalam $count() $unit()",
+    "date.range.time.ago" : "$count() $unit() yang lalu"
 }

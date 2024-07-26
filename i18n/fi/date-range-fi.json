@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "viikko $weekday()",
     "date.range.weekday.weeks.ahead" : "$weeks(-1.0) viikon kuluttua $weekday()",
     "date.range.days.ago" : "$days(-1.0) päivää sitten",
-    "date.range.days.ahead" : "$days(-1.0) päivässä"
+    "date.range.days.ahead" : "$days(-1.0) päivässä",
+    "date.range.time.ahead" : "$count() $unit()",
+    "date.range.time.ago" : "$count() $unit() sitten"
 }

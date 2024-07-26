@@ -1,22 +1,31 @@
 {
 
-  "date.format.time.separator": " الساعة ",
-  "date.format.time.separator.full": " الساعة ",
-  "date.format.time.separator.long": " الساعة ",
-  "date.format.time.separator.medium": " الساعة ",
-  "date.format.time.separator.short": ", ",
+  "date.format.time.separator": " ",
+  "date.format.time.separator.full": " ",
+  "date.format.time.separator.long": " ",
+  "date.format.time.separator.medium": " ",
+
+  "date.format.full" : "WWWW, MMMM D, YYYY",
+  "date.format.long" : "MMMM D, YYYY",
 
   "date.format.timezone.GMT.long" : "توقيت غرينيتش",
   "date.format.timezone.GMT+1.long" : "التوقيت الصيفي البريطاني",
   "date.format.timezone.GMT.short" : "بتوقيت غرينيتش",
 
-  "date.format.timezone.UTC.long" : "توقيت عالمي متناسق",
-  "date.format.timezone.UTC.short" : "التوقيت العالمي",
+  "time.format.full": "hhh:mm:ss ++ Z",
+  "time.format.long": "hhh:mm:ss ++ z",
+  "time.format.medium": "hhh:mm:ss ++ ",
+  "time.format.short": "hhh:mm ++",
+  "time.format.narrow": "hhh:mm ++",
 
-  "time.pm" : "في الظهيرة",
-  "time.am" : "في الصباح",
-  "time.pm.lowercase" : "في الظهيرة",
-  "time.am.lowercase" : "في الصباح",
+
+  "date.format.timezone.UTC.long" : "توقيت عالمي متناسق",
+  "date.format.timezone.UTC.short" : "توقيت عالمي متناسق",
+
+  "time.pm" : "مساءً",
+  "time.am" : "صباحًا",
+  "time.pm.lowercase" : "مساءً",
+  "time.am.lowercase" : "صباحًا",
 
 
 

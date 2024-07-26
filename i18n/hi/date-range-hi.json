@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "से एक सप्ताह $weekday()",
     "date.range.weekday.weeks.ahead" : "$weeks(-1.0) सप्ताह में, $weekday() को",
     "date.range.days.ago" : "$days(-1.0) दिन पहले",
-    "date.range.days.ahead" : "$days(-1.0) दिनों में"
+    "date.range.days.ahead" : "$days(-1.0) दिनों में",
+    "date.range.time.ago": "$count() $unit() पहले",
+    "date.range.time.ahead": "$count() $unit() में"
 }

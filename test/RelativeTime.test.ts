@@ -22,6 +22,7 @@ function RelativeTimeTest(label) {
     let r, x, x2, desc
     let event
 
+
     let intlAvailable = checkIntlSupport() === 'complete'
     if(intlAvailable) {
         useIntl(true)
@@ -29,6 +30,11 @@ function RelativeTimeTest(label) {
 
 
     Tap.test('Relative Time '+label, t => {
+
+        if(!new Date().getUTCHours())  {
+            return t.skip('Skipping relative time test during the UTC crossover hour')
+        }
+
 
         t.skip(`COMMENT: Intl Availability is ${checkIntlSupport()}. These tests were made with ${intlAvailable? 'full' : 'no'} Intl support`)
         t.skip('COMMENT: This run was made using '+label)
@@ -444,6 +450,7 @@ function RelativeTimeTest(label) {
         t.end()
     })
 }
+
 
 RelativeTimeTest('real time')
 // This should work with and without an artifial reference

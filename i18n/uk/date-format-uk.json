@@ -1,43 +1,42 @@
 {
 
-  "date.format.time.separator": " at ",
-  "date.format.time.separator.full": " at ",
-  "date.format.time.separator.long": " at ",
-  "date.format.time.separator.medium": " at ",
-  "date.format.time.separator.short": ", ",
+  "date.format.time.separator": ", o ",
+  "date.format.time.separator.full": ", o ",
+  "date.format.time.separator.long": ", o ",
+  "date.format.time.separator.medium": ", o ",
 
-  "date.format.timezone.GMT.long" : "Greenwich Mean Time",
-  "date.format.timezone.GMT+1.long" : "British Summer Time",
+  "date.format.timezone.GMT.long" : "Середній час за Грінвічем",
+  "date.format.timezone.GMT+1.long" : "Британський літній час",
   "date.format.timezone.GMT.short" : "GMT",
 
-  "date.format.timezone.UTC.long" : "Coordinated Universal Time",
+  "date.format.timezone.UTC.long" : "Універсальний скоординований час",
   "date.format.timezone.UTC.short" : "UTC",
 
-  "date.format.full": "WWWW D MMMM YYYY",
-  "date.format.long": "D MMMM YYYY",
+  "date.format.full": "WWWW, D MMMM YYYY року",
+  "date.format.long": "D MMMM YYYY p.",
 
-  "time.pm" : "PM",
-  "time.am" : "AM",
-  "time.pm.lowercase" : "pm",
-  "time.am.lowercase" : "am",
+  "time.pm" : "вдень",
+  "time.am" : "вранці",
+  "time.pm.lowercase" : "вдень",
+  "time.am.lowercase" : "вранці",
 
 
 
-  "date.format.timezone.EST.long" : "Eastern Standard Time",
+  "date.format.timezone.EST.long" : "Східний стандартний час",
   "date.format.timezone.EST.short" : "EST",
-  "date.format.timezone.CST.long" : "Central Standard Time",
+  "date.format.timezone.CST.long" : "Центральний стандартний час",
   "date.format.timezone.CST.short" : "CST",
-  "date.format.timezone.MST.long" : "Mountain Standard Time",
+  "date.format.timezone.MST.long" : "Гірський стандартний час",
   "date.format.timezone.MST.short" : "MST",
-  "date.format.timezone.PST.long" : "Pacific Standard Time",
+  "date.format.timezone.PST.long" : "Тихоокеанський стандартний час",
   "date.format.timezone.PST.short" : "PST",
-  "date.format.timezone.EDT.long" : "Eastern Daylight Time",
+  "date.format.timezone.EDT.long" : "Східний літній час",
   "date.format.timezone.EDT.short" : "EDT",
-  "date.format.timezone.CDT.long" : "Central Daylight Time",
+  "date.format.timezone.CDT.long" : "Центральний літній час",
   "date.format.timezone.CDT.short" : "CDT",
-  "date.format.timezone.MDT.long" : "Mountain Daylight Time",
+  "date.format.timezone.MDT.long" : "Гірський літній час",
   "date.format.timezone.MDT.short" : "MDT",
-  "date.format.timezone.PDT.long" : "Pacific Daylight Time",
+  "date.format.timezone.PDT.long" : "Тихоокеанський літній час",
   "date.format.timezone.PDT.short" : "PDT"
 
 }

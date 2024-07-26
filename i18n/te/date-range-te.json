@@ -41,6 +41,8 @@
     "date.range.weekday.weeks.ago" : "$weekday() సోమవారం",
     "date.range.weekday.week.ahead" : "$weekday(), $weeks(-1.0) వారాల క్రితం",
     "date.range.weekday.weeks.ahead" : "$weekday() నుండి ఒక వారం",
-    "date.range.days.ago" : "$weeks(-1.0) వారాలలో, $weekday()",
-    "date.range.days.ahead" : "$days(-1.0) రోజుల క్రితం"
+    "date.range.days.ago" : "$days(-1.0) రోజుల క్రితం",
+    "date.range.days.ahead" : "$days(-1.0) రోజుల్లో",
+    "date.range.time.ago": "$count() $unit() క్రితం",
+    "date.range.time.ahead": "$count() $unit()ల్లో"
 }

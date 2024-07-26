@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "$weekday() から一週間",
     "date.range.weekday.weeks.ahead" : "$weeks(-1.0) 週間後、$weekday()",
     "date.range.days.ago" : "$days(-1.0)日前",
-    "date.range.days.ahead" : "$days(-1.0)日で"
+    "date.range.days.ahead" : "$days(-1.0)日で",
+    "date.range.time.ahead" : "$count() $unit() で",
+    "date.range.time.ago" : "$count() $unit() 前"
 }

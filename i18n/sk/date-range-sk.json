@@ -41,6 +41,9 @@
     "date.range.weekday.weeks.ago" : "$weekday(), pred $weeks(-1.0) týždňami",
     "date.range.weekday.week.ahead" : "týždeň od $weekday()",
     "date.range.weekday.weeks.ahead" : "o $weeks(-1.0) týždne, v $weekday()",
-    "date.range.days.ago" : "Pred $days(-1.0) dňami",
-    "date.range.days.ahead" : "za $days(-1.0) dni"
+    "date.range.days.ago" : "pred $days(-1.0) dňami",
+    "date.range.days.ahead" : "za $days(-1.0) dni",
+    "date.range.time.ago" : "pred $count() $unit()",
+    "date.range.time.ahead" : "za $count() $unit()"
+
 }

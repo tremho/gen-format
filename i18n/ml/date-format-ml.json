@@ -1,43 +1,38 @@
 {
 
-  "date.format.time.separator": " at ",
-  "date.format.time.separator.full": " at ",
-  "date.format.time.separator.long": " at ",
-  "date.format.time.separator.medium": " at ",
-  "date.format.time.separator.short": ", ",
 
-  "date.format.timezone.GMT.long" : "Greenwich Mean Time",
-  "date.format.timezone.GMT+1.long" : "British Summer Time",
-  "date.format.timezone.GMT.short" : "GMT",
+  "date.format.timezone.GMT.long" : "ഗ്ഗ്രീൻ\u200Cവിച്ച് ശരാശരി സമയം",
+  "date.format.timezone.GMT+1.long" : "ബ്രിട്ടീഷ് സമ്മർ സമയം",
+  "date.format.timezone.GMT.short" : "ജിഎംടി",
 
-  "date.format.timezone.UTC.long" : "Coordinated Universal Time",
-  "date.format.timezone.UTC.short" : "UTC",
+  "date.format.timezone.UTC.long" : "ഏകോപിപ്പിച്ച യൂണിവേഴ്സൽ സമയം",
+  "date.format.timezone.UTC.short" : "യുടിസി",
 
-  "date.format.full": "WWWW D MMMM YYYY",
-  "date.format.long": "D MMMM YYYY",
+  "date.format.full": "YYYY MMMM D WWWW",
+  "date.format.long": "YYYY MMMM D",
 
-  "time.pm" : "PM",
-  "time.am" : "AM",
-  "time.pm.lowercase" : "pm",
-  "time.am.lowercase" : "am",
+  "time.pm" : "ഉച്ചതിരിഞ്ഞ്",
+  "time.am" : "പ്രഭാതത്തിൽ",
+  "time.pm.lowercase" : "ഉച്ചതിരിഞ്ഞ്",
+  "time.am.lowercase" : "പ്രഭാതത്തിൽ",
 
 
 
-  "date.format.timezone.EST.long" : "Eastern Standard Time",
+  "date.format.timezone.EST.long" : "കിഴക്കൻ സ്റ്റാൻഡേർഡ് സമയം",
   "date.format.timezone.EST.short" : "EST",
-  "date.format.timezone.CST.long" : "Central Standard Time",
+  "date.format.timezone.CST.long" : "സെൻട്രൽ സ്റ്റാൻഡേർഡ് സമയം",
   "date.format.timezone.CST.short" : "CST",
-  "date.format.timezone.MST.long" : "Mountain Standard Time",
+  "date.format.timezone.MST.long" : "മൗണ്ടൻ സ്റ്റാൻഡേർഡ് സമയം",
   "date.format.timezone.MST.short" : "MST",
-  "date.format.timezone.PST.long" : "Pacific Standard Time",
+  "date.format.timezone.PST.long" : "പസഫിക് സ്റ്റാൻഡേർഡ് സമയം",
   "date.format.timezone.PST.short" : "PST",
-  "date.format.timezone.EDT.long" : "Eastern Daylight Time",
+  "date.format.timezone.EDT.long" : "കിഴക്കൻ പകൽ സമയം",
   "date.format.timezone.EDT.short" : "EDT",
-  "date.format.timezone.CDT.long" : "Central Daylight Time",
+  "date.format.timezone.CDT.long" : "കേന്ദ്ര പകൽ സമയം",
   "date.format.timezone.CDT.short" : "CDT",
-  "date.format.timezone.MDT.long" : "Mountain Daylight Time",
+  "date.format.timezone.MDT.long" : "പർ\u200Cവ്വത പകൽ\u200C സമയം",
   "date.format.timezone.MDT.short" : "MDT",
-  "date.format.timezone.PDT.long" : "Pacific Daylight Time",
+  "date.format.timezone.PDT.long" : "പസഫിക് പകൽ സമയം",
   "date.format.timezone.PDT.short" : "PDT"
 
 }

@@ -1,43 +1,42 @@
 {
 
-  "date.format.time.separator": " at ",
-  "date.format.time.separator.full": " at ",
-  "date.format.time.separator.long": " at ",
-  "date.format.time.separator.medium": " at ",
-  "date.format.time.separator.short": ", ",
+  "date.format.time.separator": " o ",
+  "date.format.time.separator.full": " o ",
+  "date.format.time.separator.long": " o ",
+  "date.format.time.separator.medium": " o ",
 
-  "date.format.timezone.GMT.long" : "Greenwich Mean Time",
-  "date.format.timezone.GMT+1.long" : "British Summer Time",
+  "date.format.timezone.GMT.long" : "Czas środkowoeuropejski",
+  "date.format.timezone.GMT+1.long" : "Brytyjski czas letni",
   "date.format.timezone.GMT.short" : "GMT",
 
-  "date.format.timezone.UTC.long" : "Coordinated Universal Time",
+  "date.format.timezone.UTC.long" : "Skoordynowany czas uniwersalny",
   "date.format.timezone.UTC.short" : "UTC",
 
-  "date.format.full": "WWWW D MMMM YYYY",
+  "date.format.full": "WWWW, D MMMM YYYY",
   "date.format.long": "D MMMM YYYY",
 
-  "time.pm" : "PM",
-  "time.am" : "AM",
-  "time.pm.lowercase" : "pm",
-  "time.am.lowercase" : "am",
+  "time.pm" : "po południu",
+  "time.am" : "rankiem",
+  "time.pm.lowercase" : "po południu",
+  "time.am.lowercase" : "rankiem",
 
 
 
-  "date.format.timezone.EST.long" : "Eastern Standard Time",
+  "date.format.timezone.EST.long" : "Wschodni czas standardowy",
   "date.format.timezone.EST.short" : "EST",
-  "date.format.timezone.CST.long" : "Central Standard Time",
+  "date.format.timezone.CST.long" : "Centralny czas standardowy",
   "date.format.timezone.CST.short" : "CST",
-  "date.format.timezone.MST.long" : "Mountain Standard Time",
+  "date.format.timezone.MST.long" : "Górski czas standardowy",
   "date.format.timezone.MST.short" : "MST",
-  "date.format.timezone.PST.long" : "Pacific Standard Time",
+  "date.format.timezone.PST.long" : "Czas pacyficzny",
   "date.format.timezone.PST.short" : "PST",
-  "date.format.timezone.EDT.long" : "Eastern Daylight Time",
+  "date.format.timezone.EDT.long" : "Wschodni czas letni",
   "date.format.timezone.EDT.short" : "EDT",
-  "date.format.timezone.CDT.long" : "Central Daylight Time",
+  "date.format.timezone.CDT.long" : "Centralny czas letni",
   "date.format.timezone.CDT.short" : "CDT",
-  "date.format.timezone.MDT.long" : "Mountain Daylight Time",
+  "date.format.timezone.MDT.long" : "Górski czas letni",
   "date.format.timezone.MDT.short" : "MDT",
-  "date.format.timezone.PDT.long" : "Pacific Daylight Time",
+  "date.format.timezone.PDT.long" : "Pacyficzny czas letni",
   "date.format.timezone.PDT.short" : "PDT"
 
 }

@@ -1,43 +1,42 @@
 {
 
-  "date.format.time.separator": " at ",
-  "date.format.time.separator.full": " at ",
-  "date.format.time.separator.long": " at ",
-  "date.format.time.separator.medium": " at ",
-  "date.format.time.separator.short": ", ",
+  "date.format.time.separator": " lúc ",
+  "date.format.time.separator.full": " lúc ",
+  "date.format.time.separator.long": " lúc ",
+  "date.format.time.separator.medium": " lúc ",
 
-  "date.format.timezone.GMT.long" : "Greenwich Mean Time",
-  "date.format.timezone.GMT+1.long" : "British Summer Time",
+  "date.format.timezone.GMT.long" : "giờ GMT",
+  "date.format.timezone.GMT+1.long" : "Giờ mùa hè Anh",
   "date.format.timezone.GMT.short" : "GMT",
 
-  "date.format.timezone.UTC.long" : "Coordinated Universal Time",
+  "date.format.timezone.UTC.long" : "Giờ phối hợp quốc tế",
   "date.format.timezone.UTC.short" : "UTC",
 
-  "date.format.full": "WWWW D MMMM YYYY",
-  "date.format.long": "D MMMM YYYY",
+  "date.format.full": "WWWW, ngày D MMMM năm YYYY",
+  "date.format.long": "ngày D MMMM năm YYYY",
 
-  "time.pm" : "PM",
-  "time.am" : "AM",
-  "time.pm.lowercase" : "pm",
-  "time.am.lowercase" : "am",
+  "time.pm" : "vào buổi chiều",
+  "time.am" : "vào buổi sáng",
+  "time.pm.lowercase" : "vào buổi chiều",
+  "time.am.lowercase" : "vào buổi sáng",
 
 
 
-  "date.format.timezone.EST.long" : "Eastern Standard Time",
+  "date.format.timezone.EST.long" : "giờ chuẩn phương Đông",
   "date.format.timezone.EST.short" : "EST",
-  "date.format.timezone.CST.long" : "Central Standard Time",
+  "date.format.timezone.CST.long" : "Giờ chuẩn miền Trung",
   "date.format.timezone.CST.short" : "CST",
-  "date.format.timezone.MST.long" : "Mountain Standard Time",
+  "date.format.timezone.MST.long" : "Giờ chuẩn miền núi",
   "date.format.timezone.MST.short" : "MST",
-  "date.format.timezone.PST.long" : "Pacific Standard Time",
+  "date.format.timezone.PST.long" : "múi giờ Thái Bình Dương",
   "date.format.timezone.PST.short" : "PST",
-  "date.format.timezone.EDT.long" : "Eastern Daylight Time",
+  "date.format.timezone.EDT.long" : "Giờ ban ngày ở phương đông",
   "date.format.timezone.EDT.short" : "EDT",
-  "date.format.timezone.CDT.long" : "Central Daylight Time",
+  "date.format.timezone.CDT.long" : "Giờ ban ngày miền Trung",
   "date.format.timezone.CDT.short" : "CDT",
-  "date.format.timezone.MDT.long" : "Mountain Daylight Time",
+  "date.format.timezone.MDT.long" : "Giờ ban ngày miền núi",
   "date.format.timezone.MDT.short" : "MDT",
-  "date.format.timezone.PDT.long" : "Pacific Daylight Time",
+  "date.format.timezone.PDT.long" : "Giờ ban ngày Thái Bình Dương",
   "date.format.timezone.PDT.short" : "PDT"
 
 }

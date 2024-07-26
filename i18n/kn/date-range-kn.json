@@ -42,5 +42,7 @@
     "date.range.weekday.week.ahead" : "$weekday()ದಿಂದ ಒಂದು ವಾರ",
     "date.range.weekday.weeks.ahead" : "$weeks(-1.0) ವಾರಗಳಲ್ಲಿ, $weekday()",
     "date.range.days.ago" : "$days(-1.0) ದಿನಗಳ ಹಿಂದೆ",
-    "date.range.days.ahead" : "$days(-1.0) ದಿನಗಳಲ್ಲಿ"
+    "date.range.days.ahead" : "$days(-1.0) ದಿನಗಳಲ್ಲಿ",
+    "date.range.time.ago" : "$count() $unit() ಲ್ಲಿ",
+    "date.range.time.ahead": "$count() $unit() ಹಿಂದೆ"
 }

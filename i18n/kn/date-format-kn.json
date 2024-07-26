@@ -1,43 +1,36 @@
 {
-
-  "date.format.time.separator": " at ",
-  "date.format.time.separator.full": " at ",
-  "date.format.time.separator.long": " at ",
-  "date.format.time.separator.medium": " at ",
-  "date.format.time.separator.short": ", ",
-
-  "date.format.timezone.GMT.long" : "Greenwich Mean Time",
-  "date.format.timezone.GMT+1.long" : "British Summer Time",
+  "date.format.timezone.GMT.long" : "ಗ್ರೀನ್ ವಿಚ್ ಸಮಯ",
+  "date.format.timezone.GMT+1.long" : "ಬ್ರಿಟಿಷ್ ಬೇಸಿಗೆ ಸಮಯ",
   "date.format.timezone.GMT.short" : "GMT",
 
-  "date.format.timezone.UTC.long" : "Coordinated Universal Time",
+  "date.format.timezone.UTC.long" : "ಸಂಯೋಜಿತ ಸಾರ್ವತ್ರಿಕ ಸಮಯ",
   "date.format.timezone.UTC.short" : "UTC",
 
-  "date.format.full": "WWWW D MMMM YYYY",
-  "date.format.long": "D MMMM YYYY",
+  "date.format.full": "MMMM D, YYYY WWWW",
+  "date.format.long": "MMMM D, YYYY",
 
-  "time.pm" : "PM",
-  "time.am" : "AM",
-  "time.pm.lowercase" : "pm",
-  "time.am.lowercase" : "am",
+  "time.pm" : "ಮಧ್ಯಾಹ್ನದಲ್ಲಿ",
+  "time.am" : "ಮುಂಜಾನೆಯಲ್ಲಿ",
+  "time.pm.lowercase" : "ಮಧ್ಯಾಹ್ನದಲ್ಲಿ",
+  "time.am.lowercase" : "ಮುಂಜಾನೆಯಲ್ಲಿ",
 
 
 
-  "date.format.timezone.EST.long" : "Eastern Standard Time",
-  "date.format.timezone.EST.short" : "EST",
-  "date.format.timezone.CST.long" : "Central Standard Time",
-  "date.format.timezone.CST.short" : "CST",
-  "date.format.timezone.MST.long" : "Mountain Standard Time",
-  "date.format.timezone.MST.short" : "MST",
-  "date.format.timezone.PST.long" : "Pacific Standard Time",
-  "date.format.timezone.PST.short" : "PST",
-  "date.format.timezone.EDT.long" : "Eastern Daylight Time",
-  "date.format.timezone.EDT.short" : "EDT",
-  "date.format.timezone.CDT.long" : "Central Daylight Time",
-  "date.format.timezone.CDT.short" : "CDT",
-  "date.format.timezone.MDT.long" : "Mountain Daylight Time",
-  "date.format.timezone.MDT.short" : "MDT",
-  "date.format.timezone.PDT.long" : "Pacific Daylight Time",
-  "date.format.timezone.PDT.short" : "PDT"
+  "date.format.timezone.EST.long" : "ಪೂರ್ವ ಪ್ರಮಾಣಿತ ಸಮಯ",
+  "date.format.timezone.EST.short" : "ಇಎಸ್ಟಿ",
+  "date.format.timezone.CST.long" : "ಕೇಂದ್ರ ಪ್ರಮಾಣಿತ ಸಮಯ",
+  "date.format.timezone.CST.short" : "ಸಿಎಸ್ಟಿ",
+  "date.format.timezone.MST.long" : "ಮೌಂಟೇನ್ ಸ್ಟ್ಯಾಂಡರ್ಡ್ ಸಮಯ",
+  "date.format.timezone.MST.short" : "ಎಂಎಸ್ಟಿ",
+  "date.format.timezone.PST.long" : "ಪೆಸಿಫಿಕ್ ಪ್ರಮಾಣಿತ ಸಮಯ",
+  "date.format.timezone.PST.short" : "ಪಿಎಸ್ಟಿ",
+  "date.format.timezone.EDT.long" : "ಪೂರ್ವ ಹಗಲು ಸಮಯ",
+  "date.format.timezone.EDT.short" : "ಇ ಡಿ ಟಿ",
+  "date.format.timezone.CDT.long" : "ಕೇಂದ್ರ ಹಗಲು ಸಮಯ",
+  "date.format.timezone.CDT.short" : "ಸಿಡಿಟಿ",
+  "date.format.timezone.MDT.long" : "ಪರ್ವತ ಹಗಲು ಸಮಯ",
+  "date.format.timezone.MDT.short" : "ಎಂಡಿಟಿ",
+  "date.format.timezone.PDT.long" : "ಪೆಸಿಫಿಕ್ ಹಗಲು ಸಮಯ",
+  "date.format.timezone.PDT.short" : "ಪಿಡಿಟಿ"
 
 }
