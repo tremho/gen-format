@@ -602,7 +602,7 @@ function fitRelativeDate(dt, locale) {
     let days = timeDiff / (1000 * 3600 * 24)
     let sign = days < 0 ? -1 : 1
     days = sign * Math.floor(Math.abs(days))
-    if(days === -0) days = 0
+    if(Object.is(days, -0)) days = 0
     if(!years && !months) {
         // if in same month, be more direct
         days = dt.getUTCDate() - today.getUTCDate()

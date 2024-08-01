@@ -63,13 +63,20 @@ const wrapper = {
     setLocale(locale?:string):LoadStats {
         if(!i18nArray.length) wrapper.init()
         let allStats = new LoadStats();
+        allStats.regionFiles =
+            allStats.commonRegionFiles =
+                allStats.commonFiles =
+                    allStats.totalStrings =
+                    allStats.languageFiles = 0
+
         allStats.localeName = locale
         for (let i18n of i18nArray) {
             let stats = i18n.setLocale(locale)
             allStats.totalStrings += stats.totalStrings
-            allStats.commonFiles = allStats.commonFiles.concat(stats.commonFiles)
-            allStats.regionFiles = allStats.regionFiles.concat(stats.regionFiles)
-            allStats.commonRegionFiles = allStats.commonRegionFiles.concat(stats.commonRegionFiles)
+            allStats.commonFiles += stats.commonFiles
+            allStats.regionFiles += stats.regionFiles
+            allStats.commonRegionFiles += stats.commonRegionFiles
+            allStats.languageFiles += stats.languageFiles
         }
         return allStats
     },
@@ -77,7 +84,7 @@ const wrapper = {
         if(!i18nArray.length) wrapper.init()
         for (let i18n of i18nArray) {
             if(!i18n.isLocaleLoaded(locale)) {
-                console.warn(`locale ${locale}' not found in table at '${i18n.getI18nFolder()}'`)
+                console.warn(`locale ${locale}' not found in table at '${i18n.geti18nFolder()}'`)
                 return false;
             }
         }

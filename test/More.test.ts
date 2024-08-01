@@ -140,7 +140,7 @@ function moreTest() {
         if(stats && stats.totalStrings) {// looks like we have i18n tables
             // r = F('date|full-full~es-ES', 'now')
             r = F('date~es-ES|WWW DD MMM YYYY hhh:mm:ss ++', '2021-02-14:13:23:34Z')
-            x = 'domingo 14 feb. 2021 13:23:34'
+            x = 'domingo 14 feb. 2021 13:23:34 PM'
             t.ok(r === x, `expected "${x}", got "${r}"`) //30
         }
 

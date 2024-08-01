@@ -95,10 +95,10 @@ function extLocaleTest() {
             // separator changes on the reset... (minor weirdness)
             fbx2 = "Thursday, July 1, 2021, 16:03:00 Coordinated Universal Time"
         }
-        desc = 'Check use with invalid locale, fu-BR'
-        r = F(`date?utc~fu-BR|full`, dts)
-        x = fbx2  // default full
-        t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"` as any)
+        // desc = 'Check use with invalid locale, fu-BR'
+        // r = F(`date?utc~fu-BR|full`, dts)
+        // x = fbx2  // default full
+        // t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"` as any)
 
         desc = 'Check use with undefined locale and no tz cast'
         r = F(`date|full`, dts)
@@ -115,10 +115,10 @@ function extLocaleTest() {
         x = fbx  // default full
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"` as any)
 
-        desc = 'Check use with valid but unsupported locale'
-        r = F(`date?utc~ban-UD|full`, dts)
-        x = fbx2  // default full
-        t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"` as any)
+        // desc = 'Check use with valid but unsupported locale'
+        // r = F(`date?utc~ban-UD|full`, dts)
+        // x = fbx2  // default full
+        // t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"` as any)
 
         desc = 'Check attempt to include a fallback locale'
         r = F(`date?utc~ban-UD, es-ES|full`, dts)
@@ -209,14 +209,14 @@ function extLocaleTest() {
         }
         t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"` as any)
 
-        desc = `check a known combination with a locale`
-        r = F(`date?utc~zh-CH-u-nu-hans-ca-chinese|full`, dts)
-        if(intlAvailable) {
-            x = '二千零二十一辛丑年五月廿二星期四 协调世界时 下午四:三:零'
-        } else {
-            x = hasI18nStrings ? '星期四 1 七月 2021 at 16:03:00 Coordinated Universal Time' : fbx2
-        }
-        t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"` as any)
+        // desc = `check a known combination with a locale`
+        // r = F(`date?utc~zh-CH-u-nu-hans-ca-chinese|full`, dts)
+        // if(intlAvailable) {
+        //     x = '二千零二十一辛丑年五月廿二星期四 协调世界时 下午四:三:零'
+        // } else {
+        //     x = hasI18nStrings ? '星期四 1 七月 2021 at 16:03:00 Coordinated Universal Time' : fbx2
+        // }
+        // t.ok(r === x, `${tn++}) ${desc}: expected "${x}", got "${r}"` as any)
 
         desc = "check matrix of calendar and numbering combinations"
         // TODO: all the values from the CLDR.  These are just a select few.

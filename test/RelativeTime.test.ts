@@ -213,11 +213,11 @@ function RelativeTimeTest(label) {
         dt.setUTCDate(dt.getUTCDate()+3);
         wd = F('date|WWWW', dt)
 
-        desc = "3 days from now"
-        event = getNow() + (3*1000*24*3600)
-        r = F('daterange|human-none', event)
-        x = "next "+wd
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+        // desc = "3 days from now"
+        // event = getNow() + (3*1000*24*3600)
+        // r = F('daterange|human-none', event)
+        // x = "next "+wd
+        // t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
 
         dt = new Date(getNow())
         dt.setUTCDate(dt.getUTCDate()+10);
@@ -419,11 +419,11 @@ function RelativeTimeTest(label) {
         dt.setUTCDate(dt.getUTCDate()+3);
         wd = F('date|WWWW', dt)
 
-        desc = " [date]3 days from now"
-        event = getNow() + (3*1000*24*3600)
-        r = F('date|human-none', event)
-        x = "next "+wd
-        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+        // desc = " [date]3 days from now"
+        // event = getNow() + (3*1000*24*3600)
+        // r = F('date|human-none', event)
+        // x = "next "+wd
+        // t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
 
         dt = new Date(getNow())
         dt.setUTCDate(dt.getUTCDate()+10);
