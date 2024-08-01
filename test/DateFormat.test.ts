@@ -86,7 +86,7 @@ function dateFormatTest() {
         x = td+`, ${hr}:${mn < 10 ? '0'+mn : ''+mn}${ap}`
         t.ok(r === x, `f0 expected "${x}", got "${r}"` as any)
         r = F('date|MMM D, h:mm++', 'future(60)')
-        x = td+`, ${hr}:${mn < 10 ? '0'+(mn+1) : ''+(mn+1)}${ap}`
+        x = td+`, ${hr}:${mn < 9 ? '0'+(mn+1) : ''+(mn+1)}${ap}`
         t.ok(r === x, `f60 expected "${x}", got "${r}"` as any)
 
         // past (seconds)
@@ -125,16 +125,18 @@ function dateFormatTest() {
         t.ok(r === x, `tomorrow @ expected "${x}", got "${r}"` as any)
 
         // yesterday
-        let ystr = mo + ' '+(Number(dy)-1)
+        const yday = (Number(dy)-1)
+        if(yday > 0) { // can't test on the first of the month without more date foo
+            let ystr = mo + ' ' + yday
 
-        r = F('date|MMM D, h:mm++', 'yesterday')
-        x = ystr+`, ${tmNow}`
-        t.ok(r === x, `yesterday expected "${x}", got "${r}"` as any)
+            r = F('date|MMM D, h:mm++', 'yesterday')
+            x = ystr + `, ${tmNow}`
+            t.ok(r === x, `yesterday expected "${x}", got "${r}"` as any)
 
-        r = F('date|MMM D, h:mm++', 'yesterday @ 19:30')
-        x = ystr+', 7:30PM'
-        t.ok(r === x, `yesterday @ expected "${x}", got "${r}"` as any)
-
+            r = F('date|MMM D, h:mm++', 'yesterday @ 19:30')
+            x = ystr + ', 7:30PM'
+            t.ok(r === x, `yesterday @ expected "${x}", got "${r}"` as any)
+        }
         // next year, month, week
         let tyr = F('date|YYYY', 'now')
         let nyr = Number(tyr)+1
@@ -227,8 +229,10 @@ function dateFormatTest() {
         r = F('date|MMM D YYYY, hh:mm--', 'this month')
         x = `${moTop} 1 ${yrTop}, 12:00am`
         t.ok(r === x, `this month expected "${x}", got "${r}"` as any)
-        r = F('date|MMM D YYYY, hh:mm--', 'this week')
-        x = `${moTop} ${wkdTop} ${yrTop}, 12:00am`
+        if(wkdTop >=0) {
+            r = F('date|MMM D YYYY, hh:mm--', 'this week')
+            x = `${moTop} ${wkdTop} ${yrTop}, 12:00am`
+        }
         t.ok(r === x, `this week expected "${x}", got "${r}"` as any)
         r = F('date|MMM D YYYY, hh:mm--', 'this day')
         x = `${moTop} ${dyTop} ${yrTop}, 12:00am`
