@@ -1,5 +1,5 @@
 
-import F, {checkIntlSupport, useIntl, getUseIntlChoice, setFileOps, getFileOps} from './src/Formatter'
+import F, {checkIntlSupport, useIntl, getUseIntlChoice, setFileOps, getFileOps, formatV} from './src/Formatter'
 import NodeFileOps from './src/NodeFileOps'
 import * as i18n from './src/i18n'
 
@@ -8,6 +8,7 @@ export {useIntl as useIntl}
 export {getUseIntlChoice as getUseIntlChoice}
 export {setFileOps as setFileOps}
 export {getFileOps as getFileOps}
+export {formatV as formatV}
 export {i18n as i18n}
 export {NodeFileOps as NodeFileOps}
 
