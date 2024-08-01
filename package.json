@@ -6,7 +6,7 @@
   "scripts": {
     "prepublish": "npm run clean && npm test",
     "test": "npm run clean && npm run build && tap --reporter=base --color --passes --disable-coverage ./build/test/*.test.js",
-    "test-direct": "npm run clean && npm run build && node build/test/DateFormat.test.js",
+    "test-direct": "npm run clean && npm run build && node build/test/TimezoneCast.test.js",
     "clean": "rimraf build css",
     "build": "tsc",
     "doc": "npm run clean && npm run build && inchjs && cd build; tsccd ./; documentation lint src; documentation readme --readme-file ../API.md --markdown-toc false --section API src"

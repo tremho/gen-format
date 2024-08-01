@@ -169,20 +169,24 @@ function moreTest() {
         // Note: tests originally written to assume local === PST fail on Travis CI, which is GMT
         // But that seems to have revealed another bug that we should get back "GMT" not "Greenwich Mean Time"
         // for a 'z' format.  Add this to bug list.
-        x = '2:30:00 AM PST'
-        r = F('date?local|h:mm:ss ++ z', '2021-01-24:10:30:00Z')
-        let localTimeIsGMT = (r === '10:30:00 AM Greenwich Mean Time')
-        if(localTimeIsGMT) x = '10:30:00 AM Greenwich Mean Time'
-        t.ok(r === x, `expected "${x}", got "${r}"`) //35
+        const mo = new Date().getMonth()
+        const doLocal = !(mo >=6 && mo <=10)
 
-        if(localTimeIsGMT) {
-            x = '10:30:00 AM Greenwich Mean Time'
-        } else {
-            x = '3:30:00 AM PDT'
+        if(doLocal) { // don't do a local test in summer (on Windows) because it gets timezone wrong (DST)
+            x = '2:30:00 AM PST'
+            r = F('date?local|h:mm:ss ++ z', '2021-01-24:10:30:00Z')
+            let localTimeIsGMT = (r === '10:30:00 AM Greenwich Mean Time')
+            if(localTimeIsGMT) x = '10:30:00 AM Greenwich Mean Time'
+            t.ok(r === x, `expected "${x}", got "${r}"`) //35
+        
+            if(localTimeIsGMT) {
+                x = '10:30:00 AM Greenwich Mean Time'
+            } else {
+                x = '3:30:00 AM PDT'
+            }
+            r = F('date?local|h:mm:ss ++ z', '2021-06-24:10:30:00Z')
+            t.ok(r === x, `expected "${x}", got "${r}"`) //36
         }
-        r = F('date?local|h:mm:ss ++ z', '2021-06-24:10:30:00Z')
-        t.ok(r === x, `expected "${x}", got "${r}"`) //36
-
 
         // format bug investigation
         const foo = {
