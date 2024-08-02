@@ -32,7 +32,7 @@ function RelativeTimeTest(label) {
     Tap.test('Relative Time '+label, t => {
 
         if(!new Date().getUTCHours())  {
-            return t.skip('Skipping relative time test during the UTC crossover hour', null, null)
+            return t.skip({name: 'Skipping relative time test during the UTC crossover hour'} as any)
         }
 
 

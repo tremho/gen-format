@@ -6,7 +6,6 @@
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 [![TotalDownloads][total-downloads-image]][npm-url]
-[![Twitter Follow][twitter-image]][twitter-url]
 
 [build-status]: https://travis-ci.com/tremho/gen-format.svg?branch=master
 
@@ -19,8 +18,6 @@
 [downloads-image]: http://img.shields.io/npm/dm/@tremho/gen-format.svg
 
 [total-downloads-image]: http://img.shields.io/npm/dt/@tremho/gen-format.svg?label=total%20downloads
-
-[twitter-image]: https://img.shields.io/twitter/follow/Tremho1.svg?style=social&label=Follow%20me
 
 [twitter-url]: https://twitter.com/Tremho1
 
@@ -66,8 +63,29 @@ This support comes from the `i18n` localization files
 which are downloaded separately.  See the setup instructions
 in this document for more information.
 
+------
+### Come on contributors! Quit slacking!
+
+I rarely get contributor pull requests or issues as feedback for any of my open-source projects.
+This project has received a number of downloads, but no outside activity.
+Having recently revisited this myself to bring it to v 2.0.0, I have to think that
+those that have been using it must be modifying it to fix various things, and yet I am
+not seeing anything come back.
+
+_Please - if you make a change to this code, submit a PR for it.  That's how open source
+is supposed to work, right?_
+
+[github repo](https://github.com/tremho/gen-format)
 -------
 ### Revision History
+
+##### v 2.0.0 
+- __All v1.1.0 changes__
+  - see notes below
+- __Various bug fixes__
+  - mostly test related
+- __Some Windows fixes__
+  - a few platform surprises
 
 ##### v 1.1.0 (prerelease)
 - __new API:__
@@ -85,7 +103,8 @@ in this document for more information.
     - documentation updates
 
 - __i18n string table data update__    
-    - String table region incorrect path placement fixed.  
+    - String table region incorrect path placement fixed.
+    - 
 __Please retrieve the [__latest__ ___i18n.zip___](https://github.com/tremho/gen-format/releases)
 from the download site (see docs).__
 
@@ -315,6 +334,9 @@ Happy formatting!
 
 
 
+ 
+ 
+ 
  
  
  

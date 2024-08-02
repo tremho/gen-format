@@ -1,6 +1,6 @@
 {
   "name": "@tremho/gen-format",
-  "version": "2.0.0-pre-release.10",
+  "version": "2.0.1-pre-release.1",
   "description": "General formatting system; string, number, date, currency, (expandable)",
   "main": "build/src/Formatter.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "ts-clear-classdoc": "^1.0.1"
   },
   "dependencies": {
-    "@tremho/locale-string-tables": "^2.0.0-pre-release.9",
+    "@tremho/locale-string-tables": "^2.0.0",
     "typescript": "^5.5.4"
   }
 }
