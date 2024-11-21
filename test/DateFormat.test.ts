@@ -293,7 +293,7 @@ function dateFormatTest() {
         t.ok(r === x, `(long) expected "${x}", got "${r}"` as any)
 
         r = F('date|medium-medium', testDate)
-        x = 'Wed, Jan 13, 2021 12:00:00 AM'
+        x = 'Jan 13, 2021, 12:00:00 AM'
         t.ok(r === x, `(medium) expected "${x}", got "${r}"` as any)
 
         r = F('date|short-short', testDate)
@@ -313,7 +313,7 @@ function dateFormatTest() {
         t.ok(r === x, `(long pst) expected "${x}", got "${r}"` as any)
 
         r = F('date?pst|medium', testDate)
-        x = 'Tue, Jan 12, 2021 4:00:00 PM'
+        x = 'Jan 12, 2021, 4:00:00 PM'
         t.ok(r === x, `(medium pst) expected "${x}", got "${r}"` as any)
 
         r = F('date?pst|short', testDate)
@@ -326,23 +326,23 @@ function dateFormatTest() {
 
         if(hasI18nStrings) {
             r = F('date~es-ES?pst|full', testDate)
-            x = 'martes, 12 de enero de 2021, 16:00:00 Hora estándar del Pacífico'
+            x = 'martes, 12 de enero de 2021, 16:00:00 (hora estándar del Pacífico)'
             t.ok(r === x, `(ES) expected "${x}", got "${r}"` as any)
 
             r = F('date~es-ES?pst|long', testDate)
-            x = '12 de enero de 2021, 16:00:00 PST'
+            x = '12 de enero de 2021, 16:00:00 GMT-8'
             t.ok(r === x, `(ES long) expected "${x}", got "${r}"` as any)
 
             r = F('date~es-ES?pst|medium', testDate)
-            x = 'mar., ene. 12, 2021 16:00:00'
+            x = '12 ene 2021, 16:00:00'
             t.ok(r === x, `(ES med) expected "${x}", got "${r}"` as any)
 
             r = F('date~es-ES?pst|short', testDate)
-            x = '12/1/21 16:00'
+            x = '12/1/21, 16:00'
             t.ok(r === x, `(ES short) expected "${x}", got "${r}"` as any)
 
             r = F('date~es-ES?pst|short-long', testDate)
-            x = '12/1/21 16:00:00 PST'
+            x = '12/1/21, 16:00:00 GMT-8'
             t.ok(r === x, `(ES short-long) expected "${x}", got "${r}"` as any)
         } else {
             t.skip({name: 'No string tables: skipped ES locale tests'} as any)

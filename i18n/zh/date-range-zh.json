@@ -45,5 +45,4 @@
     "date.range.days.ahead" : "在 $days(-1.0) 天",
     "date.range.time.ago" : "$count() $unit()前",
     "date.range.time.ahead" : "在 $count() $unit()"
-
 }

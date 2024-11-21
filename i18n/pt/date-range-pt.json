@@ -45,5 +45,4 @@
     "date.range.days.ahead" : "em $days(-1.0) dias",
     "date.range.time.ago" : "$count() $unit() atrás",
     "date.range.time.ahead" : "em $count() $unit()"
-
 }

@@ -43,6 +43,6 @@
     "date.range.weekday.weeks.ahead" : "in $weeks(-1.0) wochen, am $weekday()",
     "date.range.days.ago" : "vor $days(-1.0) tagen",
     "date.range.days.ahead" : "in $days(-1.0) tagen",
-    "date.range.time.ahead": "in $count() $unit()",
-    "date.range.time.ago" : "vor $count() $unit()"
+    "date.range.time.ago" : "vor $count() $unit()",
+    "date.range.time.ahead" : "in $count() $unit()"
 }

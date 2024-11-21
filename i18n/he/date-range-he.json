@@ -45,5 +45,4 @@
     "date.range.days.ahead" : "בעוד $days(-1.0) ימים",
     "date.range.time.ago" : "$unit() $count() ב",
     "date.range.time.ahead" : "$unit() $count() לפני"
-
 }

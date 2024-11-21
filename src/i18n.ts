@@ -101,7 +101,7 @@ const wrapper = {
         if(!i18nArray) wrapper.init()
         let str = ''
         for (let i18n of i18nArray) {
-            str = i18n.getLocaleString(id)
+            str = i18n.getLocaleString(id,useDefault, silent)
             if(str) break;
         }
         return str ? str : useDefault

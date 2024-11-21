@@ -43,8 +43,6 @@
     "date.range.weekday.weeks.ahead" : "dans $weeks() semaines, le $weekday()",
     "date.range.days.ago" : "Il ya $days(-1.0) jours",
     "date.range.days.ahead" : "dans $days(-1.0) jours",
-
     "date.range.time.ago" : "il y a $count() $unit()",
     "date.range.time.ahead" : "dans $count() $unit()"
-
 }

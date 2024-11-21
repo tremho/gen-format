@@ -45,5 +45,4 @@
     "date.range.days.ahead" : "kwa siku $days(-1.0)",
     "date.range.time.ago" : "$unit() $count() zilizopita",
     "date.range.time.ahead" : "kwa $unit() $count()"
-
 }

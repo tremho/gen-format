@@ -95,6 +95,7 @@ export default class DateRangeFormatter implements IFormatHandler {
         let isDiff, isHuman, timeStyle
 
         let format = specParts.format
+        // console.log("specParts is ", JSON.stringify(format))
 
         if(format.indexOf('full') !== -1
             || format.indexOf('long') !== -1
@@ -116,11 +117,13 @@ export default class DateRangeFormatter implements IFormatHandler {
                 timeStyle = 'full'
                 isDiff = true
             }
+            // console.log(`calling i18nFormatByStyle(${specParts.locale}, ${dateStyle}, ${timeStyle}, ${isUtc})`)
             format = i18nFormatByStyle(specParts.locale, dateStyle, timeStyle,isUtc, ', ')
             // if we have a discrete format, timeStyle will not be part of format
-            if(tStyle && tStyle.indexOf(':') !== -1) {
+            if(tStyle && tStyle.indexOf(':') !== -1 && format.indexOf(':') === -1) {
                 format += timeStyle
             }
+            // console.log(`resulting format ${format}`)
         }
 
         // TODO: we should be able to refactor out isDiff, as it is always true, no?
@@ -228,9 +231,13 @@ export default class DateRangeFormatter implements IFormatHandler {
             }
         }
 
+        i18n.setLocale(specParts.locale)
+
         const fmtchars = ['Y','M','D','H','V','h','m','s','-','+','z','Z']
         leftFormat = leftFormat.trim()
-        let sep = i18n.getLocaleString('date.format.time.separator', '', true)
+        let sep = i18n.getLocaleString('date.format.time.separator', '')
+        // console.log("getLocaleString of 'date.format.time.separator' returns '"+sep+"'")
+
         // if(sep) leftFormat = leftFormat.replace(sep, ', ') // we use a comma in this form
         rightFormat = rightFormat.trim()
         let llc = leftFormat.charAt(leftFormat.length-1)
@@ -259,13 +266,14 @@ export default class DateRangeFormatter implements IFormatHandler {
             }
             if(out) out += i18n.getLocaleString('date.range.time.separator',', ')
         }
-
+        // console.log("DateRangeFormatter line 267: out="+out)
 
 
         if(isDiff) {
-            let ms = dtEnd.getTime() - dtStart.getTime()
+            let ms = endTime - stTime
             let dparts = getDurationParts(ms)
             out += fitRelativeTime(dparts, specParts.locale, spec, isHuman, timeStyle)
+            // console.log("DateRangeFormatter line 274: out="+out)
         } else {
             if(stTime === endTime) {
                 // not a range if they are the same
@@ -278,6 +286,7 @@ export default class DateRangeFormatter implements IFormatHandler {
                 out = `${startStr} - ${endStr}`
             }
         }
+        // console.log("DateRangeFormatter line 287: out="+out)
 
         // NO need to use IDTF formatRange because it doesn't do anything we don't handle already.
         // that might be different if it had different treatments other than a '-' to depict range, but it seems not.
@@ -308,7 +317,7 @@ class DurationParts {
 }
 
 /**
- * Break down the interval into a DurationParts object that describes the span in graduated unite of time.
+ * Break down the interval into a DurationParts object that describes the span in graduated units of time.
  * @param ms
  *
  * @private
@@ -342,7 +351,6 @@ function getDurationParts(ms):DurationParts {
     out.days -= out.weeks*dayPerWeek
     out.weeks -= out.months*weeksPerMonth
     out.months -= out.years*monthsPerYear
-
     return out
 }
 
@@ -434,6 +442,7 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
 
     // fast out for now
     i18n.setLocale(locale)
+
     if(!dparts.years && !dparts.months && !dparts.weeks && !dparts.days
         && !dparts.hours && !dparts.minutes && !dparts.seconds && !dparts.milliseconds) {
         return i18n.getLocaleString('date.range.now','now')
@@ -485,6 +494,7 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
             hms = true
             n++
         }
+
         if (relStyle === 'full' && (dparts.seconds || dparts.milliseconds) && dparts.seconds < 6) {
             if (dparts.sign < 0) {
                 return i18n.getLocaleString("date.range.moments.ago", "a few moments ago")
@@ -498,6 +508,9 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
             hms = true
         }
         if(n !== 1 || (relStyle && relStyle.indexOf(':') !== -1)) {
+            // console.log("Yep, fell into the 'weird' place...")
+            // the idea here is that to format segmented time, we create that as a separate formatting call and
+            // play games with the label for count and unit so it outputs as the result of that
             let tDate = new Date(0)
             tDate.setUTCHours(dparts.hours)
             tDate.setUTCMinutes(dparts.minutes)
@@ -506,14 +519,15 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
             unit = F(`date~${locale}|${relStyle}`, tDate)
             count = ''
         }
-        i18n.setLocale(locale)
+
         if (dparts.sign > 0) inago = i18n.getLocaleString('date.range.time.ahead', 'in $count() $unit()')
         else inago = i18n.getLocaleString('date.range.time.ago', '$count() $unit() ago')
         let term = 'term'
         if(relStyle !== 'full' && relStyle !== 'long') term = 'abbr'
 
         // fallback pluralization if we don't have any string tables
-        let stats:any = i18n.setLocale() // default locale
+        const stats:any = i18n.setLocale() // default locale
+
         let hasI18nStrings = (stats && stats.totalStrings)
         if(!hasI18nStrings) {
             if(term === 'abbr') {
@@ -534,6 +548,7 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
         }
         else {
             i18n.setLocale(locale)
+
             if (i18n.hasLocaleString(`date.${term}.${unit}`)) {
                 unit = i18n.getPluralizedString(locale, `date.${term}.${unit}`, count)
             }
@@ -560,6 +575,7 @@ function fitRelativeTime(dparts, locale, specParts, isHuman, relStyle) {
         if(relStyle === 'full') {
             if (type === 'seconds' && dparts.seconds < 6) {
                 i18n.setLocale(locale)
+
                 if (dparts.sign < 0) {
                     return i18n.getLocaleString('date.range.moments.ago','a few moments ago')
                 } else {
@@ -593,22 +609,22 @@ function roundUpDParts(dparts) {
 
 function fitRelativeDate(dt, locale) {
     if(!locale) locale = getSystemLocale()
+    // console.log("in fitRelativeDate for locale "+locale)
+    // console.log("IRTF="+IRTF)
+    // console.log("UseIntl() is"+useIntl())
+
+    i18n.setLocale(locale)
+
     let out = ''
     let isToday = false
     let today = new Date(getNow())
     let timeDiff = dt.getTime() - today.getTime()
-    let years = Math.floor(dt.getUTCFullYear() - today.getUTCFullYear())
-    let months = dt.getUTCMonth() - today.getUTCMonth()
-    let days = timeDiff / (1000 * 3600 * 24)
-    let sign = days < 0 ? -1 : 1
-    days = sign * Math.floor(Math.abs(days))
-    if(Object.is(days, -0)) days = 0
-    if(!years && !months) {
-        // if in same month, be more direct
-        days = dt.getUTCDate() - today.getUTCDate()
-    }
-    let weeks = Math.floor(Math.abs(days/7))
+    let dparts = roundUpDParts(getDurationParts(timeDiff))
+    let {sign, years, months, days, weeks} = dparts
+    if(years) years *= sign
+    if(months) months *= sign
     if(weeks) weeks *=sign
+    if(days) days *= sign
     if((years || months) && Math.abs(weeks) > 2) {
         let dateStyle = i18n.getLocaleString('date.format.full', 'WWWW, MMMM D YYY')
         out = F(`date~${locale}|` + dateStyle, dt).trim()
@@ -616,6 +632,7 @@ function fitRelativeDate(dt, locale) {
         // express as weeks
         let weekday = F(`date~${locale}|WWWW`, dt)
         i18n.setLocale(locale)
+
         if(weeks < 0) {
             if(weeks === -1) {
                 out = formatV('@date.range.weekday.previous:$weekday(), last week', {weekday})
@@ -635,15 +652,16 @@ function fitRelativeDate(dt, locale) {
             }
         }
     } else {
-        i18n.setLocale(locale)
         // express as days
         if(days === 0) {
             out = i18n.getLocaleString('date.range.today','today')
+            // console.log("getLocaleString of 'date.range.today' returns "+out)
             isToday = true
         } else if(days === 1) {
             out = i18n.getLocaleString('date.range.tomorrow','tomorrow')
         } else if(days === -1) {
             out = i18n.getLocaleString('date.range.yesterday','yesterday')
+            // console.log("getLocaleString of 'date.range.yesterday' returns "+out)
         }
         if(Math.abs(days) < 7 && Math.abs(days) > 2) {
             let weekday = F(`date~${locale}|WWWW`, dt)
@@ -652,6 +670,7 @@ function fitRelativeDate(dt, locale) {
             out += formatV((days < 0)? last  : next, {weekday})
         } else if(!out) {
             i18n.setLocale(locale)
+
             if (days < 0) {
                 out = formatV('@date.range.days.ago:$days(-1.0) days ago', {days: -days})
             } else {

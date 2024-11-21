@@ -45,5 +45,4 @@
     "date.range.days.ahead" : "через $days(-1.0) дня",
     "date.range.time.ago" : "$count() $unit() назад",
     "date.range.time.ahead" : "через $count() $unit()"
-
 }

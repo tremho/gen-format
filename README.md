@@ -75,10 +75,32 @@ not seeing anything come back.
 _Please - if you make a change to this code, submit a PR for it.  That's how open source
 is supposed to work, right?_
 
+_If you find an issue, but don't feel up to contributing, please leave an issue comment_
+
+##### Suggested changes -
+There are a series of tests.  They all pass now, but there are some exceptions being made to allow that.
+Specifically, look at test/Localized.test.ts and see how it has exceptions coded to ignore the results expected
+from localizedExpectations.ts.  These fail either because the wording of the format is incorrect (there have been changes that invalidated the original)
+or because the localized strings are wrong, or both.  
+Start with limiting the test to english only and fix any of the date and time related localization strings that may be at fault for this (note that
+i18n must be enabled or else you'll just get the defaults). Once this is clear, then fix any of the expected format outputs for the tests in english that need any
+and then localize these strings to other languages (I used Google Translate for this). 
+These steps should solve most of the localization test issues, but there may still be some exceptions that require editing the formatting code itself.
+If you are not using multi-language localization, though, you probably aren't inspired enough to do this test follow-through, and that's okay.
+The code as it is should work fine in english for most cases at least and many of the european languages.  Have fun. 
+
 [github repo](https://github.com/tremho/gen-format)
 -------
 ### Revision History
 
+##### v 2.0.3
+- __Browser compatibility__
+  - default to use Intl without explicitly setting it because it is available on modern browsers
+  - remove dependencies on incompatible imports
+  - improved use of getLocaleString() for a default context without i18n
+- __Misc fixes__
+  - Fix a date format bug for month
+  - Fix a relative date format bug regarding dates within "today"
 ##### v 2.0.0 
 - __All v1.1.0 changes__
   - see notes below
@@ -183,7 +205,7 @@ for any locales you wish to support outside of `en-US`
 
 With or without Intl support, at least some locale-aware Date and Time formatting
 will use language and region specific string translation tables
-as provided for by the [@tremho/locale-string-tables]() 
+as provided for by the [@tremho/locale-string-tables](https://www.npmjs.com/package/@tremho/locale-string-tables) 
 module.
 
 The string table data is not provided in the npm package for
@@ -334,6 +356,7 @@ Happy formatting!
 
 
 
+ 
  
  
  

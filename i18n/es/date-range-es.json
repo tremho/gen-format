@@ -36,14 +36,13 @@
     "date.range.today" : "hoy",
     "date.range.tomorrow" : "mañana",
     "date.range.yesterday" : "ayer",
-    "date.range.weekday.next" : "el próximo $weekday()",
+    "date.range.weekday.next" : " próximo $weekday()",
     "date.range.weekday.previous" : "$weekday(), la semana pasada",
     "date.range.weekday.weeks.ago" : "$weekday(), hace $weeks(-1.0) semanas",
     "date.range.weekday.week.ahead" : "una semana desde el $weekday()",
     "date.range.weekday.weeks.ahead" : "en $weeks(-1.0) semanas, el $weekday()",
     "date.range.days.ago" : "hace $days(-1.0) días",
     "date.range.days.ahead" : "en $days(-1.0) días",
-
     "date.range.time.ago" : "hace $count() $unit()",
     "date.range.time.ahead" : "dentro de $count() $unit()"
 }

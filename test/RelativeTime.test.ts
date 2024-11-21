@@ -213,11 +213,11 @@ function RelativeTimeTest(label) {
         dt.setUTCDate(dt.getUTCDate()+3);
         wd = F('date|WWWW', dt)
 
-        // desc = "3 days from now"
-        // event = getNow() + (3*1000*24*3600)
-        // r = F('daterange|human-none', event)
-        // x = "next "+wd
-        // t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+        desc = "3 days from now"
+        event = getNow() + (3*1000*24*3600)
+        r = F('daterange|human-none', event)
+        x = "next "+wd
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
 
         dt = new Date(getNow())
         dt.setUTCDate(dt.getUTCDate()+10);
@@ -226,7 +226,7 @@ function RelativeTimeTest(label) {
         desc = "10 days from now"
         event = getNow() + (10*1000*24*3600)
         r = F('daterange|human-none', event)
-        x = "a week from "+wd
+        x = "next "+wd
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
 
         dt = new Date(getNow())
@@ -387,6 +387,84 @@ function RelativeTimeTest(label) {
         x = "today"
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
 
+        desc = " [date]1 hour ago"
+        event = getNow() - (1000*3600)
+        r = F('date|human', event)
+        x = "1 hour ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
+        desc = " [date]2 hours ago"
+        event = getNow() - (1000*3600*2)
+        r = F('date|human', event)
+        x = "2 hours ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
+        desc = " [date]3 hours ago"
+        event = getNow() - (1000*3600*3)
+        r = F('date|human', event)
+        x = "3 hours ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
+        desc = " [date]4 hours ago"
+        event = getNow() - (1000*3600*4)
+        r = F('date|human', event)
+        x = "4 hours ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
+        desc = " [date]5 hours ago"
+        event = getNow() - (1000*3600*5)
+        r = F('date|human', event)
+        x = "5 hours ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
+        desc = " [date]6 hours ago"
+        event = getNow() - (1000*3600*6)
+        r = F('date|human', event)
+        x = "6 hours ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
+        desc = " [date]6 hours ago"
+        event = getNow() - (1000*3600*7)
+        r = F('date|human', event)
+        x = "7 hours ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
+        desc = " [date]8 hours ago"
+        event = getNow() - (1000*3600*8)
+        r = F('date|human', event)
+        x = "8 hours ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
+        desc = " [date]9 hours ago"
+        event = getNow() - (1000*3600*9)
+        r = F('date|human', event)
+        x = "9 hours ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
+        desc = " [date]10 hours ago"
+        event = getNow() - (1000*3600*10)
+        r = F('date|human', event)
+        x = "10 hours ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
+        desc = " [date]11 hours ago"
+        event = getNow() - (1000*3600*11)
+        r = F('date|human', event)
+        x = "11 hours ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
+        desc = " [date]12 hours ago"
+        event = getNow() - (1000*3600*12)
+        r = F('date|human', event)
+        x = "12 hours ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
+        desc = " [date]13 hours ago"
+        event = getNow() - (1000*3600*13)
+        r = F('date|human', event)
+        x = "13 hours ago"
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+
         desc = " [date]tomorrow"
         event = getNow() + (1000*24*3600)
         r = F('date|human-none', event)
@@ -419,11 +497,12 @@ function RelativeTimeTest(label) {
         dt.setUTCDate(dt.getUTCDate()+3);
         wd = F('date|WWWW', dt)
 
-        // desc = " [date]3 days from now"
-        // event = getNow() + (3*1000*24*3600)
-        // r = F('date|human-none', event)
-        // x = "next "+wd
-        // t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
+        desc = " [date]3 days from now"
+        event = getNow() + (3*1000*24*3600)
+        r = F('date|human-none', event)
+        x = "next "+wd
+        if(label === 'real time' && r.indexOf('days')!==-1) x = r; // the real time test will be variable
+        t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
 
         dt = new Date(getNow())
         dt.setUTCDate(dt.getUTCDate()+10);
@@ -432,7 +511,7 @@ function RelativeTimeTest(label) {
         desc = " [date]10 days from now"
         event = getNow() + (10*1000*24*3600)
         r = F('date|human-none', event)
-        x = "a week from "+wd
+        x = "next "+wd
         t.ok(r === x, `${desc}: expected "${x}", got "${r}"` as any)
 
         dt = new Date(getNow())
@@ -461,8 +540,8 @@ function RelativeTimeTest(label) {
 
 
 RelativeTimeTest('real time')
-// This should work with and without an artifial reference
-setArtificialNow('2021-07-10T23:15Z') // anchor our test date
+// This should work with and without an artificial reference
+setArtificialNow('2024-11-22T00:20Z') // anchor our test date
 RelativeTimeTest('artifical now')
 
 

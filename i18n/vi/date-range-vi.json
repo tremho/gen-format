@@ -34,7 +34,7 @@
     "date.range.moments.away" : "Trong giây lát",
     "date.range.ago" : "trước",
     "date.range.today" : "hôm nay",
-    "date.range.tomorrow" : "ngày mai",
+    "date.range.tomorrow" : "Ngày mai",
     "date.range.yesterday" : "hôm qua",
     "date.range.weekday.next" : "$weekday() tới",
     "date.range.weekday.previous" : "$weekday(), tuần trước",
@@ -45,5 +45,4 @@
     "date.range.days.ahead" : "trong $days(-1.0) ngày nữa",
     "date.range.time.ago" : "$count() $unit() trước",
     "date.range.time.ahead" : "trong $count() $unit() nữa"
-
 }

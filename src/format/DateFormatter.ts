@@ -3,13 +3,13 @@ import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 import {findTimezones, findTimezoneBlocks, findTimezoneBlocksForDate} from './Timezone'
 import {i18nFormatByStyle} from "./Shared";
 // import * as LocaleStringTables from "@tremho/locale-string-tables"
-import {getSystemLocale, LoadStats} from "@tremho/locale-string-tables"
+// import {getSystemLocale, LoadStats} from "@tremho/locale-string-tables"
 import DateRangeFormatter from "./DateRangeFormatter";
 
-const sysloc = getSystemLocale()
-let localTimeZone;
-
 import i18n from '../i18n'
+
+const sysloc = i18n.getSystemLocale()
+let localTimeZone;
 
 // We'll use Intl if it is available and has language support
 
@@ -278,7 +278,7 @@ export default class DateFormatter implements IFormatHandler {
         } catch(e) {
             console.error(e.message)
             i18n.setLocale() // revert to system locale on error
-            specParts.locale = getSystemLocale()
+            specParts.locale = i18n.getSystemLocale()
         }
 
         try {
@@ -429,7 +429,7 @@ export class SimpleDateFormat {
             }
 
             this.locale = locale
-            const stats:LoadStats = i18n.setLocale(locale)
+            const stats:any = i18n.setLocale(locale)
             if(!stats.languageFiles  && !stats.regionFiles && !stats.commonRegionFiles) {
                 throw Error('No Locale files loaded for '+locale)
             }
@@ -733,7 +733,7 @@ export class SimpleDateFormat {
         let mis = getFormatPart('month', 'short')
         let mo4 = mil || i18nMonth(this.locale, this.mo, 'long')
         let mo3 = mim || i18nMonth(this.locale, this.mo, 'medium')
-        let mo2 = mis || this.mo < 10 ? '0'+this.mo : ''+this.mo
+        let mo2 = /*mis ||*/ this.mo < 10 ? '0'+this.mo : ''+this.mo
         let mo1 = mis || ''+ this.mo
         n = 0;
         let nn = 0;

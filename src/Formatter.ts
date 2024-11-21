@@ -4,7 +4,7 @@ import fileOps from './NodeFileOps'
 
 let gFileOps:FileOps = fileOps // default; can override
 
-let useIntlChoice = false
+let useIntlChoice = true // default to true -- let user set if false with useIntl(false)
 
 /**
  * Sets up the file operation functions needed for the `i18n` / `locale-string-tables` support

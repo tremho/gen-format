@@ -45,5 +45,4 @@
     "date.range.days.ahead" : "$days(-1.0) நாட்களில்",
     "date.range.time.ago" : "$count() $unit() முன்பு",
     "date.range.time.ahead" : "$count() $unit()ளில்"
-
 }

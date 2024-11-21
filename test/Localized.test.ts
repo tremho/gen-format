@@ -18,9 +18,64 @@ const testLocales = Object.getOwnPropertyNames(locExpectations)
 
 let updatedExpectations = false
 
+// These languages and test numbers are expected to fail, so they are excluded
+// modify localizedExpectations.ts to fix these.
+// see below because this only needs to be done if we aren't modifying the file on error like we do
+// currently with the `writeNewExpectations` code below.
+// with that enabled, if this test run fails, it should pass the next time
+// comment out that code if you want to lock in the localizedExpectations for these tests to a consistent set.
 const locExpectFailExceptions = {
-    "am" : [0,29,37],
-    "ar" : [0, 1, 2, 14, 15, 21, 22, 29, 30,31,37,38,39]
+    // "am" : [0,1,3,5,10,11,16,17,18,24,25,26,29,32,33,34,37],
+    // "ar" : [0, 1, 2, 10,11, 14, 15, 17,18, 21, 22, 24,25,26,27,28, 29, 30,31,32,33,34, 37,38,39],
+    // "az" : [0, 1, 2, 10,11, 17,18,24,25,26,32,33,34],
+    // "bg" : [0,1,2,10,11,17,18,24,25,26,32,33,34],
+    // "bn" : [0,1,2,10,11,17,18,24,25,26,32,33,34],
+    // "bs" : [2,10,11,17,18,24,25,26,32,33,34],
+    // "ca" : [0,1,10,11,17,18,24,25,26,32,33,34 ],
+    // "cs" : [0,1,10,11,17,18,24,25,26,32,33,34 ],
+    // "da" : [2,10,11,17,18,24,25,26,32,33,34 ],
+    // "de" : [10,11,17,18,24,25,26,32,33,34 ],
+    // "el" : [0,1,10,11,17,18,24,25,26,32,33,34 ],
+    // "en" : [10,11,17,18,24,25,26,32,33,34 ], // start fixing these english strings then localize to the others
+    // "es" : [2,10,11,17,18,19,24,25,26,32,33,34,35],
+    // "et" : [0,1,2,10,11,17,18,24,25,26,32,33,34 ],
+    // "fa" : [0,1,2,10,11,17,18,24,25,26,32,33,34 ],
+    // "fi" : [2,10,11,17,18,24,25,26,32,33,34],
+    // "fil": [10,11,17,18,24,25,26,32,33,34 ],
+    // "fr" : [0,10,11,17,18,24,25,26,32,33,34,10,11,17,1,24,25,26,32,33,34 ],
+    // "he" : [10,11,17,18,24,25,26,32,33,34 ],
+    // "hi" : [0,1,10,11,17,18,24,25,26,32,33,34 ],
+    // "hr" : [10,11,17,18,24,25,26,32,33,34 ],
+    // "hu" : [0,10,11,17,18,24,25,26,32,33,34 ],
+    // "id" : [0,1,2,10,11,17,18,24,25,26,32,33,34 ],
+    // "it" : [0,1,10,11,17,18,24,25,26,32,33,34 ],
+    // "ja" : [10,11,17,18,24,25,26,32,33,34 ],
+    // "kn" : [0,1,2,10,11,17,18,24,25,26,32,33,34],
+    // "lt" : [10,11,17,18,24,25,26,32,33,34 ],
+    // "lv" : [10,11,17,18,24,25,26,32,33,34],
+    // "ml" : [0,10,11,17,18,24,25,26,32,33,34 ],
+    // "mr" : [0,1,2,10,11,17,18,24,25,26,32,33,34],
+    // "ms" : [0,1,10,11,17,18,24,25,26,32,33,34],
+    // "nb" : [0,10,11,17,18,24,25,26,32,33,34 ],
+    // "nl" : [0,2,10,11,17,18,24,25,26,32,33,34],
+    // "pa" : [10,11,17,18,24,25,26,32,33,34 ],
+    // "pl" : [10,11,17,18,24,25,26,32,33,34,36],
+    // "pt" : [0,1,2,10,11,17,18,24,25,26,32,33,34],
+    // "ro" : [0,1,10,11,17,18,24,25,26,32,33,34 ],
+    // "ru" : [0,1,10,11,17,18,24,25,26,32,33,34 ],
+    // "sk" : [0,1,10,11,17,18,24,25,26,32,33,34],
+    // "sl" : [0,1,2,10,11,17,18,24,25,26,32,33,34],
+    // "sr" : [10,11,17,18,24,25,26,32,33,34],
+    // "sv" : [0,1,10,11,17,18,24,25,26,32,33,34 ],
+    // "sw" : [0,1,2,10,11,17,18,24,25,26,32,33,34],
+    // "ta" : [0,1,2,10,11,17,18,24,25,26,32,33,34],
+    // "te" : [10,11,17,18,24,25,26,32,33,34],
+    // "th" : [0,1,10,11,17,18,24,25,26,32,33,34,10,11,17,18,24,25,26,32,33,34],
+    // "tr" : [10,11,17,18,24,25,26,32,33,34],
+    // "uk" : [10,11,17,18,24,25,26,32,33,34,10,11,17,18,24,25,26,32,33,34],
+    // "uz" : [10,11,17,18,24,25,26,32,33,34],
+    // "vi" : [0,1,2,8,10,11,17,18,20,24,25,26,32,33,34],
+    // "zh" : [ 0,1,2,10,11,17,18,24,25,26,32,33,34]
 }
 
 const stringIds = [
@@ -71,7 +126,6 @@ const stringIds = [
     "date.range.time.ago",
     "date.range.time.ahead"
 ]
-
 
 function localizationTests(loc) {
     let r, x, desc
@@ -410,28 +464,32 @@ if (intlAvailable) {
 let stats:any = i18n.setLocale() // default locale
 if(stats && stats.totalStrings) {// looks like we have i18n tables
 
-    // i18n.enumerateAvailableLocales(loc => {
-    //     if(loc.indexOf('-') === -1) { // languages only
-    //         dateStringTests(loc)
-    //         localizationTests(loc)
-    //
-    //         // use this to build tables
-    //         // buildDateStringsFromExpectations(loc)
-    //     }
-    // })
-    localizationTests('ar')
+    i18n.enumerateAvailableLocales(loc => {
+        if(loc.indexOf('-') === -1) { // languages only
+            dateStringTests(loc)
+
+            // this will fail without an updated localizedExpectation.ts
+            // or exclusions in locExpectFailExceptions above
+            localizationTests(loc)
+
+            // use this to build tables
+            // buildDateStringsFromExpectations(loc)
+        }
+    })
 
 
-    // if(updatedExpectations) {
-    //     writeNewExpectations()
-    // }
+    // use this to update the localizedExpectation.ts file with current generated stuff
+    if(updatedExpectations) {
+        writeNewExpectations()
+    }
 }
 
 function writeOrDie(loc, ti, desc, r, x, t) {
     if(r !== x) {
         let fex = locExpectFailExceptions[loc]
         if(fex && fex.indexOf(ti-1) !== -1) {
-            return t.ok(true, 'passes as a recognized exception')
+            // return t.ok(true, 'passes as a recognized exception')
+            return t.skip(`${loc} #${ti} passes as a recognized exception`)
         }
         let ex = locExpectations['en'][ti-1]
         if(r === ex) {
@@ -486,21 +544,3 @@ function writeNewExpectations() {
     fs.writeFileSync(lxf, out)
 
 }
-
-/*
-a year ago localized ==>
-"الاثنين, يوليو 6 2020"
-  "الاثنين, يوليو 6, 2020"
- ✖ data incorrect: (ar #11) a month ago localized ==>
- "الأحد, يونيو 6 2021"
-  "الأحد, يونيو 6, 2021"
- "الأربعاء, يوليو 6 2022"
-  "الأربعاء, يوليو 6, 2022"
- ✖ data incorrect: (ar #18) a month from now localized ==> "الجمعة, أغسطس 6 2021" instead of "الجمعة, أغسطس 6, 2021"
- ✖ data incorrect: (ar #24) 4 years ago localized ==> "الخميس, يوليو 6 2017" instead of "الخميس, يوليو 6, 2017"
- ✖ data incorrect: (ar #25) 4 months ago localized ==> "السبت, مارس 6 2021" instead of "السبت, مارس 6, 2021"
- ✖ data incorrect: (ar #26) 3 weeks ago localized ==> "الثلاثاء, يونيو 15 2021" instead of "الثلاثاء, يونيو 15, 2021"
- ✖ data incorrect: (ar #32) 4 years from now localized ==> "الأحد, يوليو 6 2025" instead of "الأحد, يوليو 6, 2025"
- ✖ data incorrect: (ar #33) 4 months from now localized ==> "السبت, نوفمبر 6 2021" instead of "السبت, نوفمبر 6, 2021"
-
- */

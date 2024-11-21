@@ -1,8 +1,8 @@
 import i18n from "../i18n";
-import {getSystemLocale} from "@tremho/locale-string-tables";
+// import {getSystemLocale} from "@tremho/locale-string-tables";
 
 export function i18nFormatByStyle(locale, dateStyle, timeStyle, isUtc, fallbackSeparator) {
-    if(!locale) locale = getSystemLocale()
+    if(!locale) locale = i18n.getSystemLocale()
     i18n.setLocale(locale)
     if(!dateStyle) dateStyle = 'none'
     if(!timeStyle) timeStyle = 'none'
